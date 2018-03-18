@@ -1,0 +1,31 @@
+plugins{
+	id 'com.github.ben-manes.versions' version '0.17.0'
+	id "me.champeau.gradle.jmh" version "0.4.5"
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.8
+
+eclipse.classpath.downloadSources=true
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	testCompile 'com.google.guava:guava:24.1-jre'
+	testCompile "org.junit.platform:junit-platform-runner:1.1.0"
+	testCompile "org.junit.jupiter:junit-jupiter-engine:5.1.0"
+	testCompile "org.junit.jupiter:junit-jupiter-params:5.1.0"
+}
+
+jmh {
+    jmhVersion = '1.20'
+}
+
+
+task wrapper(type: Wrapper) {
+   gradleVersion = '4.6'
+}

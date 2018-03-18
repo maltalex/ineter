@@ -1,0 +1,150 @@
+/**
+ * Copyright (c) 2018, Ineter Contributors
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+package net.bit48.ineter;
+
+public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
+
+	static enum IPv4SubnetMask {
+
+		// @formatter:off
+		MASK_00, MASK_01, MASK_02, MASK_03,
+		MASK_04, MASK_05, MASK_06, MASK_07,
+		MASK_08, MASK_09, MASK_10, MASK_11,
+		MASK_12, MASK_13, MASK_14, MASK_15,
+		MASK_16, MASK_17, MASK_18, MASK_19,
+		MASK_20, MASK_21, MASK_22, MASK_23,
+		MASK_24, MASK_25, MASK_26, MASK_27,
+		MASK_28, MASK_29, MASK_30, MASK_31, MASK_32;
+		// @formatter:on
+
+		public static IPv4SubnetMask fromMaskLen(final byte maskLen) {
+			if (maskLen >= 0 && maskLen <= 32) {
+				return IPv4SubnetMask.values()[maskLen];
+			}
+			throw new IllegalArgumentException("The mask length must be between 0 and 32");
+		}
+
+		private final int mask;
+		private final byte bitCount;
+
+		private IPv4SubnetMask() {
+			this.bitCount = (byte) ordinal();
+			this.mask = this.bitCount != 0 ? 0xffffffff << (32 - this.bitCount) : 0;
+		}
+
+		public int mask() {
+			return this.mask;
+		}
+
+		public byte maskBitCount() {
+			return this.bitCount;
+		}
+
+		public int and(final int ip) {
+			return this.mask & ip;
+		}
+
+		public IPv4Address and(final IPv4Address ip) {
+			return IPv4Address.of(and(ip.toInt()));
+		}
+
+		public int orInverted(final int ip) {
+			return (~this.mask) | ip;
+		}
+
+		public IPv4Address orInverted(final IPv4Address ip) {
+			return IPv4Address.of(orInverted(ip.toInt()));
+		}
+
+		public IPv4Address toAddress() {
+			return IPv4Address.of(mask());
+		}
+	}
+
+	private static final long serialVersionUID = 1L;
+	private static final byte BITS = 32;
+
+	public static IPv4Subnet of(final String cidr) {
+		String[] cidrSplit = cidr.split("/");
+		return new IPv4Subnet(cidrSplit[0], Byte.parseByte(cidrSplit[1]));
+	}
+
+	public static IPv4Subnet of(final String address, final byte maskLen) {
+		return new IPv4Subnet(address, maskLen);
+	}
+
+	public static IPv4Subnet of(final IPv4Address address, final byte maskLen) {
+		return new IPv4Subnet(address, maskLen);
+	}
+
+	final byte networkBitCount;
+
+	IPv4Subnet(final IPv4Address address, final IPv4SubnetMask mask) {
+		super(mask.and(address), mask.orInverted(address));
+		this.networkBitCount = mask.maskBitCount();
+	}
+
+	IPv4Subnet(final IPv4Address address, final byte networkBitCount) {
+		this(address, IPv4SubnetMask.fromMaskLen(networkBitCount));
+	}
+
+	IPv4Subnet(final String address, final byte networkBitCount) {
+		this(IPv4Address.of(address), IPv4SubnetMask.fromMaskLen(networkBitCount));
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + this.networkBitCount;
+		return result;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final IPv4Subnet other = (IPv4Subnet) obj;
+		if (this.networkBitCount != other.networkBitCount) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%s/%s", super.firstAddress, this.networkBitCount);
+	}
+
+	@Override
+	public int getNetworkBitCount() {
+		return this.networkBitCount;
+	}
+
+	@Override
+	public IPv4Address getNetworkMask() {
+		return IPv4SubnetMask.fromMaskLen(this.networkBitCount).toAddress();
+	}
+
+	@Override
+	public int getHostBitCount() {
+		return (BITS - this.networkBitCount);
+	}
+
+	@Override
+	public IPv4Address getNetworkAddress() {
+		return getFirst();
+	}
+}
