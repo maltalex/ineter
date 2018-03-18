@@ -83,11 +83,11 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address>, S
 
 		private IPv4Range range;
 
-		private IPv4KnownRange(final IPv4Range range) {
+		private IPv4KnownRange(IPv4Range range) {
 			this.range = range;
 		}
 
-		public boolean contains(final IPv4Address address) {
+		public boolean contains(IPv4Address address) {
 			return this.range.contains(address);
 		}
 
@@ -102,47 +102,47 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address>, S
 		private final int mask;
 		private final int shift;
 
-		private Ip4Octet(final int byteShift) {
+		private Ip4Octet(int byteShift) {
 			this.shift = 24 - (byteShift << 3);
 			this.mask = 0xff000000 >>> (byteShift << 3);
 		}
 
-		public int isolateAsInt(final int ip) {
+		public int isolateAsInt(int ip) {
 			return (ip & this.mask) >>> this.shift;
 		}
 
-		public byte isolateAsByte(final int ip) {
+		public byte isolateAsByte(int ip) {
 			return (byte) isolateAsInt(ip);
 		}
 	}
 
 	private static final long serialVersionUID = 1L;
 
-	public static IPv4Address of(final byte[] bigEndianByteArr) {
+	public static IPv4Address of(byte[] bigEndianByteArr) {
 		return new IPv4Address(bigEndianByteArr);
 	}
 
-	public static IPv4Address of(final int intIp) {
+	public static IPv4Address of(int intIp) {
 		return new IPv4Address(intIp);
 	}
 
-	public static IPv4Address of(final IPv4Address other) {
+	public static IPv4Address of(IPv4Address other) {
 		return new IPv4Address(other.ip);
 	}
 
-	public static IPv4Address of(final String ip) {
+	public static IPv4Address of(String ip) {
 		if (ip == null) {
 			throw new NullPointerException("String IP address is null");
 		}
 		if (ip.length() < 7 || ip.length() > 15) {
 			throw new IllegalArgumentException("Invalid IP address length");
 		}
-		final String[] split = ip.split("\\.");
+		String[] split = ip.split("\\.");
 		if (split.length != 4) {
 			throw new IllegalArgumentException("IPv4 addresses must have exactly 4 octets");
 		}
-		final int a = Integer.parseInt(split[0]), b = Integer.parseInt(split[1]);
-		final int c = Integer.parseInt(split[2]), d = Integer.parseInt(split[3]);
+		int a = Integer.parseInt(split[0]), b = Integer.parseInt(split[1]);
+		int c = Integer.parseInt(split[2]), d = Integer.parseInt(split[3]);
 
 		// Make sure all octets are between 0 and 255
 		if (((a | b | c | d) & 0xffffff00) != 0) {
@@ -152,7 +152,7 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address>, S
 		return of(a << 24 | b << 16 | c << 8 | d);
 	}
 
-	public static IPv4Address of(final Inet4Address address) {
+	public static IPv4Address of(Inet4Address address) {
 		return of(address.getAddress());
 	}
 
@@ -160,7 +160,7 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address>, S
 
 	final int ip;
 
-	IPv4Address(final byte[] bigEndianByteArr) {
+	IPv4Address(byte[] bigEndianByteArr) {
 		if (bigEndianByteArr == null) {
 			throw new NullPointerException("The given array is null");
 		}
@@ -174,12 +174,12 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address>, S
 				| (bigEndianByteArr[2] & 0xff) << 8 | (bigEndianByteArr[3] & 0xff);
 	}
 
-	IPv4Address(final int intIp) {
+	IPv4Address(int intIp) {
 		this.ip = intIp;
 	}
 
 	@Override
-	public int compareTo(final IPv4Address o) {
+	public int compareTo(IPv4Address o) {
 		if (o == null) {
 			return 1;
 		}
@@ -191,7 +191,7 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address>, S
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(Object obj) {
 		if (obj == null) {
 			return false;
 		}
@@ -261,7 +261,7 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address>, S
 	}
 
 	@Override
-	public IPv4Address plus(final int n) {
+	public IPv4Address plus(int n) {
 		return new IPv4Address((int) (toLong() + n));
 	}
 
@@ -271,7 +271,7 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address>, S
 	}
 
 	@Override
-	public IPv4Address minus(final int n) {
+	public IPv4Address minus(int n) {
 		return new IPv4Address((int) (toLong() - n));
 	}
 

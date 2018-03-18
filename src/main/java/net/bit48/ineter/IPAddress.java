@@ -15,7 +15,7 @@ import java.net.UnknownHostException;
 
 public abstract class IPAddress {
 
-	public static IPAddress of(final byte[] bigEndianByteArr) {
+	public static IPAddress of(byte[] bigEndianByteArr) {
 		if (bigEndianByteArr.length == 4) {
 			return IPv4Address.of(bigEndianByteArr);
 		}
@@ -26,7 +26,7 @@ public abstract class IPAddress {
 		throw new IllegalArgumentException("Array length must be 4 or 16. Given legth: " + bigEndianByteArr.length);
 	}
 
-	public static IPAddress of(final String ip) {
+	public static IPAddress of(String ip) {
 		if (ip.length() >= 2 && ip.length() <= 41) {
 			// Either a "." or ":" have to appear within the first 6 characters:
 			// [1234: or 123.
@@ -43,7 +43,7 @@ public abstract class IPAddress {
 		throw new IllegalArgumentException(String.format("The string %s is not a valid ip address", ip));
 	}
 
-	public static IPAddress of(final InetAddress address) {
+	public static IPAddress of(InetAddress address) {
 		if (address instanceof Inet6Address) {
 			return IPv6Address.of((Inet6Address) address);
 		}

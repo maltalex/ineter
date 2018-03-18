@@ -104,11 +104,11 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address>, S
 
 		private IPv6Range range;
 
-		private IPv6KnownRange(final IPv6Range subnet) {
+		private IPv6KnownRange(IPv6Range subnet) {
 			this.range = subnet;
 		}
 
-		public boolean contains(final IPv6Address address) {
+		public boolean contains(IPv6Address address) {
 			return this.range.contains(address);
 		}
 
@@ -126,16 +126,16 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address>, S
 		private final long mask;
 		private final int shift;
 
-		private LongShort(final int shortShift) {
+		private LongShort(int shortShift) {
 			this.shift = 48 - (shortShift << 4);
 			this.mask = 0xffff000000000000L >>> (shortShift << 4);
 		}
 
-		public long isolateAsLong(final long l) {
+		public long isolateAsLong(long l) {
 			return (l & this.mask) >>> this.shift;
 		}
 
-		public int isolateAsInt(final long l) {
+		public int isolateAsInt(long l) {
 			return (int) isolateAsLong(l);
 		}
 	}
@@ -149,20 +149,20 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address>, S
 		private final long mask;
 		private final int shift;
 
-		private LongByte(final int shortShift) {
+		private LongByte(int shortShift) {
 			this.shift = 56 - (shortShift << 3);
 			this.mask = 0xff00000000000000L >>> (shortShift << 3);
 		}
 
-		public long isolateAsLong(final long l) {
+		public long isolateAsLong(long l) {
 			return (l & this.mask) >>> this.shift;
 		}
 
-		public byte isolateAsByte(final long l) {
+		public byte isolateAsByte(long l) {
 			return (byte) isolateAsLong(l);
 		}
 
-		public long expand(final byte b) {
+		public long expand(byte b) {
 			return (b & 0xffL) << this.shift;
 		}
 
@@ -239,7 +239,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address>, S
 		}
 		String zone = null;
 		for (int i = last - 1; i > first; i--) {
-			final char ch = address.charAt(i);
+			char ch = address.charAt(i);
 			if (ch == ':') { // Looks like a normal address, carry on parsing
 				break;
 			}
@@ -250,7 +250,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address>, S
 				break;
 			}
 		}
-		final int length = last - first;
+		int length = last - first;
 		if (length > 39) {
 			throw new IllegalArgumentException(
 					String.format("Invalid length - the string %s is too long to be an IPv6 address. Length: %d",
@@ -271,7 +271,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address>, S
 
 		// 2. Iterate start to finish or until a :: is encountered
 		for (int i = first; i < last; i++) {
-			final char c = address.charAt(i);
+			char c = address.charAt(i);
 			if (isHexDigit(c)) {
 				if (++partHexDigitCount > 4) {
 					throw new IllegalArgumentException(
@@ -305,10 +305,10 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address>, S
 		}
 
 		// 3. Iterate from the end until the ::
-		final int lastFilledPartIndex = partIndex - 1;
+		int lastFilledPartIndex = partIndex - 1;
 		partIndex = 7;
 		for (int i = last - 1; i >= afterDoubleSemicolonIndex; i--) {
-			final char c = address.charAt(i);
+			char c = address.charAt(i);
 			if (isHexDigit(c)) {
 				if (partIndex <= lastFilledPartIndex) {
 					throw new IllegalArgumentException("Too many parts. Expected 8 parts");
@@ -378,7 +378,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address>, S
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		int prime = 31;
 		int result = 1;
 		result = prime * result + (int) (this.lower ^ (this.lower >>> 32));
 		result = prime * result + (int) (this.upper ^ (this.upper >>> 32));
@@ -505,7 +505,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address>, S
 		return ((aMSB & bMSB & resutlMSB) == 1) || (aMSB == 0 && (bMSB | resutlMSB) == 1);
 	}
 
-	public IPv6Address plus(final long n) {
+	public IPv6Address plus(long n) {
 		if (n < 0) {
 			return minus(-n);
 		}
@@ -520,7 +520,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address>, S
 	}
 
 	@Override
-	public IPv6Address plus(final int n) {
+	public IPv6Address plus(int n) {
 		return plus((long) n);
 	}
 

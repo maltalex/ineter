@@ -19,24 +19,24 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements Se
 
 	public abstract T getLast();
 
-	public boolean overlaps(final IPRange<T> range) {
+	public boolean overlaps(IPRange<T> range) {
 		// Either one of the ends of the other range is within this one
 		// Or this range is completely inside the other range. In that case,
 		// it's enough to check just one of the edges of this range
 		return this.contains(range.getFirst()) || this.contains(range.getLast()) || range.contains(this.getFirst());
 	}
 
-	public boolean contains(final T ip) {
+	public boolean contains(T ip) {
 		return this.getFirst().compareTo(ip) <= 0 && this.getLast().compareTo(ip) >= 0;
 	}
 
-	public boolean contains(final IPRange<T> range) {
+	public boolean contains(IPRange<T> range) {
 		return this.contains(range.getFirst()) && this.contains(range.getLast());
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		int prime = 31;
 		int result = 1;
 		result = prime * result + this.getFirst().hashCode();
 		result = prime * result + this.getLast().hashCode();
@@ -44,12 +44,12 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements Se
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(Object obj) {
 		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
 		@SuppressWarnings("unchecked")
-		final IPRange<T> other = (IPRange<T>) obj;
+		IPRange<T> other = (IPRange<T>) obj;
 		return this.getFirst().equals(other.getFirst()) && this.getLast().equals(other.getLast());
 	}
 
@@ -65,11 +65,11 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements Se
 		return iterator(false);
 	}
 
-	public Iterator<T> iterator(final boolean trim) {
+	public Iterator<T> iterator(boolean trim) {
 		return iterator(trim, trim);
 	}
 
-	public abstract Iterator<T> iterator(final boolean skipFirst, final boolean skipLast);
+	public abstract Iterator<T> iterator(boolean skipFirst, boolean skipLast);
 
 	public abstract List<? extends IPSubnet<? extends T>> toSubnets();
 }

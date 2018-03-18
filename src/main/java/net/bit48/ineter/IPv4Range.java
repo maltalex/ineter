@@ -17,12 +17,12 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class IPv4Range extends IPRange<IPv4Address> {
 
-	public static IPv4Range of(final IPv4Address firstAddress, final IPv4Address lastAddress) {
+	public static IPv4Range of(IPv4Address firstAddress, IPv4Address lastAddress) {
 		return new IPv4Range(firstAddress, lastAddress);
 	}
 
-	public static IPv4Range between(final String between) {
-		final String[] parts = between.split("-");
+	public static IPv4Range between(String between) {
+		String[] parts = between.split("-");
 		return IPv4Range.of(IPv4Address.of(parts[0].trim()), IPv4Address.of(parts[1].trim()));
 	}
 
@@ -44,48 +44,48 @@ public class IPv4Range extends IPRange<IPv4Address> {
 			this.lastAddress = DEFAULT_LAST;
 		}
 
-		Builder(final IPv4Address firstAddress, final IPv4Address lastAddress) {
+		Builder(IPv4Address firstAddress, IPv4Address lastAddress) {
 			this.firstAddress = firstAddress;
 			this.lastAddress = lastAddress;
 		}
 
-		public Builder first(final IPv4Address firstAddress) {
+		public Builder first(IPv4Address firstAddress) {
 			return new Builder(firstAddress, this.lastAddress);
 		}
 
-		public Builder first(final byte[] bigEndianByteArr) {
+		public Builder first(byte[] bigEndianByteArr) {
 			return this.first(IPv4Address.of(bigEndianByteArr));
 		}
 
-		public Builder first(final int ip) {
+		public Builder first(int ip) {
 			return this.first(IPv4Address.of(ip));
 		}
 
-		public Builder first(final String ip) {
+		public Builder first(String ip) {
 			return this.first(IPv4Address.of(ip));
 		}
 
-		public Builder first(final Inet4Address address) {
+		public Builder first(Inet4Address address) {
 			return this.first(IPv4Address.of(address));
 		}
 
-		public Builder last(final IPv4Address lastAddress) {
+		public Builder last(IPv4Address lastAddress) {
 			return new Builder(this.firstAddress, lastAddress);
 		}
 
-		public Builder last(final byte[] bigEndianByteArr) {
+		public Builder last(byte[] bigEndianByteArr) {
 			return this.last(IPv4Address.of(bigEndianByteArr));
 		}
 
-		public Builder last(final int ip) {
+		public Builder last(int ip) {
 			return this.last(IPv4Address.of(ip));
 		}
 
-		public Builder last(final String ip) {
+		public Builder last(String ip) {
 			return this.last(IPv4Address.of(ip));
 		}
 
-		public Builder last(final Inet4Address address) {
+		public Builder last(Inet4Address address) {
 			return this.last(IPv4Address.of(address));
 		}
 
@@ -95,7 +95,7 @@ public class IPv4Range extends IPRange<IPv4Address> {
 
 		@Override
 		public int hashCode() {
-			final int prime = 31;
+			int prime = 31;
 			int result = 1;
 			result = prime * result + ((this.firstAddress == null) ? 0 : this.firstAddress.hashCode());
 			result = prime * result + ((this.lastAddress == null) ? 0 : this.lastAddress.hashCode());
@@ -103,7 +103,7 @@ public class IPv4Range extends IPRange<IPv4Address> {
 		}
 
 		@Override
-		public boolean equals(final Object obj) {
+		public boolean equals(Object obj) {
 			if (this == obj) {
 				return true;
 			}
@@ -113,7 +113,7 @@ public class IPv4Range extends IPRange<IPv4Address> {
 			if (getClass() != obj.getClass()) {
 				return false;
 			}
-			final Builder other = (Builder) obj;
+			Builder other = (Builder) obj;
 			if (this.firstAddress == null) {
 				if (other.firstAddress != null) {
 					return false;
@@ -143,7 +143,7 @@ public class IPv4Range extends IPRange<IPv4Address> {
 	final IPv4Address firstAddress;
 	final IPv4Address lastAddress;
 
-	IPv4Range(final IPv4Address firstAddress, final IPv4Address lastAddress) {
+	IPv4Range(IPv4Address firstAddress, IPv4Address lastAddress) {
 		this.firstAddress = firstAddress;
 		this.lastAddress = lastAddress;
 		if (this.firstAddress == null || this.lastAddress == null) {
@@ -173,13 +173,12 @@ public class IPv4Range extends IPRange<IPv4Address> {
 	}
 
 	@Override
-	public Iterator<IPv4Address> iterator(final boolean skipFirst, final boolean skipLast) {
+	public Iterator<IPv4Address> iterator(boolean skipFirst, boolean skipLast) {
 		return new Iterator<IPv4Address>() {
 
-			final AtomicLong next = new AtomicLong(
+			AtomicLong next = new AtomicLong(
 					skipFirst ? IPv4Range.this.firstAddress.next().toLong() : IPv4Range.this.firstAddress.toLong());
-			final long last = skipLast ? IPv4Range.this.lastAddress.previous().toLong()
-					: IPv4Range.this.lastAddress.toLong();
+			long last = skipLast ? IPv4Range.this.lastAddress.previous().toLong() : IPv4Range.this.lastAddress.toLong();
 
 			@Override
 			public void remove() {
@@ -193,7 +192,7 @@ public class IPv4Range extends IPRange<IPv4Address> {
 
 			@Override
 			public IPv4Address next() {
-				final long tempNext;
+				long tempNext;
 				if ((tempNext = this.next.getAndIncrement()) <= this.last) {
 					return new IPv4Address((int) tempNext);
 				}
@@ -202,7 +201,7 @@ public class IPv4Range extends IPRange<IPv4Address> {
 		};
 	}
 
-	IPv4Subnet maxSubnetInRange(final IPv4Address addr) {
+	IPv4Subnet maxSubnetInRange(IPv4Address addr) {
 		int addrHostBits = Integer.numberOfTrailingZeros(addr.toInt());
 		int networkBitsEq = Integer.numberOfLeadingZeros(this.lastAddress.toInt() ^ addr.toInt());
 		int hostBitsMax = 32 - networkBitsEq;
@@ -216,10 +215,10 @@ public class IPv4Range extends IPRange<IPv4Address> {
 
 	@Override
 	public List<IPv4Subnet> toSubnets() {
-		final ArrayList<IPv4Subnet> result = new ArrayList<>();
+		ArrayList<IPv4Subnet> result = new ArrayList<>();
 		IPv4Address lastAddress = this.firstAddress.previous();
 		do {
-			final IPv4Subnet nextSubnet = maxSubnetInRange(lastAddress.next());
+			IPv4Subnet nextSubnet = maxSubnetInRange(lastAddress.next());
 			result.add(nextSubnet);
 			lastAddress = nextSubnet.lastAddress;
 		} while (lastAddress.compareTo(this.lastAddress) < 0);

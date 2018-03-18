@@ -49,7 +49,7 @@ public class ZonedIPv6Address extends IPv6Address {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + ((this.zone == null) ? 0 : this.zone.hashCode());
 		return result;
@@ -100,7 +100,7 @@ public class ZonedIPv6Address extends IPv6Address {
 	}
 
 	@Override
-	public ZonedIPv6Address plus(final long n) {
+	public ZonedIPv6Address plus(long n) {
 		if (n < 0) {
 			return minus(-n);
 		}
@@ -115,7 +115,7 @@ public class ZonedIPv6Address extends IPv6Address {
 	}
 
 	@Override
-	public ZonedIPv6Address plus(final int n) {
+	public ZonedIPv6Address plus(int n) {
 		return plus((long) n);
 	}
 

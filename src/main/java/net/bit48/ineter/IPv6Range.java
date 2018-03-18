@@ -18,12 +18,12 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class IPv6Range extends IPRange<IPv6Address> {
 
-	public static IPv6Range of(final IPv6Address firstAddress, final IPv6Address lastAddress) {
+	public static IPv6Range of(IPv6Address firstAddress, IPv6Address lastAddress) {
 		return new IPv6Range(firstAddress, lastAddress);
 	}
 
-	public static IPv6Range between(final String between) {
-		final String[] parts = between.split("-");
+	public static IPv6Range between(String between) {
+		String[] parts = between.split("-");
 		return IPv6Range.of(IPv6Address.of(parts[0].trim()), IPv6Address.of(parts[1].trim()));
 	}
 
@@ -45,40 +45,40 @@ public class IPv6Range extends IPRange<IPv6Address> {
 			this.lastAddress = DEFAULT_LAST;
 		}
 
-		Builder(final IPv6Address firstAddress, final IPv6Address lastAddress) {
+		Builder(IPv6Address firstAddress, IPv6Address lastAddress) {
 			this.firstAddress = firstAddress;
 			this.lastAddress = lastAddress;
 		}
 
-		public Builder first(final IPv6Address firstAddress) {
+		public Builder first(IPv6Address firstAddress) {
 			return new Builder(firstAddress, this.lastAddress);
 		}
 
-		public Builder first(final byte[] bigEndianByteArr) {
+		public Builder first(byte[] bigEndianByteArr) {
 			return this.first(IPv6Address.of(bigEndianByteArr));
 		}
 
-		public Builder first(final String ip) {
+		public Builder first(String ip) {
 			return this.first(IPv6Address.of(ip));
 		}
 
-		public Builder first(final Inet6Address address) {
+		public Builder first(Inet6Address address) {
 			return this.first(IPv6Address.of(address));
 		}
 
-		public Builder last(final IPv6Address lastAddress) {
+		public Builder last(IPv6Address lastAddress) {
 			return new Builder(this.firstAddress, lastAddress);
 		}
 
-		public Builder last(final byte[] bigEndianByteArr) {
+		public Builder last(byte[] bigEndianByteArr) {
 			return this.last(IPv6Address.of(bigEndianByteArr));
 		}
 
-		public Builder last(final String ip) {
+		public Builder last(String ip) {
 			return this.last(IPv6Address.of(ip));
 		}
 
-		public Builder last(final Inet6Address address) {
+		public Builder last(Inet6Address address) {
 			return this.last(IPv6Address.of(address));
 		}
 
@@ -88,7 +88,7 @@ public class IPv6Range extends IPRange<IPv6Address> {
 
 		@Override
 		public int hashCode() {
-			final int prime = 31;
+			int prime = 31;
 			int result = 1;
 			result = prime * result + ((this.firstAddress == null) ? 0 : this.firstAddress.hashCode());
 			result = prime * result + ((this.lastAddress == null) ? 0 : this.lastAddress.hashCode());
@@ -96,7 +96,7 @@ public class IPv6Range extends IPRange<IPv6Address> {
 		}
 
 		@Override
-		public boolean equals(final Object obj) {
+		public boolean equals(Object obj) {
 			if (this == obj) {
 				return true;
 			}
@@ -106,7 +106,7 @@ public class IPv6Range extends IPRange<IPv6Address> {
 			if (getClass() != obj.getClass()) {
 				return false;
 			}
-			final Builder other = (Builder) obj;
+			Builder other = (Builder) obj;
 			if (this.firstAddress == null) {
 				if (other.firstAddress != null) {
 					return false;
@@ -136,7 +136,7 @@ public class IPv6Range extends IPRange<IPv6Address> {
 	final IPv6Address firstAddress;
 	final IPv6Address lastAddress;
 
-	IPv6Range(final IPv6Address firstAddress, final IPv6Address lastAddress) {
+	IPv6Range(IPv6Address firstAddress, IPv6Address lastAddress) {
 		this.firstAddress = firstAddress;
 		this.lastAddress = lastAddress;
 		if (this.firstAddress == null || this.lastAddress == null) {
@@ -166,12 +166,12 @@ public class IPv6Range extends IPRange<IPv6Address> {
 	}
 
 	@Override
-	public Iterator<IPv6Address> iterator(final boolean skipFirst, final boolean skipLast) {
+	public Iterator<IPv6Address> iterator(boolean skipFirst, boolean skipLast) {
 		return new Iterator<IPv6Address>() {
 
-			final AtomicLong nextAddition = new AtomicLong(skipFirst ? 1 : 0);
+			AtomicLong nextAddition = new AtomicLong(skipFirst ? 1 : 0);
 			// Will throw exception if length is greater than max long
-			final long totalCount = skipLast ? length().longValueExact() - 1 : length().longValueExact();
+			long totalCount = skipLast ? length().longValueExact() - 1 : length().longValueExact();
 
 			@Override
 			public void remove() {
@@ -185,7 +185,7 @@ public class IPv6Range extends IPRange<IPv6Address> {
 
 			@Override
 			public IPv6Address next() {
-				final long tempNext;
+				long tempNext;
 				if ((tempNext = this.nextAddition.getAndIncrement()) < this.totalCount) {
 					return IPv6Range.this.firstAddress.plus(tempNext);
 				}
@@ -211,7 +211,7 @@ public class IPv6Range extends IPRange<IPv6Address> {
 		return Long.numberOfLeadingZeros(upperXOR);
 	}
 
-	IPv6Subnet maxSubnetInRange(final IPv6Address addr) {
+	IPv6Subnet maxSubnetInRange(IPv6Address addr) {
 		int addrHostBits = numberOfTrailingZeros(addr);
 		int networkBitsEq = numberOfLeadingEq(this.lastAddress, addr);
 		int hostBitsMax = 128 - networkBitsEq;
@@ -225,10 +225,10 @@ public class IPv6Range extends IPRange<IPv6Address> {
 
 	@Override
 	public List<IPv6Subnet> toSubnets() {
-		final ArrayList<IPv6Subnet> result = new ArrayList<>();
+		ArrayList<IPv6Subnet> result = new ArrayList<>();
 		IPv6Address lastAddress = this.firstAddress.previous();
 		do {
-			final IPv6Subnet nextSubnet = maxSubnetInRange(lastAddress.next());
+			IPv6Subnet nextSubnet = maxSubnetInRange(lastAddress.next());
 			result.add(nextSubnet);
 			lastAddress = nextSubnet.lastAddress;
 		} while (lastAddress.compareTo(this.lastAddress) < 0);

@@ -30,7 +30,7 @@ public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address> {
 		MASK_120, MASK_121, MASK_122, MASK_123, MASK_124, MASK_125, MASK_126, MASK_127, MASK_128;
 		//@formatter:on
 
-		public static IPv6SubnetMask fromMaskLen(final int maskLen) {
+		public static IPv6SubnetMask fromMaskLen(int maskLen) {
 			if (maskLen >= 0 && maskLen <= 128) {
 				return IPv6SubnetMask.values()[maskLen];
 			}
@@ -52,11 +52,11 @@ public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address> {
 			return this.bitCount;
 		}
 
-		public IPv6Address and(final IPv6Address ip) {
+		public IPv6Address and(IPv6Address ip) {
 			return IPv6Address.of(ip.upper & this.maskUpper, ip.lower & this.maskLower);
 		}
 
-		public IPv6Address orInverted(final IPv6Address ip) {
+		public IPv6Address orInverted(IPv6Address ip) {
 			return IPv6Address.of(ip.upper | ~this.maskUpper, ip.lower | ~this.maskLower);
 		}
 
@@ -68,36 +68,36 @@ public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address> {
 	private static final long serialVersionUID = 1L;
 	private static final int BITS = 128;
 
-	public static IPv6Subnet of(final String cidr) {
+	public static IPv6Subnet of(String cidr) {
 		String[] cidrSplit = cidr.split("/");
 		return new IPv6Subnet(IPv6Address.of(cidrSplit[0]), IPv6SubnetMask.fromMaskLen(Integer.parseInt(cidrSplit[1])));
 	}
 
-	public static IPv6Subnet of(final String address, final int maskLen) {
+	public static IPv6Subnet of(String address, int maskLen) {
 		return new IPv6Subnet(IPv6Address.of(address), IPv6SubnetMask.fromMaskLen(maskLen));
 	}
 
-	public static IPv6Subnet of(final IPv6Address address, final int maskLen) {
+	public static IPv6Subnet of(IPv6Address address, int maskLen) {
 		return new IPv6Subnet(address, IPv6SubnetMask.fromMaskLen(maskLen));
 	}
 
 	final int networkBitCount;
 
-	IPv6Subnet(final IPv6Address address, final IPv6SubnetMask mask) {
+	IPv6Subnet(IPv6Address address, IPv6SubnetMask mask) {
 		super(mask.and(address), mask.orInverted(address));
 		this.networkBitCount = mask.maskBitCount();
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + this.networkBitCount;
 		return result;
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -107,7 +107,7 @@ public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address> {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final IPv6Subnet other = (IPv6Subnet) obj;
+		IPv6Subnet other = (IPv6Subnet) obj;
 		if (this.networkBitCount != other.networkBitCount) {
 			return false;
 		}

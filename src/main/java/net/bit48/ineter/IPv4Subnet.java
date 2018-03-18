@@ -22,7 +22,7 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 		MASK_28, MASK_29, MASK_30, MASK_31, MASK_32;
 		// @formatter:on
 
-		public static IPv4SubnetMask fromMaskLen(final byte maskLen) {
+		public static IPv4SubnetMask fromMaskLen(byte maskLen) {
 			if (maskLen >= 0 && maskLen <= 32) {
 				return IPv4SubnetMask.values()[maskLen];
 			}
@@ -45,19 +45,19 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 			return this.bitCount;
 		}
 
-		public int and(final int ip) {
+		public int and(int ip) {
 			return this.mask & ip;
 		}
 
-		public IPv4Address and(final IPv4Address ip) {
+		public IPv4Address and(IPv4Address ip) {
 			return IPv4Address.of(and(ip.toInt()));
 		}
 
-		public int orInverted(final int ip) {
+		public int orInverted(int ip) {
 			return (~this.mask) | ip;
 		}
 
-		public IPv4Address orInverted(final IPv4Address ip) {
+		public IPv4Address orInverted(IPv4Address ip) {
 			return IPv4Address.of(orInverted(ip.toInt()));
 		}
 
@@ -69,44 +69,44 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 	private static final long serialVersionUID = 1L;
 	private static final byte BITS = 32;
 
-	public static IPv4Subnet of(final String cidr) {
+	public static IPv4Subnet of(String cidr) {
 		String[] cidrSplit = cidr.split("/");
 		return new IPv4Subnet(cidrSplit[0], Byte.parseByte(cidrSplit[1]));
 	}
 
-	public static IPv4Subnet of(final String address, final byte maskLen) {
+	public static IPv4Subnet of(String address, byte maskLen) {
 		return new IPv4Subnet(address, maskLen);
 	}
 
-	public static IPv4Subnet of(final IPv4Address address, final byte maskLen) {
+	public static IPv4Subnet of(IPv4Address address, byte maskLen) {
 		return new IPv4Subnet(address, maskLen);
 	}
 
 	final byte networkBitCount;
 
-	IPv4Subnet(final IPv4Address address, final IPv4SubnetMask mask) {
+	IPv4Subnet(IPv4Address address, IPv4SubnetMask mask) {
 		super(mask.and(address), mask.orInverted(address));
 		this.networkBitCount = mask.maskBitCount();
 	}
 
-	IPv4Subnet(final IPv4Address address, final byte networkBitCount) {
+	IPv4Subnet(IPv4Address address, byte networkBitCount) {
 		this(address, IPv4SubnetMask.fromMaskLen(networkBitCount));
 	}
 
-	IPv4Subnet(final String address, final byte networkBitCount) {
+	IPv4Subnet(String address, byte networkBitCount) {
 		this(IPv4Address.of(address), IPv4SubnetMask.fromMaskLen(networkBitCount));
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + this.networkBitCount;
 		return result;
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -116,7 +116,7 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final IPv4Subnet other = (IPv4Subnet) obj;
+		IPv4Subnet other = (IPv4Subnet) obj;
 		if (this.networkBitCount != other.networkBitCount) {
 			return false;
 		}
