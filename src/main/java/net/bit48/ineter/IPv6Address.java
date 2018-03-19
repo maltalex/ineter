@@ -347,7 +347,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 		}
 
 		// 5. Check total number of parts
-		if (partCount > 8 || (partCount < 8 && afterDoubleSemicolonIndex == address.length() + 2)) {
+		if (partCount > 8 || (partCount < 8 && afterDoubleSemicolonIndex == last + 2)) {
 			throw new IllegalArgumentException(String.format("Invalid number of parts. Expected 8, got %d", partCount));
 		}
 		return zone == null ? new IPv6Address(upperAccumulator, lowerAccumulator)

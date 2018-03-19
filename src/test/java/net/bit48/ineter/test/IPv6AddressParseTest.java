@@ -37,10 +37,10 @@ public class IPv6AddressParseTest {
 
 	// Do not rename used by @MethodSource below
 	public static List<String> generateIP6AddressStrings() {
-		return generateIP6AddressStrings(0, 10_000);
+		return generateIP6AddressStrings(0, 10_000, true);
 	}
 
-	public static List<String> generateIP6AddressStrings(int seed, int count) {
+	public static List<String> generateIP6AddressStrings(int seed, int count, boolean brackets) {
 		List<String> addresses = new ArrayList<>(count);
 		Random r = new Random(seed);
 
@@ -62,7 +62,11 @@ public class IPv6AddressParseTest {
 					currentAddress.remove(first);
 				}
 			}
-			addresses.add(String.join(":", currentAddress));
+			if (brackets && r.nextBoolean()) {
+				addresses.add("[" + String.join(":", currentAddress) + "]");
+			} else {
+				addresses.add(String.join(":", currentAddress));
+			}
 		}
 		return addresses;
 	}
@@ -130,7 +134,7 @@ public class IPv6AddressParseTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "1:1", "1:1:1", "::1:1:1:1:1:1:1:1", "1:1:1:1:1:1:1:1:1", "1:1:1:1:1:1:1:1:1:1",
+	@ValueSource(strings = { "1:1", "[1:1]", "1:1:1", "::1:1:1:1:1:1:1:1", "1:1:1:1:1:1:1:1:1", "1:1:1:1:1:1:1:1:1:1",
 			"1:1:1:1:1:1:1:1:1:1:1", "1:1:1:1:1:1:1:1:1:1:1:1", "::1:1:1:1:1:1:1:1:1", "1::1:1:1:1:1:1:1:1",
 			"1:1::1:1:1:1:1:1:1", "1:1:1::1:1:1:1:1:1", "1:1:1:1::1:1:1:1:1", "1:1:1:1:1::1:1:1:1",
 			"1:1:1:1:1:1::1:1:1", "1:1:1:1:1:1:1::1:1", "1:1:1:1:1:1:1:1::1", "1:1:1:1:1:1:1:1:1::", })
