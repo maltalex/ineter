@@ -117,8 +117,7 @@ public class IPv4RangeTest {
 	@Test
 	void iterationOrder() {
 		ArrayList<IPv4Address> itemList = new ArrayList<>();
-		IPv4Range.newBuilder().first("127.255.255.0").last("128.0.0.1").build().iterator()
-				.forEachRemaining(itemList::add);
+		IPv4Range.of("127.255.255.0", "128.0.0.1").iterator().forEachRemaining(itemList::add);
 
 		assertEquals(itemList.size(), 258);
 		assertEquals(itemList.get(0), IPv4Address.of("127.255.255.0"));
@@ -135,8 +134,7 @@ public class IPv4RangeTest {
 
 	@Test
 	void iterationLastElement() {
-		Iterator<IPv4Address> i = IPv4Range.newBuilder().first("127.255.255.0").last("127.255.255.0").build()
-				.iterator();
+		Iterator<IPv4Address> i = IPv4Range.of("127.255.255.0", "127.255.255.0").iterator();
 		assertTrue(i.hasNext());
 		assertEquals(i.next(), IPv4Address.of("127.255.255.0"));
 		assertThrows(NoSuchElementException.class, () -> i.next());
@@ -144,8 +142,7 @@ public class IPv4RangeTest {
 
 	@Test
 	void iterationRemove() {
-		Iterator<IPv4Address> i = IPv4Range.newBuilder().first("127.255.255.0").last("127.255.255.0").build()
-				.iterator();
+		Iterator<IPv4Address> i = IPv4Range.of("127.255.255.0", "127.255.255.0").iterator();
 		assertThrows(UnsupportedOperationException.class, () -> i.remove());
 	}
 

@@ -7,7 +7,6 @@
  */
 package net.bit48.ineter;
 
-import java.io.Serializable;
 import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,123 +22,21 @@ public class IPv4Range extends IPRange<IPv4Address> {
 		return new IPv4Range(firstAddress, lastAddress);
 	}
 
+	public static IPv4Range of(String firstAddress, String lastAddress) {
+		return new IPv4Range(IPv4Address.of(firstAddress), IPv4Address.of(lastAddress));
+	}
+
+	public static IPv4Range of(byte[] firstAddress, byte[] lastAddress) {
+		return new IPv4Range(IPv4Address.of(firstAddress), IPv4Address.of(lastAddress));
+	}
+
+	public static IPv4Range of(Inet4Address firstAddress, Inet4Address lastAddress) {
+		return new IPv4Range(IPv4Address.of(firstAddress), IPv4Address.of(lastAddress));
+	}
+
 	public static IPv4Range between(String between) {
 		String[] parts = between.split("-");
 		return IPv4Range.of(IPv4Address.of(parts[0].trim()), IPv4Address.of(parts[1].trim()));
-	}
-
-	public static Builder newBuilder() {
-		return new Builder();
-	}
-
-	public static class Builder implements Serializable {
-
-		private static final long serialVersionUID = 1L;
-
-		public static final IPv4Address DEFAULT_LAST = IPv4Address.of("255.255.255.255");
-		public static final IPv4Address DEFAULT_FIRST = IPv4Address.of("0.0.0.0");
-
-		private final IPv4Address firstAddress;
-		private final IPv4Address lastAddress;
-
-		Builder() {
-			this.firstAddress = DEFAULT_FIRST;
-			this.lastAddress = DEFAULT_LAST;
-		}
-
-		Builder(IPv4Address firstAddress, IPv4Address lastAddress) {
-			this.firstAddress = firstAddress;
-			this.lastAddress = lastAddress;
-		}
-
-		public Builder first(IPv4Address firstAddress) {
-			return new Builder(firstAddress, this.lastAddress);
-		}
-
-		public Builder first(byte[] bigEndianByteArr) {
-			return this.first(IPv4Address.of(bigEndianByteArr));
-		}
-
-		public Builder first(int ip) {
-			return this.first(IPv4Address.of(ip));
-		}
-
-		public Builder first(String ip) {
-			return this.first(IPv4Address.of(ip));
-		}
-
-		public Builder first(Inet4Address address) {
-			return this.first(IPv4Address.of(address));
-		}
-
-		public Builder last(IPv4Address lastAddress) {
-			return new Builder(this.firstAddress, lastAddress);
-		}
-
-		public Builder last(byte[] bigEndianByteArr) {
-			return this.last(IPv4Address.of(bigEndianByteArr));
-		}
-
-		public Builder last(int ip) {
-			return this.last(IPv4Address.of(ip));
-		}
-
-		public Builder last(String ip) {
-			return this.last(IPv4Address.of(ip));
-		}
-
-		public Builder last(Inet4Address address) {
-			return this.last(IPv4Address.of(address));
-		}
-
-		public IPv4Range build() {
-			return new IPv4Range(this.firstAddress, this.lastAddress);
-		}
-
-		@Override
-		public int hashCode() {
-			int prime = 31;
-			int result = 1;
-			result = prime * result + ((this.firstAddress == null) ? 0 : this.firstAddress.hashCode());
-			result = prime * result + ((this.lastAddress == null) ? 0 : this.lastAddress.hashCode());
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (getClass() != obj.getClass()) {
-				return false;
-			}
-			Builder other = (Builder) obj;
-			if (this.firstAddress == null) {
-				if (other.firstAddress != null) {
-					return false;
-				}
-			} else if (!this.firstAddress.equals(other.firstAddress)) {
-				return false;
-			}
-			if (this.lastAddress == null) {
-				if (other.lastAddress != null) {
-					return false;
-				}
-			} else if (!this.lastAddress.equals(other.lastAddress)) {
-				return false;
-			}
-			return true;
-		}
-
-		@Override
-		public String toString() {
-			return String.format("Ip4Range.Builder [firstAddress=%s, lastAddress=%s]", this.firstAddress,
-					this.lastAddress);
-		}
-
 	}
 
 	final IPv4Address firstAddress;

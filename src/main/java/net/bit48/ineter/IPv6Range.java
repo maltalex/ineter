@@ -7,7 +7,6 @@
  */
 package net.bit48.ineter;
 
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.Inet6Address;
 import java.util.ArrayList;
@@ -24,114 +23,21 @@ public class IPv6Range extends IPRange<IPv6Address> {
 		return new IPv6Range(firstAddress, lastAddress);
 	}
 
+	public static IPv6Range of(String firstAddress, String lastAddress) {
+		return new IPv6Range(IPv6Address.of(firstAddress), IPv6Address.of(lastAddress));
+	}
+
+	public static IPv6Range of(byte[] firstAddress, byte[] lastAddress) {
+		return new IPv6Range(IPv6Address.of(firstAddress), IPv6Address.of(lastAddress));
+	}
+
+	public static IPv6Range of(Inet6Address firstAddress, Inet6Address lastAddress) {
+		return new IPv6Range(IPv6Address.of(firstAddress), IPv6Address.of(lastAddress));
+	}
+
 	public static IPv6Range between(String between) {
 		String[] parts = between.split("-");
 		return IPv6Range.of(IPv6Address.of(parts[0].trim()), IPv6Address.of(parts[1].trim()));
-	}
-
-	public static Builder newBuilder() {
-		return new Builder();
-	}
-
-	public static class Builder implements Serializable {
-
-		private static final long serialVersionUID = 1L;
-		public static final IPv6Address DEFAULT_LAST = IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff");
-		public static final IPv6Address DEFAULT_FIRST = IPv6Address.of("::");
-
-		private final IPv6Address firstAddress;
-		private final IPv6Address lastAddress;
-
-		Builder() {
-			this.firstAddress = DEFAULT_FIRST;
-			this.lastAddress = DEFAULT_LAST;
-		}
-
-		Builder(IPv6Address firstAddress, IPv6Address lastAddress) {
-			this.firstAddress = firstAddress;
-			this.lastAddress = lastAddress;
-		}
-
-		public Builder first(IPv6Address firstAddress) {
-			return new Builder(firstAddress, this.lastAddress);
-		}
-
-		public Builder first(byte[] bigEndianByteArr) {
-			return this.first(IPv6Address.of(bigEndianByteArr));
-		}
-
-		public Builder first(String ip) {
-			return this.first(IPv6Address.of(ip));
-		}
-
-		public Builder first(Inet6Address address) {
-			return this.first(IPv6Address.of(address));
-		}
-
-		public Builder last(IPv6Address lastAddress) {
-			return new Builder(this.firstAddress, lastAddress);
-		}
-
-		public Builder last(byte[] bigEndianByteArr) {
-			return this.last(IPv6Address.of(bigEndianByteArr));
-		}
-
-		public Builder last(String ip) {
-			return this.last(IPv6Address.of(ip));
-		}
-
-		public Builder last(Inet6Address address) {
-			return this.last(IPv6Address.of(address));
-		}
-
-		public IPv6Range build() {
-			return new IPv6Range(this.firstAddress, this.lastAddress);
-		}
-
-		@Override
-		public int hashCode() {
-			int prime = 31;
-			int result = 1;
-			result = prime * result + ((this.firstAddress == null) ? 0 : this.firstAddress.hashCode());
-			result = prime * result + ((this.lastAddress == null) ? 0 : this.lastAddress.hashCode());
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (getClass() != obj.getClass()) {
-				return false;
-			}
-			Builder other = (Builder) obj;
-			if (this.firstAddress == null) {
-				if (other.firstAddress != null) {
-					return false;
-				}
-			} else if (!this.firstAddress.equals(other.firstAddress)) {
-				return false;
-			}
-			if (this.lastAddress == null) {
-				if (other.lastAddress != null) {
-					return false;
-				}
-			} else if (!this.lastAddress.equals(other.lastAddress)) {
-				return false;
-			}
-			return true;
-		}
-
-		@Override
-		public String toString() {
-			return String.format("Ip6Range.Builder [firstAddress=%s, lastAddress=%s]", this.firstAddress,
-					this.lastAddress);
-		}
-
 	}
 
 	final IPv6Address firstAddress;

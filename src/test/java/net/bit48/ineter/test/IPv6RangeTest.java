@@ -109,8 +109,8 @@ public class IPv6RangeTest {
 	@Test
 	void iterationOrder() {
 		ArrayList<IPv6Address> itemList = new ArrayList<>();
-		IPv6Range.newBuilder().first("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ff00")
-				.last("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff").build().iterator().forEachRemaining(itemList::add);
+		IPv6Range.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ff00", "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff").iterator()
+				.forEachRemaining(itemList::add);
 
 		assertEquals(itemList.size(), 256);
 		assertEquals(itemList.get(0), IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ff00"));
@@ -127,7 +127,7 @@ public class IPv6RangeTest {
 
 	@Test
 	void iterationLastElement() {
-		Iterator<IPv6Address> i = IPv6Range.newBuilder().first("1234::").last("1234::").build().iterator();
+		Iterator<IPv6Address> i = IPv6Range.of("1234::", "1234::").iterator();
 		assertTrue(i.hasNext());
 		assertEquals(i.next(), IPv6Address.of("1234::"));
 		assertThrows(NoSuchElementException.class, () -> i.next());
@@ -135,7 +135,7 @@ public class IPv6RangeTest {
 
 	@Test
 	void iterationRemove() {
-		Iterator<IPv6Address> i = IPv6Range.newBuilder().first("1234::").last("1234::").build().iterator();
+		Iterator<IPv6Address> i = IPv6Range.of("1234::", "1234::").iterator();
 		assertThrows(UnsupportedOperationException.class, () -> i.remove());
 	}
 
