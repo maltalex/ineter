@@ -125,7 +125,7 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 
 	@Override
 	public String toString() {
-		return String.format("%s/%s", super.firstAddress, this.networkBitCount);
+		return String.format("%s/%s", super.firstAddress, Integer.toString(this.networkBitCount));
 	}
 
 	@Override
