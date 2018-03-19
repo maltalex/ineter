@@ -7,13 +7,16 @@
  */
 package net.bit48.ineter;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-public abstract class IPAddress {
+public abstract class IPAddress implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	public static IPAddress of(byte[] bigEndianByteArr) {
 		if (bigEndianByteArr.length == 4) {

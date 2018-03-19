@@ -7,10 +7,9 @@
  */
 package net.bit48.ineter;
 
-import java.io.Serializable;
 import java.net.Inet4Address;
 
-public class IPv4Address extends IPAddress implements Comparable<IPv4Address>, Serializable {
+public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 
 	public static enum IPv4KnownRange {
 

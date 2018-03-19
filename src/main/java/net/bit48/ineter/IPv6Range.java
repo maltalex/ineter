@@ -18,6 +18,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class IPv6Range extends IPRange<IPv6Address> {
 
+	private static final long serialVersionUID = 1L;
+
 	public static IPv6Range of(IPv6Address firstAddress, IPv6Address lastAddress) {
 		return new IPv6Range(firstAddress, lastAddress);
 	}
@@ -132,7 +134,6 @@ public class IPv6Range extends IPRange<IPv6Address> {
 
 	}
 
-	private static final long serialVersionUID = 1L;
 	final IPv6Address firstAddress;
 	final IPv6Address lastAddress;
 

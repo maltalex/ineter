@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
-public abstract class IPRange<T extends IPAddress & Comparable<T>> implements Serializable, Iterable<T> {
+public abstract class IPRange<T extends IPAddress & Comparable<T>> implements Iterable<T>, Serializable {
 
 	private static final long serialVersionUID = 1L;
 

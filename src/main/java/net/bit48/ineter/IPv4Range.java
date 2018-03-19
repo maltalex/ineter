@@ -17,6 +17,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class IPv4Range extends IPRange<IPv4Address> {
 
+	private static final long serialVersionUID = 1L;
+
 	public static IPv4Range of(IPv4Address firstAddress, IPv4Address lastAddress) {
 		return new IPv4Range(firstAddress, lastAddress);
 	}
@@ -33,6 +35,7 @@ public class IPv4Range extends IPRange<IPv4Address> {
 	public static class Builder implements Serializable {
 
 		private static final long serialVersionUID = 1L;
+
 		public static final IPv4Address DEFAULT_LAST = IPv4Address.of("255.255.255.255");
 		public static final IPv4Address DEFAULT_FIRST = IPv4Address.of("0.0.0.0");
 
@@ -139,7 +142,6 @@ public class IPv4Range extends IPRange<IPv4Address> {
 
 	}
 
-	private static final long serialVersionUID = 1L;
 	final IPv4Address firstAddress;
 	final IPv4Address lastAddress;
 

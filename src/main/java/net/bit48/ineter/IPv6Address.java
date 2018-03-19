@@ -7,10 +7,9 @@
  */
 package net.bit48.ineter;
 
-import java.io.Serializable;
 import java.net.Inet6Address;
 
-public class IPv6Address extends IPAddress implements Comparable<IPv6Address>, Serializable {
+public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 
 	public static enum IPv6KnownRange {
 
@@ -177,6 +176,8 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address>, S
 					| LongByte.BYTE_H.expand(bigEndianByteArr[offset + 7]);
 		}
 	}
+
+	private static final long serialVersionUID = 1L;
 
 	public static IPv6Address of(long upper, long lower) {
 		return new IPv6Address(upper, lower);
@@ -363,8 +364,6 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address>, S
 		}
 		return (a + Long.MIN_VALUE) < (b + Long.MIN_VALUE) ? -1 : 1;
 	}
-
-	private static final long serialVersionUID = 1L;
 
 	// Instance variables and methods
 
