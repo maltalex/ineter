@@ -23,7 +23,7 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 		// @formatter:on
 
 		public static IPv4SubnetMask fromMaskLen(byte maskLen) {
-			if (maskLen >= 0 && maskLen <= 32) {
+			if (maskLen >= 0 && maskLen <= IPv4Address.ADDRESS_BITS) {
 				return IPv4SubnetMask.values()[maskLen];
 			}
 			throw new IllegalArgumentException("The mask length must be between 0 and 32");
@@ -67,7 +67,6 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 	}
 
 	private static final long serialVersionUID = 1L;
-	private static final byte BITS = 32;
 
 	public static IPv4Subnet of(String cidr) {
 		String[] cidrSplit = cidr.split("/");
@@ -125,7 +124,7 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 
 	@Override
 	public String toString() {
-		return String.format("%s/%s", super.firstAddress, Integer.toString(this.networkBitCount));
+		return String.format("%s/%d", super.firstAddress, this.networkBitCount);
 	}
 
 	@Override
@@ -140,7 +139,7 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 
 	@Override
 	public int getHostBitCount() {
-		return (BITS - this.networkBitCount);
+		return (IPv4Address.ADDRESS_BITS - this.networkBitCount);
 	}
 
 	@Override

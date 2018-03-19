@@ -31,7 +31,7 @@ public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address> {
 		//@formatter:on
 
 		public static IPv6SubnetMask fromMaskLen(int maskLen) {
-			if (maskLen >= 0 && maskLen <= 128) {
+			if (maskLen >= 0 && maskLen <= IPv6Address.ADDRESS_BITS) {
 				return IPv6SubnetMask.values()[maskLen];
 			}
 			throw new IllegalArgumentException("The mask length must be between 0 and 128");
@@ -66,7 +66,6 @@ public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address> {
 	}
 
 	private static final long serialVersionUID = 1L;
-	private static final int BITS = 128;
 
 	public static IPv6Subnet of(String cidr) {
 		String[] cidrSplit = cidr.split("/");
@@ -131,7 +130,7 @@ public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address> {
 
 	@Override
 	public int getHostBitCount() {
-		return BITS - this.networkBitCount;
+		return IPv6Address.ADDRESS_BITS - this.networkBitCount;
 	}
 
 	@Override

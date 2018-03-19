@@ -103,17 +103,19 @@ public class IPv6Range extends IPRange<IPv6Address> {
 
 	int numberOfTrailingOnes(IPv6Address a) {
 		long notLower = ~a.lower;
-		return (notLower == 0) ? 64 + Long.numberOfTrailingZeros(~a.upper) : Long.numberOfTrailingZeros(notLower);
+		return (notLower == 0) ? IPv6Address.HOLDER_BITS + Long.numberOfTrailingZeros(~a.upper)
+				: Long.numberOfTrailingZeros(notLower);
 	}
 
 	int numberOfTrailingZeros(IPv6Address a) {
-		return (a.lower == 0) ? 64 + Long.numberOfTrailingZeros(a.upper) : Long.numberOfTrailingZeros(a.lower);
+		return (a.lower == 0) ? IPv6Address.HOLDER_BITS + Long.numberOfTrailingZeros(a.upper)
+				: Long.numberOfTrailingZeros(a.lower);
 	}
 
 	int numberOfLeadingEq(IPv6Address a, IPv6Address b) {
 		long upperXOR = a.upper ^ b.upper;
 		if (upperXOR == 0) {
-			return 64 + Long.numberOfLeadingZeros(a.lower ^ b.lower);
+			return IPv6Address.HOLDER_BITS + Long.numberOfLeadingZeros(a.lower ^ b.lower);
 		}
 		return Long.numberOfLeadingZeros(upperXOR);
 	}
@@ -121,13 +123,13 @@ public class IPv6Range extends IPRange<IPv6Address> {
 	IPv6Subnet maxSubnetInRange(IPv6Address addr) {
 		int addrHostBits = numberOfTrailingZeros(addr);
 		int networkBitsEq = numberOfLeadingEq(this.lastAddress, addr);
-		int hostBitsMax = 128 - networkBitsEq;
+		int hostBitsMax = IPv6Address.ADDRESS_BITS - networkBitsEq;
 		if (numberOfTrailingOnes(this.lastAddress) < hostBitsMax) {
 			hostBitsMax--;
 		}
 
 		int hostBits = Math.min(addrHostBits, hostBitsMax);
-		return IPv6Subnet.of(addr, 128 - hostBits);
+		return IPv6Subnet.of(addr, IPv6Address.ADDRESS_BITS - hostBits);
 	}
 
 	@Override

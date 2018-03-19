@@ -177,6 +177,11 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 		}
 	}
 
+	public static final int ADDRESS_BITS = 128;
+	public static final int ADDRESS_BYTES = 16;
+	public static final int ADDRESS_SHORTS = 8;
+	public static final int HOLDER_BITS = 64;
+
 	private static final long serialVersionUID = 1L;
 
 	public static IPv6Address of(long upper, long lower) {
@@ -187,7 +192,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 		if (bigEndianByteArr == null) {
 			throw new NullPointerException();
 		}
-		if (bigEndianByteArr.length != 16) {
+		if (bigEndianByteArr.length != ADDRESS_BYTES) {
 			throw new IllegalArgumentException("The given array must be 16 bytes long");
 		}
 	}
@@ -347,7 +352,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 		}
 
 		// 5. Check total number of parts
-		if (partCount > 8 || (partCount < 8 && afterDoubleSemicolonIndex == last + 2)) {
+		if (partCount > ADDRESS_SHORTS || (partCount < ADDRESS_SHORTS && afterDoubleSemicolonIndex == last + 2)) {
 			throw new IllegalArgumentException(String.format("Invalid number of parts. Expected 8, got %d", partCount));
 		}
 		return zone == null ? new IPv6Address(upperAccumulator, lowerAccumulator)

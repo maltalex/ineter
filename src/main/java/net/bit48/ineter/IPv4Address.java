@@ -115,6 +115,8 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 		}
 	}
 
+	public static final int ADDRESS_BITS = 32;
+
 	private static final long serialVersionUID = 1L;
 
 	public static IPv4Address of(byte[] bigEndianByteArr) {

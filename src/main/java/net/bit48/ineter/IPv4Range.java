@@ -103,7 +103,7 @@ public class IPv4Range extends IPRange<IPv4Address> {
 	IPv4Subnet maxSubnetInRange(IPv4Address addr) {
 		int addrHostBits = Integer.numberOfTrailingZeros(addr.toInt());
 		int networkBitsEq = Integer.numberOfLeadingZeros(this.lastAddress.toInt() ^ addr.toInt());
-		int hostBitsMax = 32 - networkBitsEq;
+		int hostBitsMax = IPv4Address.ADDRESS_BITS - networkBitsEq;
 		if (Integer.numberOfTrailingZeros(~this.lastAddress.toInt()) < hostBitsMax) {
 			hostBitsMax--;
 		}
