@@ -14,6 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigInteger;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -34,6 +37,41 @@ import net.bit48.ineter.IPv6Subnet;
 
 @RunWith(JUnitPlatform.class)
 public class IPv6RangeTest {
+
+	@Test
+	void ofAddress() {
+		IPv6Range range = IPv6Range.of(IPv6Address.of("::1"), IPv6Address.of("1::"));
+		assertTrue(range.getFirst().equals(IPv6Address.of("::1")));
+		assertTrue(range.getLast().equals(IPv6Address.of("1::")));
+	}
+
+	@Test
+	void ofString() {
+		IPv6Range range = IPv6Range.of("::1", "1::");
+		assertTrue(range.getFirst().equals(IPv6Address.of("::1")));
+		assertTrue(range.getLast().equals(IPv6Address.of("1::")));
+	}
+
+	@Test
+	void ofInetAddress() throws UnknownHostException {
+		IPv6Range range = IPv6Range.of((Inet6Address) InetAddress.getByName("::1"),
+				(Inet6Address) InetAddress.getByName("1::"));
+		assertTrue(range.getFirst().equals(IPv6Address.of("::1")));
+		assertTrue(range.getLast().equals(IPv6Address.of("1::")));
+	}
+
+	@Test
+	void ofArray() {
+		IPv6Range range = IPv6Range.of(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+				new byte[] { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+		assertTrue(range.getFirst().equals(IPv6Address.of("::1")));
+		assertTrue(range.getLast().equals(IPv6Address.of("1::")));
+	}
+
+	@Test
+	void invalidRange() {
+		assertThrows(IllegalArgumentException.class, () -> IPv6Range.of("1::", "::1"));
+	}
 
 	@Test
 	void between() {
@@ -115,6 +153,25 @@ public class IPv6RangeTest {
 		assertEquals(itemList.size(), 256);
 		assertEquals(itemList.get(0), IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ff00"));
 		assertEquals(itemList.get(itemList.size() - 1), IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"));
+
+		ListIterator<IPv6Address> listIterator = itemList.listIterator();
+		IPv6Address previous = listIterator.next();
+		while (listIterator.hasNext()) {
+			IPv6Address current = listIterator.next();
+			assertTrue(current.compareTo(previous) > 0);
+			previous = current;
+		}
+	}
+
+	@Test
+	void iterationOrderSkipEdges() {
+		ArrayList<IPv6Address> itemList = new ArrayList<>();
+		IPv6Range.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ff00", "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff")
+				.iterator(true).forEachRemaining(itemList::add);
+
+		assertEquals(itemList.size(), 254);
+		assertEquals(itemList.get(0), IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ff01"));
+		assertEquals(itemList.get(itemList.size() - 1), IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffe"));
 
 		ListIterator<IPv6Address> listIterator = itemList.listIterator();
 		IPv6Address previous = listIterator.next();

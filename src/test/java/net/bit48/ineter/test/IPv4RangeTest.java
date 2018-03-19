@@ -13,6 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -33,6 +36,40 @@ import net.bit48.ineter.IPv4Subnet;
 
 @RunWith(JUnitPlatform.class)
 public class IPv4RangeTest {
+
+	@Test
+	void ofAddress() {
+		IPv4Range range = IPv4Range.of(IPv4Address.of("1.2.3.4"), IPv4Address.of("5.4.3.2"));
+		assertTrue(range.getFirst().equals(IPv4Address.of("1.2.3.4")));
+		assertTrue(range.getLast().equals(IPv4Address.of("5.4.3.2")));
+	}
+
+	@Test
+	void ofString() {
+		IPv4Range range = IPv4Range.of("1.2.3.4", "5.4.3.2");
+		assertTrue(range.getFirst().equals(IPv4Address.of("1.2.3.4")));
+		assertTrue(range.getLast().equals(IPv4Address.of("5.4.3.2")));
+	}
+
+	@Test
+	void ofInetAddress() throws UnknownHostException {
+		IPv4Range range = IPv4Range.of((Inet4Address) InetAddress.getByName("1.2.3.4"),
+				(Inet4Address) InetAddress.getByName("5.4.3.2"));
+		assertTrue(range.getFirst().equals(IPv4Address.of("1.2.3.4")));
+		assertTrue(range.getLast().equals(IPv4Address.of("5.4.3.2")));
+	}
+
+	@Test
+	void ofArray() {
+		IPv4Range range = IPv4Range.of(new byte[] { 1, 2, 3, 4 }, new byte[] { 5, 4, 3, 2 });
+		assertTrue(range.getFirst().equals(IPv4Address.of("1.2.3.4")));
+		assertTrue(range.getLast().equals(IPv4Address.of("5.4.3.2")));
+	}
+
+	@Test
+	void invalidRange() {
+		assertThrows(IllegalArgumentException.class, () -> IPv4Range.of("5.4.3.2", "1.2.3.4"));
+	}
 
 	@Test
 	void between() {
@@ -122,6 +159,24 @@ public class IPv4RangeTest {
 		assertEquals(itemList.size(), 258);
 		assertEquals(itemList.get(0), IPv4Address.of("127.255.255.0"));
 		assertEquals(itemList.get(itemList.size() - 1), IPv4Address.of("128.0.0.1"));
+
+		ListIterator<IPv4Address> listIterator = itemList.listIterator();
+		IPv4Address previous = listIterator.next();
+		while (listIterator.hasNext()) {
+			IPv4Address current = listIterator.next();
+			assertTrue(current.compareTo(previous) > 0);
+			previous = current;
+		}
+	}
+
+	@Test
+	void iterationOrderSkipEdges() {
+		ArrayList<IPv4Address> itemList = new ArrayList<>();
+		IPv4Range.of("127.255.255.0", "128.0.0.1").iterator(true).forEachRemaining(itemList::add);
+
+		assertEquals(itemList.size(), 256);
+		assertEquals(itemList.get(0), IPv4Address.of("127.255.255.1"));
+		assertEquals(itemList.get(itemList.size() - 1), IPv4Address.of("128.0.0.0"));
 
 		ListIterator<IPv4Address> listIterator = itemList.listIterator();
 		IPv4Address previous = listIterator.next();
