@@ -122,7 +122,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 	/**
 	 * Enum for extracting 16-bit shorts from 64-bit longs
 	 */
-	static enum LongShort {
+	protected static enum LongShort {
 		SHORT_A(0), SHORT_B(1), SHORT_C(2), SHORT_D(3);
 
 		private final long mask;
@@ -145,7 +145,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 	/**
 	 * Enum for extracting bytes from 64-bit longs
 	 */
-	static enum LongByte {
+	protected static enum LongByte {
 		BYTE_A(0), BYTE_B(1), BYTE_C(2), BYTE_D(3), BYTE_E(4), BYTE_F(5), BYTE_G(6), BYTE_H(7);
 
 		private final long mask;
@@ -191,7 +191,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 		return new IPv6Address(upper, lower);
 	}
 
-	static void verifyArray(byte[] bigEndianByteArr) {
+	protected static void verifyArray(byte[] bigEndianByteArr) {
 		if (bigEndianByteArr == null) {
 			throw new NullPointerException();
 		}
@@ -362,7 +362,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 				: new ZonedIPv6Address(upperAccumulator, lowerAccumulator, zone);
 	}
 
-	private static boolean isHexDigit(char c) {
+	protected static boolean isHexDigit(char c) {
 		return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
 	}
 
@@ -378,7 +378,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 	protected final long upper;
 	protected final long lower;
 
-	IPv6Address(long upper, long lower) {
+	protected IPv6Address(long upper, long lower) {
 		this.upper = upper;
 		this.lower = lower;
 	}

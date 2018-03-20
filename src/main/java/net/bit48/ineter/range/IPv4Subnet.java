@@ -11,7 +11,7 @@ import net.bit48.ineter.base.IPv4Address;
 
 public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 
-	static enum IPv4SubnetMask {
+	protected static enum IPv4SubnetMask {
 
 		// @formatter:off
 		MASK_00, MASK_01, MASK_02, MASK_03,
@@ -72,30 +72,22 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 
 	public static IPv4Subnet of(String cidr) {
 		String[] cidrSplit = cidr.split("/");
-		return new IPv4Subnet(cidrSplit[0], Byte.parseByte(cidrSplit[1]));
+		return new IPv4Subnet(IPv4Address.of(cidrSplit[0]), IPv4SubnetMask.fromMaskLen(Byte.parseByte(cidrSplit[1])));
 	}
 
 	public static IPv4Subnet of(String address, byte maskLen) {
-		return new IPv4Subnet(address, maskLen);
+		return new IPv4Subnet(IPv4Address.of(address), IPv4SubnetMask.fromMaskLen(maskLen));
 	}
 
 	public static IPv4Subnet of(IPv4Address address, byte maskLen) {
-		return new IPv4Subnet(address, maskLen);
+		return new IPv4Subnet(address, IPv4SubnetMask.fromMaskLen(maskLen));
 	}
 
-	final byte networkBitCount;
+	protected final byte networkBitCount;
 
-	IPv4Subnet(IPv4Address address, IPv4SubnetMask mask) {
+	protected IPv4Subnet(IPv4Address address, IPv4SubnetMask mask) {
 		super(mask.and(address), mask.orInverted(address));
 		this.networkBitCount = mask.maskBitCount();
-	}
-
-	IPv4Subnet(IPv4Address address, byte networkBitCount) {
-		this(address, IPv4SubnetMask.fromMaskLen(networkBitCount));
-	}
-
-	IPv4Subnet(String address, byte networkBitCount) {
-		this(IPv4Address.of(address), IPv4SubnetMask.fromMaskLen(networkBitCount));
 	}
 
 	@Override
@@ -141,7 +133,7 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 
 	@Override
 	public int getHostBitCount() {
-		return (IPv4Address.ADDRESS_BITS - this.networkBitCount);
+		return IPv4Address.ADDRESS_BITS - this.networkBitCount;
 	}
 
 	@Override

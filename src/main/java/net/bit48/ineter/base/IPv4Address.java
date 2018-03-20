@@ -98,7 +98,7 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 		}
 	}
 
-	static enum Ip4Octet {
+	protected static enum Ip4Octet {
 		OCTET_A(0), OCTET_B(1), OCTET_C(2), OCTET_D(3);
 
 		private final int mask;
@@ -171,19 +171,19 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 		return of(address.getAddress());
 	}
 
-	static int shiftToInt(int a, int b, int c, int d) {
+	protected static int shiftToInt(int a, int b, int c, int d) {
 		return (a << 24 | b << 16 | c << 8 | d);
 	}
 
-	static int shiftToInt(byte a, byte b, byte c, byte d) {
+	protected static int shiftToInt(byte a, byte b, byte c, byte d) {
 		return shiftToInt(a & 0xff, b & 0xff, c & 0xff, d & 0xff);
 	}
 
 	// Instance variables and methods
 
-	final int ip;
+	protected final int ip;
 
-	IPv4Address(int intIp) {
+	protected IPv4Address(int intIp) {
 		this.ip = intIp;
 	}
 

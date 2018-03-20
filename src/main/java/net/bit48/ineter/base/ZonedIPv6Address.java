@@ -40,9 +40,9 @@ public class ZonedIPv6Address extends IPv6Address {
 		return of(address.getAddress(), address.getScopedInterface().getName());
 	}
 
-	final String zone;
+	protected final String zone;
 
-	ZonedIPv6Address(long upper, long lower, String zone) {
+	protected ZonedIPv6Address(long upper, long lower, String zone) {
 		super(upper, lower);
 		this.zone = zone;
 	}

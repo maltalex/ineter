@@ -41,10 +41,10 @@ public class IPv4Range extends IPRange<IPv4Address> {
 		return IPv4Range.of(IPv4Address.of(parts[0].trim()), IPv4Address.of(parts[1].trim()));
 	}
 
-	final IPv4Address firstAddress;
-	final IPv4Address lastAddress;
+	protected final IPv4Address firstAddress;
+	protected final IPv4Address lastAddress;
 
-	IPv4Range(IPv4Address firstAddress, IPv4Address lastAddress) {
+	protected IPv4Range(IPv4Address firstAddress, IPv4Address lastAddress) {
 		this.firstAddress = firstAddress;
 		this.lastAddress = lastAddress;
 		if (this.firstAddress == null || this.lastAddress == null) {
@@ -102,7 +102,7 @@ public class IPv4Range extends IPRange<IPv4Address> {
 		};
 	}
 
-	IPv4Subnet maxSubnetInRange(IPv4Address addr) {
+	protected IPv4Subnet maxSubnetInRange(IPv4Address addr) {
 		int addrHostBits = Integer.numberOfTrailingZeros(addr.toInt());
 		int networkBitsEq = Integer.numberOfLeadingZeros(this.lastAddress.toInt() ^ addr.toInt());
 		int hostBitsMax = IPv4Address.ADDRESS_BITS - networkBitsEq;
