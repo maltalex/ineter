@@ -30,9 +30,9 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
-import net.bit48.ineter.IPv4Address;
-import net.bit48.ineter.IPv4Range;
-import net.bit48.ineter.IPv4Subnet;
+import net.bit48.ineter.base.IPv4Address;
+import net.bit48.ineter.range.IPv4Range;
+import net.bit48.ineter.range.IPv4Subnet;
 
 @RunWith(JUnitPlatform.class)
 public class IPv4RangeTest {

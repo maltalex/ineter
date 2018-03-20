@@ -27,9 +27,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
-import net.bit48.ineter.IPAddress;
-import net.bit48.ineter.IPv6Address;
-import net.bit48.ineter.ZonedIPv6Address;
+import net.bit48.ineter.base.IPAddress;
+import net.bit48.ineter.base.IPv6Address;
+import net.bit48.ineter.base.ZonedIPv6Address;
 
 @RunWith(JUnitPlatform.class)
 public class IPv6AddressTest {

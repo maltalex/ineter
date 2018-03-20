@@ -24,7 +24,7 @@ import org.openjdk.jmh.annotations.State;
 
 import com.google.common.net.InetAddresses;
 
-import net.bit48.ineter.IPv6Address;
+import net.bit48.ineter.base.IPv6Address;
 import net.bit48.ineter.test.IPv6AddressParseTest;
 
 @Measurement(iterations = 5)

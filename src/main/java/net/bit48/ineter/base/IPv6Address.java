@@ -5,9 +5,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package net.bit48.ineter;
+package net.bit48.ineter.base;
 
 import java.net.Inet6Address;
+
+import net.bit48.ineter.range.IPv6Range;
+import net.bit48.ineter.range.IPv6Subnet;
 
 public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 
@@ -372,8 +375,8 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 
 	// Instance variables and methods
 
-	final long upper;
-	final long lower;
+	protected final long upper;
+	protected final long lower;
 
 	IPv6Address(long upper, long lower) {
 		this.upper = upper;
@@ -408,6 +411,14 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 			return false;
 		}
 		return true;
+	}
+
+	public long getUpper() {
+		return this.upper;
+	}
+
+	public long getLower() {
+		return this.lower;
 	}
 
 	@Override

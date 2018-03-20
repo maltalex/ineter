@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package net.bit48.ineter;
+package net.bit48.ineter.range;
 
 import java.net.Inet4Address;
 import java.util.ArrayList;
@@ -13,6 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
+
+import net.bit48.ineter.base.IPv4Address;
 
 public class IPv4Range extends IPRange<IPv4Address> {
 
@@ -93,7 +95,7 @@ public class IPv4Range extends IPRange<IPv4Address> {
 			public IPv4Address next() {
 				long tempNext;
 				if ((tempNext = this.next.getAndIncrement()) <= this.last) {
-					return new IPv4Address((int) tempNext);
+					return IPv4Address.of((int) tempNext);
 				}
 				throw new NoSuchElementException();
 			}

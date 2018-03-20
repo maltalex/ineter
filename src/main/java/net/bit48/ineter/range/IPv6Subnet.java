@@ -5,7 +5,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package net.bit48.ineter;
+package net.bit48.ineter.range;
+
+import net.bit48.ineter.base.IPv6Address;
 
 public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address> {
 
@@ -53,11 +55,11 @@ public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address> {
 		}
 
 		public IPv6Address and(IPv6Address ip) {
-			return IPv6Address.of(ip.upper & this.maskUpper, ip.lower & this.maskLower);
+			return IPv6Address.of(ip.getUpper() & this.maskUpper, ip.getLower() & this.maskLower);
 		}
 
 		public IPv6Address orInverted(IPv6Address ip) {
-			return IPv6Address.of(ip.upper | ~this.maskUpper, ip.lower | ~this.maskLower);
+			return IPv6Address.of(ip.getUpper() | ~this.maskUpper, ip.getLower() | ~this.maskLower);
 		}
 
 		public IPv6Address toAddress() {

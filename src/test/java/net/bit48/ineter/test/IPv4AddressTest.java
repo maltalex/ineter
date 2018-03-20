@@ -25,7 +25,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
-import net.bit48.ineter.IPv4Address;
+import net.bit48.ineter.base.IPv4Address;
 
 @RunWith(JUnitPlatform.class)
 public class IPv4AddressTest {

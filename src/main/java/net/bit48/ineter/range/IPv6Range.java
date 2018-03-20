@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package net.bit48.ineter;
+package net.bit48.ineter.range;
 
 import java.math.BigInteger;
 import java.net.Inet6Address;
@@ -14,6 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
+
+import net.bit48.ineter.base.IPv6Address;
 
 public class IPv6Range extends IPRange<IPv6Address> {
 
@@ -102,20 +104,20 @@ public class IPv6Range extends IPRange<IPv6Address> {
 	}
 
 	int numberOfTrailingOnes(IPv6Address a) {
-		long notLower = ~a.lower;
-		return (notLower == 0) ? IPv6Address.HOLDER_BITS + Long.numberOfTrailingZeros(~a.upper)
+		long notLower = ~a.getLower();
+		return (notLower == 0) ? IPv6Address.HOLDER_BITS + Long.numberOfTrailingZeros(~a.getUpper())
 				: Long.numberOfTrailingZeros(notLower);
 	}
 
 	int numberOfTrailingZeros(IPv6Address a) {
-		return (a.lower == 0) ? IPv6Address.HOLDER_BITS + Long.numberOfTrailingZeros(a.upper)
-				: Long.numberOfTrailingZeros(a.lower);
+		return (a.getLower() == 0) ? IPv6Address.HOLDER_BITS + Long.numberOfTrailingZeros(a.getUpper())
+				: Long.numberOfTrailingZeros(a.getLower());
 	}
 
 	int numberOfLeadingEq(IPv6Address a, IPv6Address b) {
-		long upperXOR = a.upper ^ b.upper;
+		long upperXOR = a.getUpper() ^ b.getUpper();
 		if (upperXOR == 0) {
-			return IPv6Address.HOLDER_BITS + Long.numberOfLeadingZeros(a.lower ^ b.lower);
+			return IPv6Address.HOLDER_BITS + Long.numberOfLeadingZeros(a.getLower() ^ b.getLower());
 		}
 		return Long.numberOfLeadingZeros(upperXOR);
 	}

@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import net.bit48.ineter.IPv4Address;
+import net.bit48.ineter.base.IPv4Address;
 
 public class IPv4KnownAddressesTest {
 

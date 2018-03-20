@@ -31,9 +31,9 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
-import net.bit48.ineter.IPv6Address;
-import net.bit48.ineter.IPv6Range;
-import net.bit48.ineter.IPv6Subnet;
+import net.bit48.ineter.base.IPv6Address;
+import net.bit48.ineter.range.IPv6Range;
+import net.bit48.ineter.range.IPv6Subnet;
 
 @RunWith(JUnitPlatform.class)
 public class IPv6RangeTest {

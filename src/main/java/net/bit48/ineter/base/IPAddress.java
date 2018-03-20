@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package net.bit48.ineter;
+package net.bit48.ineter.base;
 
 import java.io.Serializable;
 import java.math.BigInteger;

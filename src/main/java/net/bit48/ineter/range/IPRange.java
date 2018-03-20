@@ -5,11 +5,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package net.bit48.ineter;
+package net.bit48.ineter.range;
 
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
+
+import net.bit48.ineter.base.IPAddress;
 
 public abstract class IPRange<T extends IPAddress & Comparable<T>> implements Iterable<T>, Serializable {
 

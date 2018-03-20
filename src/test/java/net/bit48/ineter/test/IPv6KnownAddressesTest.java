@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import net.bit48.ineter.IPv6Address;
+import net.bit48.ineter.base.IPv6Address;
 
 public class IPv6KnownAddressesTest {
 

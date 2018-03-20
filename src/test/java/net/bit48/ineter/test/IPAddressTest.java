@@ -18,9 +18,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
-import net.bit48.ineter.IPAddress;
-import net.bit48.ineter.IPv4Address;
-import net.bit48.ineter.IPv6Address;
+import net.bit48.ineter.base.IPAddress;
+import net.bit48.ineter.base.IPv4Address;
+import net.bit48.ineter.base.IPv6Address;
 
 @RunWith(JUnitPlatform.class)
 public class IPAddressTest {
