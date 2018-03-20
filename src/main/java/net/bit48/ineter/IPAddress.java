@@ -72,7 +72,7 @@ public abstract class IPAddress implements Serializable {
 
 	/**
 	 * Returns either an IPv4 or an IPv6 address built from an InetAddress
-	 * 
+	 *
 	 * @param address
 	 *            to copy from
 	 * @return IPv4Address or IPv6Address instance
@@ -85,48 +85,146 @@ public abstract class IPAddress implements Serializable {
 		return IPv4Address.of((Inet4Address) address);
 	}
 
+	/**
+	 * Checks whether the given address is a 6to4 address
+	 *
+	 * @return true if the give address is a 6to4 address, false otherwise
+	 */
 	public abstract boolean is6To4();
 
+	/**
+	 * Martian addresses are reserved and private addresses that should not
+	 * appear on the public internet
+	 *
+	 * @return true if the address is martian, false otherwise
+	 */
 	public abstract boolean isMartian();
 
+	/**
+	 * Checks whether the address is a loopback address
+	 *
+	 * @return true if the address is for a loopback, false otherwise
+	 */
 	public abstract boolean isLoopback();
 
+	/**
+	 * Checks whether the address is part of a range reserved for multicast
+	 *
+	 * @return true if the address is reserved for multicast, false otherwise
+	 */
 	public abstract boolean isMulticast();
 
+	/**
+	 * Checks whether the address is private
+	 *
+	 * @return true if the address is private, false otherwise
+	 */
 	public abstract boolean isPrivate();
 
+	/**
+	 * Checks whether the address part of a reserved range
+	 *
+	 * @return true if the address is part of a reserved range, false otherwise
+	 */
 	public abstract boolean isReserved();
 
+	/**
+	 * Checks whether the address is "unspecified"
+	 *
+	 * @return true if the address is "unspecified", false otherwise
+	 */
 	public abstract boolean isUnspecified();
 
+	/**
+	 * Checks whether the address is link-local
+	 *
+	 * @return true if the address is link-local, false otherwise
+	 */
 	public abstract boolean isLinkLocal();
 
+	/**
+	 * Returns the version of the IP address
+	 *
+	 * @return 4 for IPv4, 6 for IPv6
+	 */
 	public abstract int version();
 
+	/**
+	 * Returns the following address, with wraparound
+	 *
+	 * @return the address following this one
+	 */
 	public abstract IPAddress next();
 
+	/**
+	 * Return an address larger than the current one by n, with wraparound
+	 *
+	 * @param n
+	 * @return an address larger by n
+	 */
 	public abstract IPAddress plus(int n);
 
+	/**
+	 * Returns the previous address, with wraparound
+	 *
+	 * @return the address before this one
+	 */
 	public abstract IPAddress previous();
 
+	/**
+	 * Return an address smaller than the current one by n, with wraparound
+	 *
+	 * @param n
+	 * @return an address smaller by n
+	 */
 	public abstract IPAddress minus(int n);
 
+	/**
+	 * The address as an array of bytes, with the highest byte first
+	 *
+	 * @return big-endian byte array
+	 */
 	public abstract byte[] toBigEndianArray();
 
+	/**
+	 * The address as an array of bytes, with the highest byte last
+	 *
+	 * @return little-endian byte array
+	 */
 	public abstract byte[] toLittleEndianArray();
 
+	/**
+	 * The address as an array of bytes, with the highest byte first
+	 *
+	 * @return big-endian byte array
+	 */
 	public byte[] toArray() {
 		return toBigEndianArray();
 	}
 
+	/**
+	 * The address as a BigInteger, unsigned
+	 *
+	 * @return The address as an BigInteger
+	 */
 	public BigInteger toBigInteger() {
 		return new BigInteger(1, toBigEndianArray());
 	}
 
+	/**
+	 * The address as a BigInteger, signed
+	 *
+	 * @return The address as an BigInteger
+	 */
 	public BigInteger toSignedBigInteger() {
 		return new BigInteger(toBigEndianArray());
 	}
 
+	/**
+	 * The address as an InetAddress
+	 *
+	 * @return The address as an InetAddress
+	 */
 	public InetAddress toInetAddress() {
 		try {
 			return InetAddress.getByAddress(toBigEndianArray());

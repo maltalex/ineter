@@ -15,20 +15,20 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 
 		//@formatter:off
 		/**
-		 * ::/128
+		 * ::/128 - RFC 4291
 		 */
 		UNSPECIFIED(IPv6Subnet.of("::/128")),
 		/**
-		 * ::1/128
+		 * ::1/128 - RFC 4291
 		 */
 		LOOPBACK(IPv6Subnet.of("::1/128")),
 
 		/**
-		 * 100::/64
+		 * 100::/64 - RFC 6666
 		 */
 		DISCARD(IPv6Subnet.of("100::/64")),
 		/**
-		 * 2001:10::/28
+		 * 2001:10::/28 - RFC 4843
 		 */
 		ORCHID(IPv6Subnet.of("2001:10::/28")),
 		/**
@@ -36,7 +36,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 		 */
 		ORCHID_2(IPv6Subnet.of("2001:20::/28")),
 		/**
-		 * 2001:db8::/32
+		 * 2001:db8::/32 - RFC 3849
 		 */
 		DOCUMENTATION(IPv6Subnet.of("2001:db8::/32")),
 
@@ -62,41 +62,41 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 		TEREDO(IPv6Subnet.of("2001::/32")),
 
 		/**
-		 * fc00::/7
+		 * fc00::/7 - RFC 4193
 		 */
 		ULA(IPv6Subnet.of("fc00::/7")),
 
 		/**
-		 * ff00::/8
+		 * ff00::/8 - RFC 4291
 		 */
 		MULTICAST(IPv6Subnet.of("ff00::/8")),
 		/**
-		 * ff0e::/16
+		 * ff0e::/16 - RFC 4291
 		 */
 		GLOBAL_MULTICAST(IPv6Subnet.of("ff0e::/16")),
 		/**
-		 * ff05::/16
+		 * ff05::/16 - RFC 4291
 		 */
 		SITE_LOCAL_MULTICAST(IPv6Subnet.of("ff05::/16")),
 		/**
-		 * ff02::/16
+		 * ff02::/16 - RFC 4291
 		 */
 		LINK_LOCAL_MULTICAST(IPv6Subnet.of("ff02::/16")),
 		/**
-		 * ff01::/16
+		 * ff01::/16 - RFC 4291
 		 */
 		INTERFACE_LOCAL_MULTICAST(IPv6Subnet.of("ff01::/16")),
 
 		/**
-		 * 2000::/3
+		 * 2000::/3 - RFC 3587
 		 */
 		GLOBAL_UNICAST(IPv6Subnet.of("2000::/3")),
 		/**
-		 * fe80::/10
+		 * fe80::/10 - RFC 4291
 		 */
 		LINK_LOCAL_UNICAST(IPv6Subnet.of("fe80::/10")),
 		/**
-		 * fec::/10
+		 * fec::/10 - RFC 4291
 		 */
 		SITE_LOCAL_UNICAST_DEPRECATED(IPv6Subnet.of("fec::/10"));
 		//@formatter:on
