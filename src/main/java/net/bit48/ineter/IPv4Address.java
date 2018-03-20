@@ -116,11 +116,22 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 	}
 
 	public static final int ADDRESS_BITS = 32;
+	public static final int ADDRESS_BYTES = 8;
 
 	private static final long serialVersionUID = 1L;
 
 	public static IPv4Address of(byte[] bigEndianByteArr) {
-		return new IPv4Address(bigEndianByteArr);
+		if (bigEndianByteArr == null) {
+			throw new NullPointerException("The given array is null");
+		}
+		if (bigEndianByteArr.length != ADDRESS_BYTES) {
+			throw new IllegalArgumentException(
+					String.format("The array has to be 4 bytes long, the given array is %d bytes long",
+							Integer.valueOf(bigEndianByteArr.length)));
+		}
+
+		return new IPv4Address(
+				shiftToInt(bigEndianByteArr[0], bigEndianByteArr[1], bigEndianByteArr[2], bigEndianByteArr[3]));
 	}
 
 	public static IPv4Address of(int intIp) {
@@ -139,7 +150,7 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 			throw new IllegalArgumentException("Invalid IP address length");
 		}
 		String[] split = ip.split("\\.");
-		if (split.length != 4) {
+		if (split.length != ADDRESS_BYTES) {
 			throw new IllegalArgumentException("IPv4 addresses must have exactly 4 octets");
 		}
 		int a = Integer.parseInt(split[0]), b = Integer.parseInt(split[1]);
@@ -150,33 +161,32 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 			throw new IllegalArgumentException("All octets have to be between 0 and 255");
 		}
 
-		return of(a << 24 | b << 16 | c << 8 | d);
+		return of(shiftToInt(a, b, c, d));
 	}
 
 	public static IPv4Address of(Inet4Address address) {
 		return of(address.getAddress());
 	}
 
+	static int shiftToInt(int a, int b, int c, int d) {
+		return (a << 24 | b << 16 | c << 8 | d);
+	}
+
+	static int shiftToInt(byte a, byte b, byte c, byte d) {
+		return shiftToInt(a & 0xff, b & 0xff, c & 0xff, d & 0xff);
+	}
+
 	// Instance variables and methods
 
 	final int ip;
 
-	IPv4Address(byte[] bigEndianByteArr) {
-		if (bigEndianByteArr == null) {
-			throw new NullPointerException("The given array is null");
-		}
-		if (bigEndianByteArr.length != 4) {
-			throw new IllegalArgumentException(
-					String.format("The array has to be 4 bytes long, the given array is %d bytes long",
-							Integer.valueOf(bigEndianByteArr.length)));
-		}
-
-		this.ip = (bigEndianByteArr[0] & 0xff) << 24 | (bigEndianByteArr[1] & 0xff) << 16
-				| (bigEndianByteArr[2] & 0xff) << 8 | (bigEndianByteArr[3] & 0xff);
-	}
-
 	IPv4Address(int intIp) {
 		this.ip = intIp;
+	}
+
+	@Override
+	public int version() {
+		return 4;
 	}
 
 	@Override
@@ -286,10 +296,6 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 		return (Inet4Address) toInetAddress();
 	}
 
-	public int toInt() {
-		return this.ip;
-	}
-
 	@Override
 	public byte[] toLittleEndianArray() {
 		return new byte[] { Ip4Octet.OCTET_D.isolateAsByte(this.ip), Ip4Octet.OCTET_C.isolateAsByte(this.ip),
@@ -304,12 +310,12 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 				Integer.toString(Ip4Octet.OCTET_D.isolateAsInt(this.ip)));
 	}
 
+	public int toInt() {
+		return this.ip;
+	}
+
 	public long toLong() {
 		return this.ip & 0x00000000ffffffffL;
 	}
 
-	@Override
-	public int version() {
-		return 4;
-	}
 }

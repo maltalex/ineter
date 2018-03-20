@@ -211,7 +211,8 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 
 	public static IPv6Address of(String address) {
 		// This (over-engineered) method parses and validates an IPv6 address in
-		// String form in a single pass (almost) using only primitive types.
+		// String form in a single pass using only primitive types (except the
+		// zone String).
 
 		// The idea is to iterate over the address start to finish, accumulating
 		// the current "part" (i.e. 16 bit piece between colons).
@@ -223,7 +224,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 		// reach the same double colon.
 
 		// According to a JMH benchmark, this method parses randomly generated
-		// addresses, about 50% of which contain a double colon ("::"), about
+		// addresses, half of which contain a double colon ("::"), about
 		// 40% faster than Java's default InetAddress parsing
 
 		// 0. Validate Not null
@@ -286,7 +287,6 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 				// Add to part accumulator
 				partAccumulator = (partAccumulator << 4) | (Character.digit(c, 16) & 0xffff);
 			} else {
-
 				if (c == ':') {
 					// Reached end of current part. Add to accumulator
 					if (partIndex < 4) {
