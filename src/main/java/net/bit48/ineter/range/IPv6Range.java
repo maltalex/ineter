@@ -103,18 +103,18 @@ public class IPv6Range extends IPRange<IPv6Address> {
 		};
 	}
 
-	int numberOfTrailingOnes(IPv6Address a) {
+	protected int numberOfTrailingOnes(IPv6Address a) {
 		long notLower = ~a.getLower();
 		return (notLower == 0) ? IPv6Address.HOLDER_BITS + Long.numberOfTrailingZeros(~a.getUpper())
 				: Long.numberOfTrailingZeros(notLower);
 	}
 
-	int numberOfTrailingZeros(IPv6Address a) {
+	protected int numberOfTrailingZeros(IPv6Address a) {
 		return (a.getLower() == 0) ? IPv6Address.HOLDER_BITS + Long.numberOfTrailingZeros(a.getUpper())
 				: Long.numberOfTrailingZeros(a.getLower());
 	}
 
-	int numberOfLeadingEq(IPv6Address a, IPv6Address b) {
+	protected int numberOfLeadingEq(IPv6Address a, IPv6Address b) {
 		long upperXOR = a.getUpper() ^ b.getUpper();
 		if (upperXOR == 0) {
 			return IPv6Address.HOLDER_BITS + Long.numberOfLeadingZeros(a.getLower() ^ b.getLower());
@@ -122,7 +122,7 @@ public class IPv6Range extends IPRange<IPv6Address> {
 		return Long.numberOfLeadingZeros(upperXOR);
 	}
 
-	IPv6Subnet maxSubnetInRange(IPv6Address addr) {
+	protected IPv6Subnet maxSubnetInRange(IPv6Address addr) {
 		int addrHostBits = numberOfTrailingZeros(addr);
 		int networkBitsEq = numberOfLeadingEq(this.lastAddress, addr);
 		int hostBitsMax = IPv6Address.ADDRESS_BITS - networkBitsEq;
