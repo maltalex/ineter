@@ -87,7 +87,7 @@ public class IPv6AddressTest {
 			fail(e);
 		}
 		try {
-			Inet6Address a = (Inet6Address) InetAddress.getByName("::1%eth0");
+			Inet6Address a = (Inet6Address) InetAddress.getByName("fe80::1%1");
 			IPv6Address.of(a);
 		} catch (UnknownHostException e) {
 			fail(e);
@@ -180,7 +180,7 @@ public class IPv6AddressTest {
 	@Test
 	void inetAddressConstructor() {
 		try {
-			String zonedIp = "1234:0:0:0:0:0:0:4321%eth0";
+			String zonedIp = "1234:0:0:0:0:0:0:4321%1";
 			assertEquals(zonedIp, IPAddress.of(InetAddress.getByName(zonedIp)).toString());
 			assertEquals(IPAddress.of(InetAddress.getByName("1234::4321")).toString(), "1234:0:0:0:0:0:0:4321");
 		} catch (UnknownHostException e) {

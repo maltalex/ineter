@@ -206,7 +206,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 	}
 
 	public static IPv6Address of(Inet6Address address) {
-		if (address.getScopedInterface() == null) {
+		if (address.getScopeId() == 0 && address.getScopedInterface() == null) {
 			return of(address.getAddress());
 		}
 		return ZonedIPv6Address.of(address);

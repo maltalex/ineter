@@ -37,7 +37,10 @@ public class ZonedIPv6Address extends IPv6Address {
 	}
 
 	public static ZonedIPv6Address of(Inet6Address address) {
-		return of(address.getAddress(), address.getScopedInterface().getName());
+		if (address.getScopedInterface() != null) {
+			return of(address.getAddress(), address.getScopedInterface().getName());
+		}
+		return of(address.getAddress(), Integer.toString(address.getScopeId()));
 	}
 
 	protected final String zone;
