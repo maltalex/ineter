@@ -5,6 +5,7 @@ plugins{
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'jacoco'
 
 sourceCompatibility = 1.8
 
@@ -32,3 +33,12 @@ test {
 task wrapper(type: Wrapper) {
    gradleVersion = '4.6'
 }
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
+
+check.dependsOn jacocoTestReport
