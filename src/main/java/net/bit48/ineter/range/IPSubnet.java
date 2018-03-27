@@ -7,9 +7,11 @@
  */
 package net.bit48.ineter.range;
 
+import java.util.Iterator;
+
 import net.bit48.ineter.base.IPAddress;
 
-public interface IPSubnet<T extends IPAddress> {
+public interface IPSubnet<T extends IPAddress> extends Iterable<T> {
 
 	public T getNetworkMask();
 
@@ -19,4 +21,13 @@ public interface IPSubnet<T extends IPAddress> {
 
 	public T getNetworkAddress();
 
+	public boolean contains(T address);
+
+	public T getFirst();
+
+	public T getLast();
+
+	public Iterator<T> iterator(boolean skipFirst, boolean skipLast);
+
+	public Number length();
 }
