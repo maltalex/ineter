@@ -25,6 +25,9 @@ jmh {
     jmhVersion = '1.20'
 }
 
+test {
+    useJUnitPlatform()
+}
 
 task wrapper(type: Wrapper) {
    gradleVersion = '4.6'
