@@ -70,4 +70,14 @@ public class IPv6SubnetTest {
 			}
 		}
 	}
+
+	@Test
+	void unequalToNull() {
+		assertNotEquals(IPv6Subnet.of("::/24"), null);
+	}
+
+	@Test
+	void unequalToObject() {
+		assertNotEquals(IPv6Subnet.of("::/24"), new Object());
+	}
 }

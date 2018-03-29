@@ -70,4 +70,15 @@ public class IPv4SubnetTest {
 			}
 		}
 	}
+
+	@Test
+	void unequalToNull() {
+		assertNotEquals(IPv4Subnet.of("1.2.3.0/24"), null);
+	}
+
+	@Test
+	void unequalToObject() {
+		assertNotEquals(IPv4Subnet.of("1.2.3.0/24"), new Object());
+	}
+
 }

@@ -72,6 +72,12 @@ public class IPv4RangeTest {
 	}
 
 	@Test
+	void nullAddress() {
+		assertThrows(NullPointerException.class, () -> new IPv4Range(null, IPv4Address.of("1.2.3.4")));
+		assertThrows(NullPointerException.class, () -> new IPv4Range(IPv4Address.of("1.2.3.4"), null));
+	}
+
+	@Test
 	void between() {
 		IPv4Range range = IPv4Range.between("1.2.3.4-5.4.3.2");
 		assertTrue(range.getFirst().equals(IPv4Address.of("1.2.3.4")));

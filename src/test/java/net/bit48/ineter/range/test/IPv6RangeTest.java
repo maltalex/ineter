@@ -74,6 +74,12 @@ public class IPv6RangeTest {
 	}
 
 	@Test
+	void nullAddress() {
+		assertThrows(NullPointerException.class, () -> new IPv6Range(null, IPv6Address.of("::1")));
+		assertThrows(NullPointerException.class, () -> new IPv6Range(IPv6Address.of("::1"), null));
+	}
+
+	@Test
 	void between() {
 		IPv6Range range = IPv6Range.between("::-1::");
 		assertEquals(range.getFirst(), IPv6Address.of("::"));
