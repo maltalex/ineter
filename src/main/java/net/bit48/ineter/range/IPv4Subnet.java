@@ -91,32 +91,6 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 	}
 
 	@Override
-	public int hashCode() {
-		int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + this.networkBitCount;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!super.equals(obj)) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		IPv4Subnet other = (IPv4Subnet) obj;
-		if (this.networkBitCount != other.networkBitCount) {
-			return false;
-		}
-		return true;
-	}
-
-	@Override
 	public String toString() {
 		return String.format("%s/%d", super.firstAddress, this.networkBitCount);
 	}
