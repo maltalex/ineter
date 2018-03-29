@@ -8,6 +8,7 @@
 package net.bit48.ineter.base;
 
 import java.net.Inet6Address;
+import java.util.Objects;
 
 public class ZonedIPv6Address extends IPv6Address {
 
@@ -69,15 +70,7 @@ public class ZonedIPv6Address extends IPv6Address {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		ZonedIPv6Address other = (ZonedIPv6Address) obj;
-		if (this.zone == null) {
-			if (other.zone != null) {
-				return false;
-			}
-		} else if (!this.zone.equals(other.zone)) {
-			return false;
-		}
-		return true;
+		return Objects.equals(this.zone, ((ZonedIPv6Address) obj).zone);
 	}
 
 	@Override
