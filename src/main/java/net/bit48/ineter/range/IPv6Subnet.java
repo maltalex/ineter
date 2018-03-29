@@ -84,7 +84,7 @@ public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address> {
 
 	final int networkBitCount;
 
-	IPv6Subnet(IPv6Address address, IPv6SubnetMask mask) {
+	public IPv6Subnet(IPv6Address address, IPv6SubnetMask mask) {
 		super(mask.and(address), mask.orInverted(address));
 		this.networkBitCount = mask.maskBitCount();
 	}

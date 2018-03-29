@@ -44,7 +44,7 @@ public class IPv4Range extends IPRange<IPv4Address> {
 	protected final IPv4Address firstAddress;
 	protected final IPv4Address lastAddress;
 
-	protected IPv4Range(IPv4Address firstAddress, IPv4Address lastAddress) {
+	public IPv4Range(IPv4Address firstAddress, IPv4Address lastAddress) {
 		this.firstAddress = firstAddress;
 		this.lastAddress = lastAddress;
 		if (this.firstAddress == null || this.lastAddress == null) {

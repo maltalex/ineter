@@ -378,7 +378,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 	protected final long upper;
 	protected final long lower;
 
-	protected IPv6Address(long upper, long lower) {
+	public IPv6Address(long upper, long lower) {
 		this.upper = upper;
 		this.lower = lower;
 	}

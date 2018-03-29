@@ -45,7 +45,7 @@ public class IPv6Range extends IPRange<IPv6Address> {
 	final IPv6Address firstAddress;
 	final IPv6Address lastAddress;
 
-	IPv6Range(IPv6Address firstAddress, IPv6Address lastAddress) {
+	public IPv6Range(IPv6Address firstAddress, IPv6Address lastAddress) {
 		this.firstAddress = firstAddress;
 		this.lastAddress = lastAddress;
 		if (this.firstAddress == null || this.lastAddress == null) {

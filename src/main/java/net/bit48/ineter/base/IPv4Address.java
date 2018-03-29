@@ -179,11 +179,9 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 		return shiftToInt(a & 0xff, b & 0xff, c & 0xff, d & 0xff);
 	}
 
-	// Instance variables and methods
-
 	protected final int ip;
 
-	protected IPv4Address(int intIp) {
+	public IPv4Address(int intIp) {
 		this.ip = intIp;
 	}
 

@@ -85,7 +85,7 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 
 	protected final byte networkBitCount;
 
-	protected IPv4Subnet(IPv4Address address, IPv4SubnetMask mask) {
+	public IPv4Subnet(IPv4Address address, IPv4SubnetMask mask) {
 		super(mask.and(address), mask.orInverted(address));
 		this.networkBitCount = mask.maskBitCount();
 	}
