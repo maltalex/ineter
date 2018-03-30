@@ -123,6 +123,14 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Build an IPv4Address from a 4 byte long big-endian (highest byte first)
+	 * byte array
+	 *
+	 * @param bigEndianByteArr
+	 *            4 byte big-endian byte array
+	 * @return new IPv4Address instance
+	 */
 	public static IPv4Address of(byte[] bigEndianByteArr) {
 		if (bigEndianByteArr == null) {
 			throw new NullPointerException("The given array is null");
@@ -137,10 +145,24 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 				shiftToInt(bigEndianByteArr[0], bigEndianByteArr[1], bigEndianByteArr[2], bigEndianByteArr[3]));
 	}
 
+	/**
+	 * Build an IPv4Address from an int (32 bit)
+	 *
+	 * @param intIp
+	 * @return new IPv4Address instance
+	 */
 	public static IPv4Address of(int intIp) {
 		return new IPv4Address(intIp);
 	}
 
+	/**
+	 * Build an IPv4Address from a literal String representations such as
+	 * "192.168.1.1"
+	 *
+	 * @param ip
+	 *            literal IP address String
+	 * @return new IPv4Address instance
+	 */
 	public static IPv4Address of(String ip) {
 		if (ip == null) {
 			throw new NullPointerException("String IP address is null");
@@ -163,6 +185,12 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 		return of(shiftToInt(a, b, c, d));
 	}
 
+	/**
+	 * Build an IPv4Address from an java.net.Inet4Address
+	 *
+	 * @param address
+	 * @return new IPv4Address instance
+	 */
 	public static IPv4Address of(Inet4Address address) {
 		return of(address.getAddress());
 	}
@@ -177,6 +205,11 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 
 	protected final int ip;
 
+	/**
+	 * IPv4Address int constructor
+	 *
+	 * @param intIp
+	 */
 	public IPv4Address(int intIp) {
 		this.ip = intIp;
 	}
@@ -219,6 +252,11 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 		return IPv4KnownRange.TRANSLATION_6_TO_4.contains(this);
 	}
 
+	/**
+	 * Is this the broadcast address?
+	 *
+	 * @return true if the address is 255.255.255.255
+	 */
 	public boolean isBroadcast() {
 		return IPv4KnownRange.BROADCAST.contains(this);
 	}
@@ -289,6 +327,11 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 				Ip4Octet.OCTET_C.isolateAsByte(this.ip), Ip4Octet.OCTET_D.isolateAsByte(this.ip) };
 	}
 
+	/**
+	 * Return a copy of this address, in Inet4Address form
+	 *
+	 * @return new Inet4Address instance
+	 */
 	public Inet4Address toInet4Address() {
 		return (Inet4Address) toInetAddress();
 	}
@@ -307,10 +350,20 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 				Integer.toString(Ip4Octet.OCTET_D.isolateAsInt(this.ip)));
 	}
 
+	/**
+	 * Return a copy of this address in int form
+	 *
+	 * @return int representation of this address
+	 */
 	public int toInt() {
 		return this.ip;
 	}
 
+	/**
+	 * Return a copy of this address in long form
+	 *
+	 * @return long representation of this address
+	 */
 	public long toLong() {
 		return this.ip & 0x00000000ffffffffL;
 	}
