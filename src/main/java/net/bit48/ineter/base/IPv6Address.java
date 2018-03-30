@@ -187,6 +187,16 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Build an IPv6Address from two longs - upper and lower 64 bits in form of
+	 * longs
+	 *
+	 * @param upper
+	 *            upper 64 bits of the IPv6Address
+	 * @param lower
+	 *            lower 64 bits of the IPv6Address
+	 * @return new IPv6Address instance
+	 */
 	public static IPv6Address of(long upper, long lower) {
 		return new IPv6Address(upper, lower);
 	}
@@ -200,11 +210,25 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 		}
 	}
 
+	/**
+	 * Build an IPv6Address from a 16 byte long big-endian (highest byte first)
+	 * byte array
+	 *
+	 * @param bigEndianByteArr
+	 *            16 byte big-endian byte array
+	 * @return new IPv6Address instance
+	 */
 	public static IPv6Address of(byte[] bigEndianByteArr) {
 		verifyArray(bigEndianByteArr);
 		return new IPv6Address(LongByte.extractLong(bigEndianByteArr, 0), LongByte.extractLong(bigEndianByteArr, 8));
 	}
 
+	/**
+	 * Build an IPv6Address from an Inet6Address
+	 *
+	 * @param address
+	 * @return new IPv6Address instance
+	 */
 	public static IPv6Address of(Inet6Address address) {
 		if (address.getScopeId() == 0 && address.getScopedInterface() == null) {
 			return of(address.getAddress());
@@ -212,6 +236,14 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 		return ZonedIPv6Address.of(address);
 	}
 
+	/**
+	 * Build an IPv6Address or a ZonedIPv6Address from a literal IPv6 address in
+	 * String from such as "2001:1:2:3:4:5:6:7", "2001::", "[::]",
+	 * "fe80::1%eth0", and similar valid forms
+	 *
+	 * @param address
+	 * @return new IPv6Address instance
+	 */
 	public static IPv6Address of(String address) {
 		// This (over-engineered) method parses and validates an IPv6 address in
 		// String form in a single pass using only primitive types (except the
@@ -366,118 +398,11 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 		return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
 	}
 
-	static int unsignedCompare(long a, long b) {
+	protected static int unsignedCompare(long a, long b) {
 		if (a == b) {
 			return 0;
 		}
 		return (a + Long.MIN_VALUE) < (b + Long.MIN_VALUE) ? -1 : 1;
-	}
-
-	// Instance variables and methods
-
-	protected final long upper;
-	protected final long lower;
-
-	public IPv6Address(long upper, long lower) {
-		this.upper = upper;
-		this.lower = lower;
-	}
-
-	@Override
-	public int hashCode() {
-		int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (this.lower ^ (this.lower >>> 32));
-		result = prime * result + (int) (this.upper ^ (this.upper >>> 32));
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		IPv6Address other = (IPv6Address) obj;
-		if (this.lower != other.lower) {
-			return false;
-		}
-		if (this.upper != other.upper) {
-			return false;
-		}
-		return true;
-	}
-
-	public long getUpper() {
-		return this.upper;
-	}
-
-	public long getLower() {
-		return this.lower;
-	}
-
-	@Override
-	public boolean is6To4() {
-		return IPv6KnownRange.TRANSLATION_6_TO_4.contains(this);
-	}
-
-	@Override
-	public boolean isMartian() {
-		return isUnspecified() || isLoopback() || IPv6KnownRange.IPV4_MAPPED_IPV6.contains(this)
-				|| IPv6KnownRange.IPV4_COMPATIBLE_IPV6_DEPRECATED.contains(this)
-				|| IPv6KnownRange.IPV4_IPV6_TRANSLATION_WELL_KNOWN.contains(this) || isReserved() || isPrivate()
-				|| isLinkLocal() || (isMulticast() && !IPv6KnownRange.GLOBAL_MULTICAST.contains(this));
-	}
-
-	public boolean isIPv4Translation() {
-		return IPv6KnownRange.TEREDO.contains(this) || IPv6KnownRange.IPV4_MAPPED_IPV6.contains(this)
-				|| IPv6KnownRange.TRANSLATION_6_TO_4.contains(this)
-				|| IPv6KnownRange.IPV4_IPV6_TRANSLATION_WELL_KNOWN.contains(this);
-	}
-
-	@Override
-	public boolean isLoopback() {
-		return IPv6KnownRange.LOOPBACK.contains(this);
-	}
-
-	public boolean isGlobalUnicast() {
-		return IPv6KnownRange.GLOBAL_UNICAST.contains(this);
-	}
-
-	@Override
-	public boolean isLinkLocal() {
-		return IPv6KnownRange.LINK_LOCAL_UNICAST.contains(this);
-	}
-
-	@Override
-	public boolean isMulticast() {
-		return IPv6KnownRange.MULTICAST.contains(this);
-	}
-
-	@Override
-	public boolean isPrivate() {
-		return IPv6KnownRange.ULA.contains(this);
-	}
-
-	@Override
-	public boolean isReserved() {
-		return IPv6KnownRange.ORCHID.contains(this) || IPv6KnownRange.ORCHID_2.contains(this)
-				|| IPv6KnownRange.DISCARD.contains(this) || IPv6KnownRange.DOCUMENTATION.contains(this);
-	}
-
-	@Override
-	public boolean isUnspecified() {
-		return IPv6KnownRange.UNSPECIFIED.contains(this);
-	}
-
-	@Override
-	public IPv6Address next() {
-		return plus(1);
 	}
 
 	static boolean hasCarry(long a, long b, long result) {
@@ -520,6 +445,147 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 		return ((aMSB & bMSB & resutlMSB) == 1) || (aMSB == 0 && (bMSB | resutlMSB) == 1);
 	}
 
+	protected final long upper;
+	protected final long lower;
+
+	/**
+	 * Build an IPv6Address from two longs - upper and lower 64 bits in form of
+	 * longs
+	 *
+	 * @param upper
+	 *            upper 64 bits of the IPv6Address
+	 * @param lower
+	 *            lower 64 bits of the IPv6Address
+	 */
+	public IPv6Address(long upper, long lower) {
+		this.upper = upper;
+		this.lower = lower;
+	}
+
+	@Override
+	public int hashCode() {
+		int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (this.lower ^ (this.lower >>> 32));
+		result = prime * result + (int) (this.upper ^ (this.upper >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		IPv6Address other = (IPv6Address) obj;
+		if (this.lower != other.lower) {
+			return false;
+		}
+		if (this.upper != other.upper) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * return upper 64 bits of the address in long form
+	 *
+	 * @return upper 64 bits
+	 */
+	public long getUpper() {
+		return this.upper;
+	}
+
+	/**
+	 * return lower 64 bits of the address in long form
+	 *
+	 * @return lower 64 bits
+	 */
+	public long getLower() {
+		return this.lower;
+	}
+
+	@Override
+	public boolean is6To4() {
+		return IPv6KnownRange.TRANSLATION_6_TO_4.contains(this);
+	}
+
+	@Override
+	public boolean isMartian() {
+		return isUnspecified() || isLoopback() || IPv6KnownRange.IPV4_MAPPED_IPV6.contains(this)
+				|| IPv6KnownRange.IPV4_COMPATIBLE_IPV6_DEPRECATED.contains(this)
+				|| IPv6KnownRange.IPV4_IPV6_TRANSLATION_WELL_KNOWN.contains(this) || isReserved() || isPrivate()
+				|| isLinkLocal() || (isMulticast() && !IPv6KnownRange.GLOBAL_MULTICAST.contains(this));
+	}
+
+	/**
+	 * Is this one of the IPv6 addresses reserved for IPv4-IPv6 translation -
+	 * Teredo, IPv4-mapped-IPv6, 6to4, or IPv4-embedded-IPv6?
+	 *
+	 * @return true if this is a IPv4-IPv6 translation address
+	 */
+	public boolean isIPv4Translation() {
+		return IPv6KnownRange.TEREDO.contains(this) || IPv6KnownRange.IPV4_MAPPED_IPV6.contains(this)
+				|| IPv6KnownRange.TRANSLATION_6_TO_4.contains(this)
+				|| IPv6KnownRange.IPV4_IPV6_TRANSLATION_WELL_KNOWN.contains(this);
+	}
+
+	@Override
+	public boolean isLoopback() {
+		return IPv6KnownRange.LOOPBACK.contains(this);
+	}
+
+	/**
+	 * Is this an IPv6 global unicast address?
+	 *
+	 * @return true if this is a global unicast address
+	 */
+	public boolean isGlobalUnicast() {
+		return IPv6KnownRange.GLOBAL_UNICAST.contains(this);
+	}
+
+	@Override
+	public boolean isLinkLocal() {
+		return IPv6KnownRange.LINK_LOCAL_UNICAST.contains(this);
+	}
+
+	@Override
+	public boolean isMulticast() {
+		return IPv6KnownRange.MULTICAST.contains(this);
+	}
+
+	@Override
+	public boolean isPrivate() {
+		return IPv6KnownRange.ULA.contains(this);
+	}
+
+	@Override
+	public boolean isReserved() {
+		return IPv6KnownRange.ORCHID.contains(this) || IPv6KnownRange.ORCHID_2.contains(this)
+				|| IPv6KnownRange.DISCARD.contains(this) || IPv6KnownRange.DOCUMENTATION.contains(this);
+	}
+
+	@Override
+	public boolean isUnspecified() {
+		return IPv6KnownRange.UNSPECIFIED.contains(this);
+	}
+
+	@Override
+	public IPv6Address next() {
+		return plus(1);
+	}
+
+	/**
+	 * Return an address larger than the current one by n, with wraparound
+	 *
+	 * @param n
+	 * @return an address larger by n
+	 */
 	public IPv6Address plus(long n) {
 		if (n < 0) {
 			return minus(-n);
@@ -549,6 +615,12 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 		return minus((long) n);
 	}
 
+	/**
+	 * Return an address smaller than the current one by n, with wraparound
+	 *
+	 * @param n
+	 * @return an address smaller by n
+	 */
 	public IPv6Address minus(long n) {
 		if (n < 0) {
 			return plus(-n);
@@ -599,7 +671,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 		return longCompare(o);
 	}
 
-	int longCompare(IPv6Address o) {
+	protected int longCompare(IPv6Address o) {
 		int upperCompare = unsignedCompare(this.upper, o.upper);
 		return (upperCompare == 0) ? unsignedCompare(this.lower, o.lower) : upperCompare;
 	}
@@ -634,6 +706,11 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 		return 6;
 	}
 
+	/**
+	 * does this address have a specific zone?
+	 * 
+	 * @return false
+	 */
 	public boolean isZoned() {
 		return false;
 	}
