@@ -141,10 +141,6 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 		return new IPv4Address(intIp);
 	}
 
-	public static IPv4Address of(IPv4Address other) {
-		return new IPv4Address(other.ip);
-	}
-
 	public static IPv4Address of(String ip) {
 		if (ip == null) {
 			throw new NullPointerException("String IP address is null");

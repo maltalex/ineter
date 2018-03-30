@@ -114,14 +114,6 @@ public class IPv4AddressTest {
 	}
 
 	@Test
-	void ipCopyConstructor() {
-		IPv4Address ip1 = IPv4Address.of("1.2.3.4");
-		IPv4Address ip2 = IPv4Address.of(ip1);
-		assertFalse(ip1 == ip2);
-		assertTrue(ip1.equals(ip2));
-	}
-
-	@Test
 	void byteArrayConstructor() {
 		IPv4Address ip = IPv4Address.of(new byte[] { 1, 2, 3, 4 });
 		assertTrue(ip.toString().equals("1.2.3.4"));
