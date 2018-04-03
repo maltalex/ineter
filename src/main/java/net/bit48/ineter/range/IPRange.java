@@ -21,6 +21,15 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements It
 
 	public abstract T getLast();
 
+	/**
+	 * Checks whether this range has any overlapping addresses with a given
+	 * range. To check whether all addresses are contained, use
+	 * {@link IPRange#contains(IPRange)}
+	 *
+	 * @param range
+	 *            the range to check for overlap
+	 * @return true if the given range overlaps with this one
+	 */
 	public boolean overlaps(IPRange<T> range) {
 		// Either one of the ends of the other range is within this one
 		// Or this range is completely inside the other range. In that case,
@@ -28,10 +37,24 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements It
 		return this.contains(range.getFirst()) || this.contains(range.getLast()) || range.contains(this.getFirst());
 	}
 
+	/**
+	 * Checks whether a given address is inside this range
+	 *
+	 * @param ip
+	 * @return true if the given address is inside this range
+	 */
 	public boolean contains(T ip) {
 		return this.getFirst().compareTo(ip) <= 0 && this.getLast().compareTo(ip) >= 0;
 	}
 
+	/**
+	 * Checks whether this range contains all addresses of a given range. To
+	 * check for partial overlap, use {@link IPRange#overlaps(IPRange)}
+	 *
+	 * @param range
+	 *            range to check
+	 * @return true if the entire given range is contained within this range
+	 */
 	public boolean contains(IPRange<T> range) {
 		return this.contains(range.getFirst()) && this.contains(range.getLast());
 	}
@@ -66,6 +89,11 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements It
 		return String.format("%s - %s", this.getFirst().toString(), this.getLast().toString());
 	}
 
+	/**
+	 * Returns the number of addresses in the range
+	 *
+	 * @return number of addresses in the range
+	 */
 	public abstract Number length();
 
 	@Override
@@ -73,11 +101,36 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements It
 		return iterator(false);
 	}
 
+	/**
+	 * Returns an iterator that optionally skips both the first and last
+	 * addresses in the range
+	 *
+	 * @param trim
+	 *            set to true to skip first and last addresses
+	 * @return a new iterator instance
+	 */
 	public Iterator<T> iterator(boolean trim) {
 		return iterator(trim, trim);
 	}
 
+	/**
+	 * Returns an iterator that optionally skips the first, last or both
+	 * addresses in the range
+	 *
+	 * @param skipFirst
+	 *            set to true to skip the first address
+	 *
+	 * @param skipLast
+	 *            set to true to skip the last addresses
+	 * @return a new iterator instance
+	 */
 	public abstract Iterator<T> iterator(boolean skipFirst, boolean skipLast);
 
+	/**
+	 * Calculates and returns the minimal list of Subnets that compose this
+	 * address range.
+	 *
+	 * @return a list of Subnets that compose this address range
+	 */
 	public abstract List<? extends IPSubnet<? extends T>> toSubnets();
 }
