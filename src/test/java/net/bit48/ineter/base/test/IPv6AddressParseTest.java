@@ -173,7 +173,6 @@ public class IPv6AddressParseTest {
 		assertEquals(zoned.getZone(), zone);
 	}
 
-	@SuppressWarnings("boxing")
 	@Test
 	void illegalChar() {
 		List<Character> charsNoDigits = IntStream.range(0, 128).mapToObj(c -> new Character((char) c))
