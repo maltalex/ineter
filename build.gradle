@@ -5,11 +5,10 @@ plugins{
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'jacoco'
+
+apply from: 'jacoco.gradle'
 
 sourceCompatibility = 1.8
-
-eclipse.classpath.downloadSources=true
 
 repositories {
     mavenCentral()
@@ -33,12 +32,3 @@ test {
 task wrapper(type: Wrapper) {
    gradleVersion = '4.6'
 }
-
-jacocoTestReport {
-    reports {
-        xml.enabled true
-        html.enabled false
-    }
-}
-
-check.dependsOn jacocoTestReport
