@@ -23,6 +23,9 @@ signing {
     sign configurations.archives
 }
 
+def OSSUsername = hasProperty('sonatypeUsername') ? sonatypeUsername : "dummyOssUsername"
+def OSSPassword = hasProperty('sonatypePassword') ? sonatypePassword : "dummyOssPassword"
+
 uploadArchives {
 	repositories {
 		mavenDeployer {
@@ -31,11 +34,11 @@ uploadArchives {
       		}
 
 			repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-				authentication(userName: sonatypeUsername, password: sonatypePassword)
+				authentication(userName: OSSUsername, password: OSSPassword)
 			}
 
 			snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-				authentication(userName: sonatypeUsername, password: sonatypePassword)
+				authentication(userName: OSSUsername, password: OSSPassword)
 			}
 
 			pom.project {
