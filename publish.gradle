@@ -1,0 +1,70 @@
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+group = 'com.github.maltalex'
+archivesBaseName = 'ineter'
+version = '0.1.0-SNAPSHOT'
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			beforeDeployment {
+				MavenDeployment deployment -> signing.signPom(deployment) 
+      		}
+
+			repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+				authentication(userName: sonatypeUsername, password: sonatypePassword)
+			}
+
+			snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+				authentication(userName: sonatypeUsername, password: sonatypePassword)
+			}
+
+			pom.project {
+				name 'ineter'
+				packaging 'jar'
+				description ' Fast Java library for working with IP addresses, ranges, and subnets '
+				url 'https://github.com/maltalex/Ineter'
+
+				scm {
+					url 'https://github.com/maltalex/Ineter'
+					connection 'scm:git:https://github.com/maltalex/Ineter'
+					developerConnection 'scm:git@github.com:maltalex/Ineter'
+				}
+
+				licenses {
+					license {
+						name 'Mozilla Public License 2.0'
+						url 'http://mozilla.org/MPL/2.0/'
+					  }
+				}
+
+				developers {
+					developer {
+						id 'maltalex'
+						name 'Alex Maltinsky'
+						email 'code@bit48.net'
+					}
+				}
+			}
+		}
+	}
+}
