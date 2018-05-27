@@ -1,11 +1,11 @@
 [![Build Status](https://travis-ci.org/maltalex/Ineter.svg?branch=master)](https://travis-ci.org/maltalex/Ineter)
 [![codecov](https://codecov.io/gh/maltalex/Ineter/branch/master/graph/badge.svg)](https://codecov.io/gh/maltalex/Ineter)
 
-# Ineter
+# ineter
 
 ## What?
 
-Ineter (pronounced "Eye-netter") is a tiny Java library for working with:
+ineter (pronounced "Eye-netter") is a tiny Java library for working with:
 - Individual IP addresses - `IPv4Address`, `IPv6Address`/`ZonedIPv6Address`
 - IP address ranges - `IPv4Range`, `IPv6Range`
 - IP subnets - `IPv4Subnet`, `IPv6Subnet`
