@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/maltalex/Ineter.svg?branch=master)](https://travis-ci.org/maltalex/Ineter)
-[![codecov](https://codecov.io/gh/maltalex/Ineter/branch/master/graph/badge.svg)](https://codecov.io/gh/maltalex/Ineter)
+[![Build Status](https://travis-ci.org/maltalex/ineter.svg?branch=master)](https://travis-ci.org/maltalex/ineter)
+[![codecov](https://codecov.io/gh/maltalex/ineter/branch/master/graph/badge.svg)](https://codecov.io/gh/maltalex/ineter)
 
 # ineter
 
@@ -12,9 +12,9 @@ ineter (pronounced "Eye-netter") is a tiny Java library for working with:
 
 ## Why?
 
-- Low memory (and GC) footprint: Ineter uses primitive types to represent addresses - an `int` for IPv4, two `long` fields for IPv6. For comparison, Java's `InetAddress` uses an `InetAddressHolder` with two `String` fields and two `int` fields just for IPv4
-- Immutability: Ineter is immutable and thread-safe by default
-- Speed: Ineter is written with performance in mind
+- Low memory (and GC) footprint: ineter uses primitive types to represent addresses - an `int` for IPv4, two `long` fields for IPv6. For comparison, Java's `InetAddress` uses an `InetAddressHolder` with two `String` fields and two `int` fields just for IPv4
+- Immutability: ineter is immutable and thread-safe by default
+- Speed: ineter is written with performance in mind
 - Rich set of supported operations
 - MPL-2.0 license, allowing commercial use as well as re-licensing under GNU
 
