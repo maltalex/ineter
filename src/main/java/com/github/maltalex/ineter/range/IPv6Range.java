@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 
 import com.github.maltalex.ineter.base.IPv6Address;
 
@@ -21,25 +22,48 @@ public class IPv6Range extends IPRange<IPv6Address> {
 
 	private static final long serialVersionUID = 1L;
 
+	private static final Function<String, IPv6Range> PARSER = s -> Parsers.parseRange(s, IPv6Range::of, IPv6Subnet::of);
+
 	public static IPv6Range of(IPv6Address firstAddress, IPv6Address lastAddress) {
 		return new IPv6Range(firstAddress, lastAddress);
+	}
+
+	public static IPv6Range of(IPv6Address address) {
+		return IPv6Range.of(address, address);
 	}
 
 	public static IPv6Range of(String firstAddress, String lastAddress) {
 		return new IPv6Range(IPv6Address.of(firstAddress), IPv6Address.of(lastAddress));
 	}
 
+	public static IPv6Range of(String address) {
+		return IPv6Range.of(address, address);
+	}
+
 	public static IPv6Range of(byte[] firstAddress, byte[] lastAddress) {
 		return new IPv6Range(IPv6Address.of(firstAddress), IPv6Address.of(lastAddress));
+	}
+
+	public static IPv6Range of(byte[] address) {
+		return IPv6Range.of(address, address);
 	}
 
 	public static IPv6Range of(Inet6Address firstAddress, Inet6Address lastAddress) {
 		return new IPv6Range(IPv6Address.of(firstAddress), IPv6Address.of(lastAddress));
 	}
 
+	public static IPv6Range of(Inet6Address address) {
+		return IPv6Range.of(address, address);
+	}
+
+	@Deprecated
 	public static IPv6Range between(String between) {
 		String[] parts = between.split("-");
 		return IPv6Range.of(IPv6Address.of(parts[0].trim()), IPv6Address.of(parts[1].trim()));
+	}
+
+	public static IPv6Range parse(String from) {
+		return PARSER.apply(from);
 	}
 
 	final IPv6Address firstAddress;

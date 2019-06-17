@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 
 import com.github.maltalex.ineter.base.IPv4Address;
 
@@ -20,25 +21,48 @@ public class IPv4Range extends IPRange<IPv4Address> {
 
 	private static final long serialVersionUID = 1L;
 
+	private static final Function<String, IPv4Range> PARSER = s -> Parsers.parseRange(s, IPv4Range::of, IPv4Subnet::of);
+
 	public static IPv4Range of(IPv4Address firstAddress, IPv4Address lastAddress) {
 		return new IPv4Range(firstAddress, lastAddress);
+	}
+
+	public static IPv4Range of(IPv4Address address) {
+		return IPv4Range.of(address, address);
 	}
 
 	public static IPv4Range of(String firstAddress, String lastAddress) {
 		return new IPv4Range(IPv4Address.of(firstAddress), IPv4Address.of(lastAddress));
 	}
 
+	public static IPv4Range of(String address) {
+		return IPv4Range.of(address, address);
+	}
+
 	public static IPv4Range of(byte[] firstAddress, byte[] lastAddress) {
 		return new IPv4Range(IPv4Address.of(firstAddress), IPv4Address.of(lastAddress));
+	}
+
+	public static IPv4Range of(byte[] address) {
+		return IPv4Range.of(address, address);
 	}
 
 	public static IPv4Range of(Inet4Address firstAddress, Inet4Address lastAddress) {
 		return new IPv4Range(IPv4Address.of(firstAddress), IPv4Address.of(lastAddress));
 	}
 
+	public static IPv4Range of(Inet4Address address) {
+		return IPv4Range.of(address, address);
+	}
+
+	@Deprecated
 	public static IPv4Range between(String between) {
 		String[] parts = between.split("-");
 		return IPv4Range.of(IPv4Address.of(parts[0].trim()), IPv4Address.of(parts[1].trim()));
+	}
+
+	public static IPv4Range parse(String from) {
+		return PARSER.apply(from);
 	}
 
 	protected final IPv4Address firstAddress;

@@ -32,6 +32,7 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 import com.github.maltalex.ineter.base.IPv6Address;
+import com.github.maltalex.ineter.range.IPv4Range;
 import com.github.maltalex.ineter.range.IPv6Range;
 import com.github.maltalex.ineter.range.IPv6Subnet;
 
@@ -88,45 +89,54 @@ public class IPv6RangeTest {
 		assertTrue(range.toString().contains("0:0:0:0:0:0:0:0"));
 	}
 
+	@Test
+	void parse() {
+		IPv6Range range = IPv6Range.parse("::-1::");
+		assertEquals(range.getFirst(), IPv6Address.of("::"));
+		assertEquals(range.getLast(), IPv6Address.of("1::"));
+		assertTrue(range.toString().contains("1:0:0:0:0:0:0:0"));
+		assertTrue(range.toString().contains("0:0:0:0:0:0:0:0"));
+	}
+
 	@ParameterizedTest
 	@CsvSource({ "::,::,::", "::,::1234,::1000", "1234::,1234::1234,1234::1000" })
-	void contains(String start, String end, String between) {
-		assertTrue(IPv6Range.between(start + "-" + end).contains(IPv6Address.of(between)));
+	void contains(String start, String end, String parse) {
+		assertTrue(IPv6Range.parse(start + "-" + end).contains(IPv6Address.of(parse)));
 	}
 
 	@ParameterizedTest
 	@CsvSource({ "::,::,::1", "::,::1234,::1235", "1234::,1234::1234,1234::1235" })
-	void notContains(String start, String end, String between) {
-		assertFalse(IPv6Range.between(start + "-" + end).contains(IPv6Address.of(between)));
+	void notContains(String start, String end, String parse) {
+		assertFalse(IPv6Range.parse(start + "-" + end).contains(IPv6Address.of(parse)));
 	}
 
 	@ParameterizedTest
 	@CsvSource({ "::,::,::/128", "::,::1234,::1000/120", "1234::,1234::1234,1234::1230/126" })
-	void containsRange(String start, String end, String between) {
-		assertTrue(IPv6Range.between(start + "-" + end).contains(IPv6Subnet.of(between)));
+	void containsRange(String start, String end, String parse) {
+		assertTrue(IPv6Range.parse(start + "-" + end).contains(IPv6Subnet.of(parse)));
 	}
 
 	@ParameterizedTest
 	@CsvSource({ "::,::,::1/128", "::,::1234,::/112", "1234::,1234::1234,1235::/16" })
-	void notContainsRange(String start, String end, String between) {
-		assertFalse(IPv6Range.between(start + "-" + end).contains(IPv6Subnet.of(between)));
+	void notContainsRange(String start, String end, String parse) {
+		assertFalse(IPv6Range.parse(start + "-" + end).contains(IPv6Subnet.of(parse)));
 	}
 
 	@ParameterizedTest
 	@CsvSource({ "::,::,::-::", "::,::1234,::1-::2", "1234::,1234::1234,::-1234::", "1::,f::,::-ffff::" })
-	void overlaps(String start, String end, String between) {
-		assertTrue(IPv6Range.between(start + "-" + end).overlaps(IPv6Range.between(between)));
+	void overlaps(String start, String end, String parse) {
+		assertTrue(IPv6Range.parse(start + "-" + end).overlaps(IPv6Range.parse(parse)));
 	}
 
 	@ParameterizedTest
 	@CsvSource({ "::,::,::1-::2", "::,::1234,::1235-1::", "1234::,1234::1234,1234::1235-1234::1235" })
-	void notOverlaps(String start, String end, String between) {
-		assertFalse(IPv6Range.between(start + "-" + end).overlaps(IPv6Range.between(between)));
+	void notOverlaps(String start, String end, String parse) {
+		assertFalse(IPv6Range.parse(start + "-" + end).overlaps(IPv6Range.parse(parse)));
 	}
 
 	@Test
 	void equal() {
-		IPv6Range range1 = IPv6Range.between("1234::1234-1234::ffff");
+		IPv6Range range1 = IPv6Range.parse("1234::1234-1234::ffff");
 		IPv6Range range2 = IPv6Range.of(IPv6Address.of("1234::1234"), IPv6Address.of("1234::ffff"));
 
 		assertEquals(range1.hashCode(), range2.hashCode());
@@ -135,7 +145,7 @@ public class IPv6RangeTest {
 
 	@Test
 	void notEqual() {
-		IPv6Range range1 = IPv6Range.between("1234::1234-1234::ffff");
+		IPv6Range range1 = IPv6Range.parse("1234::1234-1234::ffff");
 		IPv6Range range2 = IPv6Range.of(IPv6Address.of("1234::"), IPv6Address.of("1234::ffff"));
 
 		assertNotEquals(range1, range2);
@@ -146,8 +156,8 @@ public class IPv6RangeTest {
 			"::-ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffe,ffffffffffffffffffffffffffffffff",
 			"::-0000:0000:0000:0000:ffff:ffff:ffff:fffe,0000000000000000ffffffffffffffff",
 			"::-0000:0000:0000:0001:ffff:ffff:ffff:fffe,0000000000000001ffffffffffffffff" })
-	void length(String between, String length) {
-		assertEquals(IPv6Range.between(between).length(), new BigInteger(length, 16));
+	void length(String parse, String length) {
+		assertEquals(IPv6Range.parse(parse).length(), new BigInteger(length, 16));
 	}
 
 	@Test
@@ -209,10 +219,58 @@ public class IPv6RangeTest {
 			"::-1::0:0:0:1234, 0:0:0:0:0:0:0:0/16 1:0:0:0:0:0:0:0/116 1:0:0:0:0:0:0:1000/119 1:0:0:0:0:0:0:1200/123 1:0:0:0:0:0:0:1220/124 1:0:0:0:0:0:0:1230/126 1:0:0:0:0:0:0:1234/128",
 			"::ffff:ffff:ffff:ffff-::ffff:ffff:ffff:ffff,0:0:0:0:ffff:ffff:ffff:ffff/128" })
 	void toSubnets(String range, String subnets) {
-		List<IPv6Subnet> generated = IPv6Range.between(range).toSubnets();
+		List<IPv6Subnet> generated = IPv6Range.parse(range).toSubnets();
 		List<IPv6Subnet> manual = Arrays.stream(subnets.split(" ")).map(IPv6Subnet::of).collect(Collectors.toList());
 		assertEquals(generated, manual);
 		assertEquals(manual.stream().map(IPv6Subnet::length).collect(Collectors.reducing((a, b) -> a.add(b))).get(),
-				IPv6Range.between(range).length());
+				IPv6Range.parse(range).length());
+	}
+
+	@Test
+	void singleIPRangeParse() {
+		final IPv6Range explicitRange = IPv6Range.parse("1234::1234-1234::1234");
+		final IPv6Range range = IPv6Range.parse("1234::1234");
+		assertEquals(explicitRange, range,
+				"Single address range doesn't match explicit range with same addresses on both ends.");
+	}
+
+	@Test
+	void singleIPRangeOfBytes() {
+		final IPv6Range explicitRange = IPv6Range.of(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+				new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 });
+		final IPv6Range range = IPv6Range.of(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 });
+		assertEquals(explicitRange, range,
+				"Single address range doesn't match explicit range with same addresses on both ends.");
+	}
+
+	@Test
+	void singleIPRangeOfIPv6Address() {
+		final IPv6Range explicitRange = IPv6Range.of(IPv6Address.of("::1"), IPv6Address.of("::1"));
+		final IPv6Range range = IPv6Range.of(IPv6Address.of("::1"));
+		assertEquals(explicitRange, range,
+				"Single address range doesn't match explicit range with same addresses on both ends.");
+	}
+
+	@Test
+	void singleIPRangeOfString() {
+		final IPv6Range explicitRange = IPv6Range.of("1234::1234", "1234::1234");
+		final IPv6Range range = IPv6Range.of("1234::1234");
+		assertEquals(explicitRange, range,
+				"Single address range doesn't match explicit range with same addresses on both ends.");
+	}
+
+	@Test
+	void singleIPRangeOfInet6Address() throws UnknownHostException {
+		final IPv6Range explicitRange = IPv6Range.of((Inet6Address) InetAddress.getByName("::1"), (Inet6Address) InetAddress.getByName("::1"));
+		final IPv6Range range = IPv6Range.of((Inet6Address) InetAddress.getByName("::1"));
+		assertEquals(explicitRange, range,
+				"Single address range doesn't match explicit range with same addresses on both ends.");
+	}
+
+	@Test
+	void parseSubnet(){
+		final IPv6Range range = IPv6Range.parse("1234::/16");
+		assertEquals(IPv6Address.of("1234::"), range.getFirst());
+		assertEquals(IPv6Address.of("1235::").previous(), range.getLast());
 	}
 }
