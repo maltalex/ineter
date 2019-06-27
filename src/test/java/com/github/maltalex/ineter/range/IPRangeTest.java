@@ -60,6 +60,6 @@ class IPRangeTest {
 	@Test
 	void throwOnNonsenseOnSubnet() {
 		final String from = "127/127/127";
-		assertThrows(IllegalArgumentException.class, () -> IPRange.parseRange(from, IPv4_RANGE_PRODUCER, IPv4_SUBNET_PRODUCER));
+		assertThrows(IllegalArgumentException.class, () -> IPRange.parseSubnet(from, IPv4Subnet::of, (byte) 32));
 	}
 }
