@@ -56,4 +56,10 @@ class IPRangeTest {
 		final IPv4Subnet subnet = IPv4Subnet.of("172.20.88.1/32");
 		assertEquals(subnet, parsedSubnet);
 	}
+
+	@Test
+	void throwOnNonsenseOnSubnet() {
+		final String from = "127/127/127";
+		assertThrows(IllegalArgumentException.class, () -> IPRange.parseRange(from, IPv4_RANGE_PRODUCER, IPv4_SUBNET_PRODUCER));
+	}
 }
