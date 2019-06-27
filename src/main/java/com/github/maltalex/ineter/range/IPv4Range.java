@@ -13,15 +13,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Function;
 
 import com.github.maltalex.ineter.base.IPv4Address;
 
 public class IPv4Range extends IPRange<IPv4Address> {
 
 	private static final long serialVersionUID = 1L;
-
-	private static final Function<String, IPv4Range> PARSER = s -> Parsers.parseRange(s, IPv4Range::of, IPv4Subnet::of);
 
 	public static IPv4Range of(IPv4Address firstAddress, IPv4Address lastAddress) {
 		return new IPv4Range(firstAddress, lastAddress);
@@ -62,7 +59,7 @@ public class IPv4Range extends IPRange<IPv4Address> {
 	}
 
 	public static IPv4Range parse(String from) {
-		return PARSER.apply(from);
+		return parseRange(from, IPv4Range::of, IPv4Subnet::of);
 	}
 
 	protected final IPv4Address firstAddress;

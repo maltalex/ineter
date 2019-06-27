@@ -7,13 +7,9 @@
  */
 package com.github.maltalex.ineter.range;
 
-import java.util.function.Function;
-
 import com.github.maltalex.ineter.base.IPv6Address;
 
 public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address> {
-
-	private static final Function<String, IPv6Subnet> PARSER = s -> Parsers.parseSubnet(s, IPv6Subnet::of, 128);
 
 	static enum IPv6SubnetMask {
 
@@ -79,7 +75,7 @@ public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address> {
 	}
 
 	public static IPv6Subnet parse(String from) {
-		return PARSER.apply(from);
+		return parseSubnet(from, IPv6Subnet::of, 128);
 	}
 
 	public static IPv6Subnet of(String address, int maskLen) {

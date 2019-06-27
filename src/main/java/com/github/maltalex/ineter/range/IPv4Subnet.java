@@ -7,16 +7,9 @@
  */
 package com.github.maltalex.ineter.range;
 
-import static com.github.maltalex.ineter.range.Parsers.parseSubnet;
-
-import java.util.function.Function;
-
 import com.github.maltalex.ineter.base.IPv4Address;
 
 public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
-
-	private static final Function<String, IPv4Subnet> PARSER = s -> parseSubnet(s,
-			IPv4Subnet::of, 32);
 
 	protected static enum IPv4SubnetMask {
 
@@ -92,7 +85,7 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 	}
 
 	public static IPv4Subnet parse(String from) throws IllegalArgumentException {
-		return PARSER.apply(from);
+		return parseSubnet(from, IPv4Subnet::of, 32);
 	}
 
 	static IPv4Subnet of(String address, Integer subnet) {

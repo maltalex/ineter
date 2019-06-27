@@ -14,15 +14,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Function;
 
 import com.github.maltalex.ineter.base.IPv6Address;
 
 public class IPv6Range extends IPRange<IPv6Address> {
 
 	private static final long serialVersionUID = 1L;
-
-	private static final Function<String, IPv6Range> PARSER = s -> Parsers.parseRange(s, IPv6Range::of, IPv6Subnet::of);
 
 	public static IPv6Range of(IPv6Address firstAddress, IPv6Address lastAddress) {
 		return new IPv6Range(firstAddress, lastAddress);
@@ -63,7 +60,7 @@ public class IPv6Range extends IPRange<IPv6Address> {
 	}
 
 	public static IPv6Range parse(String from) {
-		return PARSER.apply(from);
+		return parseRange(from, IPv6Range::of, IPv6Subnet::of);
 	}
 
 	final IPv6Address firstAddress;
