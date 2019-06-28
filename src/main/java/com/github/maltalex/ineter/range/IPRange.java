@@ -33,7 +33,7 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements It
 		}
 	}
 
-	static <T> T parseSubnet(String from, BiFunction<String, Integer, ? extends T> subnetProducer, int singleAddressMask) {
+	protected static <T> T parseSubnet(String from, BiFunction<String, Integer, ? extends T> subnetProducer, int singleAddressMask) {
 		final String[] parts = from.split("/");
 		if (parts.length == 2) {
 			return subnetProducer.apply(parts[0].trim(), Integer.parseInt(parts[1].trim()));
