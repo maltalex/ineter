@@ -52,12 +52,24 @@ public class IPv4Range extends IPRange<IPv4Address> {
 		return IPv4Range.of(address, address);
 	}
 
+	/**
+	 * Use {@link IPv4Range#parse(String)} instead
+	 */
 	@Deprecated
 	public static IPv4Range between(String between) {
 		String[] parts = between.split("-");
 		return IPv4Range.of(IPv4Address.of(parts[0].trim()), IPv4Address.of(parts[1].trim()));
 	}
 
+	/**
+	 * Parses the given String into an {@link IPv4Range} The String can be either a
+	 * single address, a range such as "192.168.0.0-192.168.1.2" or a subnet such as
+	 * "192.168.0.0/16"
+	 * 
+	 * @param from - a String representation of a single IPv4 address, a range or a
+	 *             subnet
+	 * @return An {@link IPv4Range}
+	 */
 	public static IPv4Range parse(String from) {
 		return parseRange(from, IPv4Range::of, IPv4Subnet::of);
 	}
