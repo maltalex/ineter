@@ -62,7 +62,7 @@ ineter (pronounced "Eye-netter") is a tiny Java library for working with:
 
 ##### IPv4Range
 
-	IPv4Range ipv4Range = IPv4Range.between("192.168.100.0-192.168.101.127"); //Arbitrary range of addresses
+	IPv4Range ipv4Range = IPv4Range.parse("192.168.100.0-192.168.101.127"); //Arbitrary range of addresses
 		
 	ipv4Range.contains(IPv4Address.of("192.168.100.100")); //true
 	ipv4Range.overlaps(IPv4Range.of("10.0.0.1", "10.0.0.10")); //false
