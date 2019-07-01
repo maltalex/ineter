@@ -7,12 +7,6 @@
  */
 package com.github.maltalex.ineter.base;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -29,8 +23,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
-import com.github.maltalex.ineter.base.IPv6Address;
-import com.github.maltalex.ineter.base.ZonedIPv6Address;
+import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(JUnitPlatform.class)
 public class IPv6AddressParseTest {
@@ -63,7 +56,7 @@ public class IPv6AddressParseTest {
 				}
 			}
 			if (brackets && r.nextBoolean()) {
-				addresses.add("[" + String.join(":", currentAddress) + "]");
+				addresses.add('[' + String.join(":", currentAddress) + ']');
 			} else {
 				addresses.add(String.join(":", currentAddress));
 			}
@@ -175,7 +168,7 @@ public class IPv6AddressParseTest {
 
 	@Test
 	void illegalChar() {
-		List<Character> charsNoDigits = IntStream.range(0, 128).mapToObj(c -> new Character((char) c))
+		List<Character> charsNoDigits = IntStream.range(0, 128).mapToObj(c -> (char) c)
 				.filter(c -> Character.digit(c, 16) == -1)
 				.filter(c -> !(c.equals(':') || c.equals('%') || c.equals(']') || c.equals('[')))
 				.collect(Collectors.toList());

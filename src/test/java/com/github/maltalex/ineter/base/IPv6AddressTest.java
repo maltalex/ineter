@@ -7,18 +7,10 @@
  */
 package com.github.maltalex.ineter.base;
 
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.math.BigInteger;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -27,9 +19,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
-import com.github.maltalex.ineter.base.IPAddress;
-import com.github.maltalex.ineter.base.IPv6Address;
-import com.github.maltalex.ineter.base.ZonedIPv6Address;
+import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(JUnitPlatform.class)
 public class IPv6AddressTest {
@@ -54,8 +44,8 @@ public class IPv6AddressTest {
 		assertEquals(ip1.hashCode(), ip2.hashCode());
 		assertEquals(zonedIp1.hashCode(), zonedIp2.hashCode());
 
-		assertFalse(ip1 == ip2);
-		assertFalse(zonedIp1 == zonedIp2);
+		assertNotSame(ip1, ip2);
+		assertNotSame(zonedIp1, zonedIp2);
 	}
 
 	@ParameterizedTest
@@ -96,20 +86,20 @@ public class IPv6AddressTest {
 
 	@Test
 	void version() {
-		assertEquals(IPv6Address.of("::").version(), 6);
-		assertEquals(ZonedIPv6Address.of("::%eth0").version(), 6);
+		assertEquals(6, IPv6Address.of("::").version());
+		assertEquals(6, ZonedIPv6Address.of("::%eth0").version());
 	}
 
 	@Test
 	void unequalToObject() {
-		assertNotEquals(IPv6Address.of("::"), new Object());
-		assertNotEquals(ZonedIPv6Address.of("::%foo"), new Object());
+		assertNotEquals(new Object(), IPv6Address.of("::"));
+		assertNotEquals(new Object(), ZonedIPv6Address.of("::%foo"));
 	}
 
 	@Test
 	void unequalToNull() {
-		assertNotEquals(IPv6Address.of("::"), null);
-		assertNotEquals(IPv6Address.of("::%foo"), null);
+		assertNotEquals(null, IPv6Address.of("::"));
+		assertNotEquals(null, IPv6Address.of("::%foo"));
 	}
 
 	@ParameterizedTest
@@ -129,8 +119,8 @@ public class IPv6AddressTest {
 		assertNotEquals(ip2, zonedIp2);
 		assertNotEquals(zonedIp2, ip2);
 
-		assertFalse(ip1 == ip2);
-		assertFalse(zonedIp1 == zonedIp2);
+		assertNotSame(ip1, ip2);
+		assertNotSame(zonedIp1, zonedIp2);
 	}
 
 	@ParameterizedTest
@@ -138,13 +128,13 @@ public class IPv6AddressTest {
 	void unzonedOrdering(String ipStr1, String ipStr2) {
 		IPv6Address ip1 = IPv6Address.of(ipStr1);
 		IPv6Address ip2 = IPv6Address.of(ipStr2);
-		assertEquals(ip1.compareTo(ip2), -1);
-		assertEquals(ip2.compareTo(ip1), 1);
-		assertEquals(ip1.compareTo(ip1), 0);
-		assertEquals(ip2.compareTo(ip2), 0);
+		assertEquals(-1, ip1.compareTo(ip2));
+		assertEquals(1, ip2.compareTo(ip1));
+		assertEquals(0, ip1.compareTo(ip1));
+		assertEquals(0, ip2.compareTo(ip2));
 
-		assertEquals(ip1.compareTo(null), 1);
-		assertEquals(ip2.compareTo(null), 1);
+		assertEquals(1, ip1.compareTo(null));
+		assertEquals(1, ip2.compareTo(null));
 	}
 
 	@ParameterizedTest
@@ -154,8 +144,8 @@ public class IPv6AddressTest {
 		IPv6Address ip2 = IPv6Address.of(ipStr2);
 		assertTrue(ip1.compareTo(ip2) < 0);
 		assertTrue(ip2.compareTo(ip1) > 0);
-		assertEquals(ip1.compareTo(ip1), 0);
-		assertEquals(ip2.compareTo(ip2), 0);
+		assertEquals(0, ip1.compareTo(ip1));
+		assertEquals(0, ip2.compareTo(ip2));
 
 		assertTrue(ip1.compareTo(null) > 0);
 		assertTrue(ip2.compareTo(null) > 0);
@@ -182,7 +172,7 @@ public class IPv6AddressTest {
 		try {
 			String zonedIp = "1234:0:0:0:0:0:0:4321%1";
 			assertEquals(zonedIp, IPAddress.of(InetAddress.getByName(zonedIp)).toString());
-			assertEquals(IPAddress.of(InetAddress.getByName("1234::4321")).toString(), "1234:0:0:0:0:0:0:4321");
+			assertEquals("1234:0:0:0:0:0:0:4321", IPAddress.of(InetAddress.getByName("1234::4321")).toString());
 		} catch (UnknownHostException e) {
 			fail(e);
 		}
@@ -197,8 +187,8 @@ public class IPv6AddressTest {
 		byte[] badArr2 = new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, (byte) 0x88, (byte) 0x99,
 				(byte) 0xaa, (byte) 0xbb, (byte) 0xcc, (byte) 0xdd, (byte) 0xee, (byte) 0xff, 0x00 };
 
-		assertEquals(IPv6Address.of(goodArr).toString(), "11:2233:4455:6677:8899:aabb:ccdd:eeff");
-		assertEquals(ZonedIPv6Address.of(goodArr, "foo").toString(), "11:2233:4455:6677:8899:aabb:ccdd:eeff%foo");
+		assertEquals("11:2233:4455:6677:8899:aabb:ccdd:eeff", IPv6Address.of(goodArr).toString());
+		assertEquals("11:2233:4455:6677:8899:aabb:ccdd:eeff%foo", ZonedIPv6Address.of(goodArr, "foo").toString());
 
 		assertThrows(IllegalArgumentException.class, () -> IPv6Address.of(badArr1));
 		assertThrows(IllegalArgumentException.class, () -> ZonedIPv6Address.of(badArr1, "foo"));
@@ -253,14 +243,14 @@ public class IPv6AddressTest {
 	@Test
 	void toStr() {
 		IPv6Address ip = IPv6Address.of("::1");
-		assertEquals(ip.toString(), "0:0:0:0:0:0:0:1");
+		assertEquals("0:0:0:0:0:0:0:1", ip.toString());
 	}
 
 	@Test
 	void toInetAddress() {
 		IPv6Address ip = IPv6Address.of("::1");
 		try {
-			assertEquals(ip.toInet6Address(), InetAddress.getByName("::1"));
+			assertEquals(InetAddress.getByName("::1"), ip.toInet6Address());
 		} catch (UnknownHostException e) {
 			fail(e);
 		}
@@ -269,13 +259,11 @@ public class IPv6AddressTest {
 	@Test
 	void toArray() {
 		IPv6Address ip = IPv6Address.of("0010:2030:4050:6070:8090:a0b0:c0d0:e0f0");
-		assertTrue(Arrays.equals(ip.toArray(), new byte[] { 0, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, (byte) 0x80,
-				(byte) 0x90, (byte) 0xa0, (byte) 0xb0, (byte) 0xc0, (byte) 0xd0, (byte) 0xe0, (byte) 0xf0 }));
-		assertTrue(Arrays.equals(ip.toBigEndianArray(),
-				new byte[] { 0, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, (byte) 0x80, (byte) 0x90, (byte) 0xa0,
-						(byte) 0xb0, (byte) 0xc0, (byte) 0xd0, (byte) 0xe0, (byte) 0xf0 }));
-		assertTrue(Arrays.equals(ip.toLittleEndianArray(),
-				new byte[] { (byte) 0xf0, (byte) 0xe0, (byte) 0xd0, (byte) 0xc0, (byte) 0xb0, (byte) 0xa0, (byte) 0x90,
-						(byte) 0x80, 0x70, 0x60, 0x50, 0x40, 0x30, 0x20, 0x10, 0 }));
+		assertArrayEquals(ip.toArray(), new byte[]{0, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, (byte) 0x80,
+				(byte) 0x90, (byte) 0xa0, (byte) 0xb0, (byte) 0xc0, (byte) 0xd0, (byte) 0xe0, (byte) 0xf0});
+		assertArrayEquals(ip.toBigEndianArray(), new byte[]{0, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, (byte) 0x80, (byte) 0x90, (byte) 0xa0,
+				(byte) 0xb0, (byte) 0xc0, (byte) 0xd0, (byte) 0xe0, (byte) 0xf0});
+		assertArrayEquals(ip.toLittleEndianArray(), new byte[]{(byte) 0xf0, (byte) 0xe0, (byte) 0xd0, (byte) 0xc0, (byte) 0xb0, (byte) 0xa0, (byte) 0x90,
+				(byte) 0x80, 0x70, 0x60, 0x50, 0x40, 0x30, 0x20, 0x10, 0});
 	}
 }

@@ -9,7 +9,6 @@ package com.github.maltalex.ineter.base;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -18,17 +17,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
-import com.github.maltalex.ineter.base.IPAddress;
-import com.github.maltalex.ineter.base.IPv4Address;
-import com.github.maltalex.ineter.base.IPv6Address;
-
 @RunWith(JUnitPlatform.class)
 public class IPAddressTest {
 
 	@Test
 	public void ofArrayIPv4() {
 		byte[] arr = new byte[] { 1, 2, 3, 4 };
-		assertTrue(IPAddress.of(arr).equals(IPv4Address.of(arr)));
+		assertEquals(IPAddress.of(arr), IPv4Address.of(arr));
 		assertThrows(IllegalArgumentException.class, () -> IPAddress.of(new byte[] { 1, 2, 3 }));
 		assertThrows(IllegalArgumentException.class, () -> IPAddress.of(new byte[] { 1, 2, 3, 4, 5 }));
 	}

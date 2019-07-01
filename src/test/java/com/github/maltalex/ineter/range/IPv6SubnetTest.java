@@ -7,8 +7,8 @@
  */
 package com.github.maltalex.ineter.range;
 
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +18,6 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 import com.github.maltalex.ineter.base.IPv6Address;
-import com.github.maltalex.ineter.range.IPv6Subnet;
 
 @RunWith(JUnitPlatform.class)
 public class IPv6SubnetTest {
@@ -41,11 +40,11 @@ public class IPv6SubnetTest {
 
 		assertEquals(subnet.getFirst(), IPv6Address.of("1234::"));
 		assertEquals(subnet.getLast(), IPv6Address.of("1235::").previous());
-		assertEquals(subnet.getNetworkBitCount(), 16);
-		assertEquals(subnet.getHostBitCount(), 112);
+		assertEquals(16, subnet.getNetworkBitCount());
+		assertEquals(112, subnet.getHostBitCount());
 		assertEquals(subnet.getNetworkMask(), IPv6Address.of("ffff::"));
 		assertEquals(subnet.getNetworkAddress(), IPv6Address.of("1234::"));
-		assertEquals(subnet.toString(), "1234:0:0:0:0:0:0:0/16");
+		assertEquals("1234:0:0:0:0:0:0:0/16", subnet.toString());
 	}
 
 	@Test
@@ -54,7 +53,7 @@ public class IPv6SubnetTest {
 		IPv6Subnet subnet2 = IPv6Subnet.of("1234::/16");
 		assertEquals(subnet1, subnet2);
 		assertEquals(subnet1.hashCode(), subnet2.hashCode());
-		assertNotEquals(subnet1, null);
+		assertNotEquals(null, subnet1);
 	}
 
 	@Test
@@ -73,12 +72,12 @@ public class IPv6SubnetTest {
 
 	@Test
 	void unequalToNull() {
-		assertNotEquals(IPv6Subnet.of("::/24"), null);
+		assertNotEquals(null, IPv6Subnet.of("::/24"));
 	}
 
 	@Test
 	void unequalToObject() {
-		assertNotEquals(IPv6Subnet.of("::/24"), new Object());
+		assertNotEquals(new Object(), IPv6Subnet.of("::/24"));
 	}
 
 	@Test

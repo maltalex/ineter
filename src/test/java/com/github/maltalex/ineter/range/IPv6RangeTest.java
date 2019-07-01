@@ -7,12 +7,6 @@
  */
 package com.github.maltalex.ineter.range;
 
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.math.BigInteger;
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -32,8 +26,8 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 import com.github.maltalex.ineter.base.IPv6Address;
-import com.github.maltalex.ineter.range.IPv6Range;
-import com.github.maltalex.ineter.range.IPv6Subnet;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(JUnitPlatform.class)
 public class IPv6RangeTest {
@@ -41,31 +35,31 @@ public class IPv6RangeTest {
 	@Test
 	void ofAddress() {
 		IPv6Range range = IPv6Range.of(IPv6Address.of("::1"), IPv6Address.of("1::"));
-		assertTrue(range.getFirst().equals(IPv6Address.of("::1")));
-		assertTrue(range.getLast().equals(IPv6Address.of("1::")));
+		assertEquals(range.getFirst(), IPv6Address.of("::1"));
+		assertEquals(range.getLast(), IPv6Address.of("1::"));
 	}
 
 	@Test
 	void ofString() {
 		IPv6Range range = IPv6Range.of("::1", "1::");
-		assertTrue(range.getFirst().equals(IPv6Address.of("::1")));
-		assertTrue(range.getLast().equals(IPv6Address.of("1::")));
+		assertEquals(range.getFirst(), IPv6Address.of("::1"));
+		assertEquals(range.getLast(), IPv6Address.of("1::"));
 	}
 
 	@Test
 	void ofInetAddress() throws UnknownHostException {
 		IPv6Range range = IPv6Range.of((Inet6Address) InetAddress.getByName("::1"),
 				(Inet6Address) InetAddress.getByName("1::"));
-		assertTrue(range.getFirst().equals(IPv6Address.of("::1")));
-		assertTrue(range.getLast().equals(IPv6Address.of("1::")));
+		assertEquals(range.getFirst(), IPv6Address.of("::1"));
+		assertEquals(range.getLast(), IPv6Address.of("1::"));
 	}
 
 	@Test
 	void ofArray() {
 		IPv6Range range = IPv6Range.of(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
 				new byte[] { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
-		assertTrue(range.getFirst().equals(IPv6Address.of("::1")));
-		assertTrue(range.getLast().equals(IPv6Address.of("1::")));
+		assertEquals(range.getFirst(), IPv6Address.of("::1"));
+		assertEquals(range.getLast(), IPv6Address.of("1::"));
 	}
 
 	@Test
@@ -165,7 +159,7 @@ public class IPv6RangeTest {
 		IPv6Range.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ff00", "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff").iterator()
 				.forEachRemaining(itemList::add);
 
-		assertEquals(itemList.size(), 256);
+		assertEquals(256, itemList.size());
 		assertEquals(itemList.get(0), IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ff00"));
 		assertEquals(itemList.get(itemList.size() - 1), IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"));
 
@@ -184,7 +178,7 @@ public class IPv6RangeTest {
 		IPv6Range.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ff00", "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff")
 				.iterator(true).forEachRemaining(itemList::add);
 
-		assertEquals(itemList.size(), 254);
+		assertEquals(254, itemList.size());
 		assertEquals(itemList.get(0), IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ff01"));
 		assertEquals(itemList.get(itemList.size() - 1), IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffe"));
 

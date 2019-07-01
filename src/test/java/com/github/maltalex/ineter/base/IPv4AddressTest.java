@@ -7,16 +7,10 @@
  */
 package com.github.maltalex.ineter.base;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.math.BigInteger;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,7 +19,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
-import com.github.maltalex.ineter.base.IPv4Address;
+import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(JUnitPlatform.class)
 public class IPv4AddressTest {
@@ -35,27 +29,27 @@ public class IPv4AddressTest {
 	void equality(String ipStr) {
 		IPv4Address ip1 = IPv4Address.of(ipStr);
 		IPv4Address ip2 = IPv4Address.of(ipStr);
-		assertTrue(ip1.equals(ip2));
-		assertTrue(ip1.hashCode() == ip2.hashCode());
-		assertFalse(ip1 == ip2);
+		assertEquals(ip1, ip2);
+		assertEquals(ip1.hashCode(), ip2.hashCode());
+		assertNotSame(ip1, ip2);
 	}
 
 	@Test
 	void version() {
 		IPv4Address ip1 = IPv4Address.of("1.2.3.4");
-		assertTrue(ip1.version() == 4);
+		assertEquals(4, ip1.version());
 	}
 
 	@Test
 	void unequalToObject() {
 		IPv4Address ip1 = IPv4Address.of("1.2.3.4");
-		assertFalse(ip1.equals(new Object()));
+		assertNotEquals(new Object(), ip1);
 	}
 
 	@Test
 	void unequalToNull() {
 		IPv4Address ip1 = IPv4Address.of("1.2.3.4");
-		assertFalse(ip1.equals(null));
+		assertNotEquals(null, ip1);
 	}
 
 	@ParameterizedTest
@@ -64,8 +58,8 @@ public class IPv4AddressTest {
 	void inequality(String ipStr1, String ipStr2) {
 		IPv4Address ip1 = IPv4Address.of(ipStr1);
 		IPv4Address ip2 = IPv4Address.of(ipStr2);
-		assertTrue(!ip1.equals(ip2));
-		assertFalse(ip1 == ip2);
+		assertNotEquals(ip1, ip2);
+		assertNotSame(ip1, ip2);
 	}
 
 	@ParameterizedTest
@@ -73,13 +67,13 @@ public class IPv4AddressTest {
 	void ordering(String ipStr1, String ipStr2) {
 		IPv4Address ip1 = IPv4Address.of(ipStr1);
 		IPv4Address ip2 = IPv4Address.of(ipStr2);
-		assertTrue(ip1.compareTo(ip2) == -1);
-		assertTrue(ip2.compareTo(ip1) == 1);
-		assertTrue(ip1.compareTo(ip1) == 0);
-		assertTrue(ip2.compareTo(ip2) == 0);
+		assertEquals(-1, ip1.compareTo(ip2));
+		assertEquals(1, ip2.compareTo(ip1));
+		assertEquals(0, ip1.compareTo(ip1));
+		assertEquals(0, ip2.compareTo(ip2));
 
-		assertTrue(ip1.compareTo(null) == 1);
-		assertTrue(ip2.compareTo(null) == 1);
+		assertEquals(1, ip1.compareTo(null));
+		assertEquals(1, ip2.compareTo(null));
 	}
 
 	@ParameterizedTest
@@ -97,7 +91,7 @@ public class IPv4AddressTest {
 	@Test
 	void inetAddressConstructor() {
 		try {
-			assertTrue(IPv4Address.of((Inet4Address) InetAddress.getByName("8.8.8.8")).toString().equals("8.8.8.8"));
+			assertEquals("8.8.8.8", IPv4Address.of((Inet4Address) InetAddress.getByName("8.8.8.8")).toString());
 		} catch (UnknownHostException e) {
 			fail(e);
 		}
@@ -116,7 +110,7 @@ public class IPv4AddressTest {
 	@Test
 	void byteArrayConstructor() {
 		IPv4Address ip = IPv4Address.of(new byte[] { 1, 2, 3, 4 });
-		assertTrue(ip.toString().equals("1.2.3.4"));
+		assertEquals("1.2.3.4", ip.toString());
 		assertThrows(IllegalArgumentException.class, () -> IPv4Address.of(new byte[] { 1, 2, 3 }));
 		assertThrows(IllegalArgumentException.class, () -> IPv4Address.of(new byte[] { 1, 2, 3, 4, 5 }));
 		assertThrows(NullPointerException.class, () -> IPv4Address.of((byte[]) null));
@@ -129,8 +123,8 @@ public class IPv4AddressTest {
 		IPv4Address ip1 = IPv4Address.of(ipStr1);
 		IPv4Address ip2 = IPv4Address.of(ipStr2);
 		int j = Integer.parseInt(i, 16);
-		assertTrue(ip1.plus(j).equals(ip2));
-		assertTrue(ip2.minus(j).equals(ip1));
+		assertEquals(ip1.plus(j), ip2);
+		assertEquals(ip2.minus(j), ip1);
 	}
 
 	@ParameterizedTest
@@ -138,21 +132,21 @@ public class IPv4AddressTest {
 	void nextPrev(String ipStr1, String ipStr2) {
 		IPv4Address ip1 = IPv4Address.of(ipStr1);
 		IPv4Address ip2 = IPv4Address.of(ipStr2);
-		assertTrue(ip1.next().equals(ip2));
-		assertTrue(ip2.previous().equals(ip1));
+		assertEquals(ip1.next(), ip2);
+		assertEquals(ip2.previous(), ip1);
 	}
 
 	@Test
 	void toStr() {
 		IPv4Address ip = IPv4Address.of("130.123.1.2");
-		assertTrue(ip.toString().equals("130.123.1.2"));
+		assertEquals("130.123.1.2", ip.toString());
 	}
 
 	@Test
 	void toInetAddress() {
 		IPv4Address ip = IPv4Address.of("130.123.1.2");
 		try {
-			assertTrue(ip.toInet4Address().equals(InetAddress.getByName("130.123.1.2")));
+			assertEquals(InetAddress.getByName("130.123.1.2"), ip.toInet4Address());
 		} catch (UnknownHostException e) {
 			fail(e);
 		}
@@ -161,16 +155,16 @@ public class IPv4AddressTest {
 	@Test
 	void toInt() {
 		IPv4Address ip = IPv4Address.of("130.123.1.2");
-		assertTrue(ip.toInt() == 0x827b0102);
-		assertTrue(ip.toBigInteger().equals(BigInteger.valueOf(0x827b0102L)));
-		assertTrue(ip.toSignedBigInteger().equals(BigInteger.valueOf(0xffffffff827b0102L)));
+		assertEquals(0x827b0102, ip.toInt());
+		assertEquals(BigInteger.valueOf(0x827b0102L), ip.toBigInteger());
+		assertEquals(BigInteger.valueOf(0xffffffff827b0102L), ip.toSignedBigInteger());
 	}
 
 	@Test
 	void toArray() {
 		IPv4Address ip = IPv4Address.of("130.123.1.2");
-		assertTrue(Arrays.equals(ip.toArray(), new byte[] { (byte) 130, 123, 1, 2 }));
-		assertTrue(Arrays.equals(ip.toBigEndianArray(), new byte[] { (byte) 130, 123, 1, 2 }));
-		assertTrue(Arrays.equals(ip.toLittleEndianArray(), new byte[] { 2, 1, 123, (byte) 130 }));
+		assertArrayEquals(ip.toArray(), new byte[]{(byte) 130, 123, 1, 2});
+		assertArrayEquals(ip.toBigEndianArray(), new byte[]{(byte) 130, 123, 1, 2});
+		assertArrayEquals(ip.toLittleEndianArray(), new byte[]{2, 1, 123, (byte) 130});
 	}
 }

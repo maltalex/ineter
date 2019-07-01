@@ -7,9 +7,6 @@
  */
 package com.github.maltalex.ineter.range;
 
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,7 +15,9 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 import com.github.maltalex.ineter.base.IPv4Address;
-import com.github.maltalex.ineter.range.IPv4Subnet;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @RunWith(JUnitPlatform.class)
 public class IPv4SubnetTest {
@@ -41,11 +40,11 @@ public class IPv4SubnetTest {
 
 		assertEquals(subnet.getFirst(), IPv4Address.of("192.168.1.0"));
 		assertEquals(subnet.getLast(), IPv4Address.of("192.168.1.255"));
-		assertEquals(subnet.getNetworkBitCount(), 24);
-		assertEquals(subnet.getHostBitCount(), 8);
+		assertEquals(24, subnet.getNetworkBitCount());
+		assertEquals(8, subnet.getHostBitCount());
 		assertEquals(subnet.getNetworkMask(), IPv4Address.of("255.255.255.0"));
 		assertEquals(subnet.getNetworkAddress(), IPv4Address.of("192.168.1.0"));
-		assertEquals(subnet.toString(), "192.168.1.0/24");
+		assertEquals("192.168.1.0/24", subnet.toString());
 	}
 
 	@Test
@@ -54,7 +53,7 @@ public class IPv4SubnetTest {
 		IPv4Subnet subnet2 = IPv4Subnet.of("192.168.1.0/24");
 		assertEquals(subnet1, subnet2);
 		assertEquals(subnet1.hashCode(), subnet2.hashCode());
-		assertNotEquals(subnet1, null);
+		assertNotEquals(null, subnet1);
 	}
 
 	@Test
@@ -64,7 +63,7 @@ public class IPv4SubnetTest {
 
 		for (IPv4Subnet s1 : l) {
 			for (IPv4Subnet s2 : l) {
-				if (!(s1 == s2)) {
+				if (s1 != s2) {
 					assertNotEquals(s1, s2);
 				}
 			}
@@ -73,12 +72,12 @@ public class IPv4SubnetTest {
 
 	@Test
 	void unequalToNull() {
-		assertNotEquals(IPv4Subnet.of("1.2.3.0/24"), null);
+		assertNotEquals(null, IPv4Subnet.of("1.2.3.0/24"));
 	}
 
 	@Test
 	void unequalToObject() {
-		assertNotEquals(IPv4Subnet.of("1.2.3.0/24"), new Object());
+		assertNotEquals(new Object(), IPv4Subnet.of("1.2.3.0/24"));
 	}
 
 	@Test

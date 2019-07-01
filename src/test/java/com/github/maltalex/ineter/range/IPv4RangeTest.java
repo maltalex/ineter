@@ -7,12 +7,6 @@
  */
 package com.github.maltalex.ineter.range;
 
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -31,8 +25,8 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 import com.github.maltalex.ineter.base.IPv4Address;
-import com.github.maltalex.ineter.range.IPv4Range;
-import com.github.maltalex.ineter.range.IPv4Subnet;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(JUnitPlatform.class)
 public class IPv4RangeTest {
@@ -40,30 +34,30 @@ public class IPv4RangeTest {
 	@Test
 	void ofAddress() {
 		IPv4Range range = IPv4Range.of(IPv4Address.of("1.2.3.4"), IPv4Address.of("5.4.3.2"));
-		assertTrue(range.getFirst().equals(IPv4Address.of("1.2.3.4")));
-		assertTrue(range.getLast().equals(IPv4Address.of("5.4.3.2")));
+		assertEquals(range.getFirst(), IPv4Address.of("1.2.3.4"));
+		assertEquals(range.getLast(), IPv4Address.of("5.4.3.2"));
 	}
 
 	@Test
 	void ofString() {
 		IPv4Range range = IPv4Range.of("1.2.3.4", "5.4.3.2");
-		assertTrue(range.getFirst().equals(IPv4Address.of("1.2.3.4")));
-		assertTrue(range.getLast().equals(IPv4Address.of("5.4.3.2")));
+		assertEquals(range.getFirst(), IPv4Address.of("1.2.3.4"));
+		assertEquals(range.getLast(), IPv4Address.of("5.4.3.2"));
 	}
 
 	@Test
 	void ofInetAddress() throws UnknownHostException {
 		IPv4Range range = IPv4Range.of((Inet4Address) InetAddress.getByName("1.2.3.4"),
 				(Inet4Address) InetAddress.getByName("5.4.3.2"));
-		assertTrue(range.getFirst().equals(IPv4Address.of("1.2.3.4")));
-		assertTrue(range.getLast().equals(IPv4Address.of("5.4.3.2")));
+		assertEquals(range.getFirst(), IPv4Address.of("1.2.3.4"));
+		assertEquals(range.getLast(), IPv4Address.of("5.4.3.2"));
 	}
 
 	@Test
 	void ofArray() {
 		IPv4Range range = IPv4Range.of(new byte[] { 1, 2, 3, 4 }, new byte[] { 5, 4, 3, 2 });
-		assertTrue(range.getFirst().equals(IPv4Address.of("1.2.3.4")));
-		assertTrue(range.getLast().equals(IPv4Address.of("5.4.3.2")));
+		assertEquals(range.getFirst(), IPv4Address.of("1.2.3.4"));
+		assertEquals(range.getLast(), IPv4Address.of("5.4.3.2"));
 	}
 
 	@Test
@@ -80,8 +74,8 @@ public class IPv4RangeTest {
 	@Test
 	void parse() {
 		IPv4Range range = IPv4Range.parse("1.2.3.4-5.4.3.2");
-		assertTrue(range.getFirst().equals(IPv4Address.of("1.2.3.4")));
-		assertTrue(range.getLast().equals(IPv4Address.of("5.4.3.2")));
+		assertEquals(range.getFirst(), IPv4Address.of("1.2.3.4"));
+		assertEquals(range.getLast(), IPv4Address.of("5.4.3.2"));
 		assertTrue(range.toString().contains("1.2.3.4"));
 		assertTrue(range.toString().contains("5.4.3.2"));
 	}
@@ -89,8 +83,8 @@ public class IPv4RangeTest {
 	@Test
 	void between() {
 		IPv4Range range = IPv4Range.between("1.2.3.4-5.4.3.2");
-		assertTrue(range.getFirst().equals(IPv4Address.of("1.2.3.4")));
-		assertTrue(range.getLast().equals(IPv4Address.of("5.4.3.2")));
+		assertEquals(range.getFirst(), IPv4Address.of("1.2.3.4"));
+		assertEquals(range.getLast(), IPv4Address.of("5.4.3.2"));
 		assertTrue(range.toString().contains("1.2.3.4"));
 		assertTrue(range.toString().contains("5.4.3.2"));
 	}
@@ -157,7 +151,7 @@ public class IPv4RangeTest {
 	@Test
 	void unequalToNull() {
 		IPv4Range range1 = IPv4Range.parse("192.168.0.0-192.168.255.255");
-		assertFalse(range1.equals(null));
+		assertNotEquals(null, range1);
 	}
 
 	@ParameterizedTest
@@ -171,7 +165,7 @@ public class IPv4RangeTest {
 		ArrayList<IPv4Address> itemList = new ArrayList<>();
 		IPv4Range.of("127.255.255.0", "128.0.0.1").iterator().forEachRemaining(itemList::add);
 
-		assertEquals(itemList.size(), 258);
+		assertEquals(258, itemList.size());
 		assertEquals(itemList.get(0), IPv4Address.of("127.255.255.0"));
 		assertEquals(itemList.get(itemList.size() - 1), IPv4Address.of("128.0.0.1"));
 
@@ -189,7 +183,7 @@ public class IPv4RangeTest {
 		ArrayList<IPv4Address> itemList = new ArrayList<>();
 		IPv4Range.of("127.255.255.0", "128.0.0.1").iterator(true).forEachRemaining(itemList::add);
 
-		assertEquals(itemList.size(), 256);
+		assertEquals(256, itemList.size());
 		assertEquals(itemList.get(0), IPv4Address.of("127.255.255.1"));
 		assertEquals(itemList.get(itemList.size() - 1), IPv4Address.of("128.0.0.0"));
 
