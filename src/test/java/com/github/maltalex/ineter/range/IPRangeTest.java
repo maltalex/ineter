@@ -7,7 +7,10 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
+@RunWith(JUnitPlatform.class)
 class IPRangeTest {
 
 	private static final BiFunction<String, String, IPv4Range> IPv4_RANGE_PRODUCER = IPv4Range::of;

@@ -13,9 +13,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 import com.github.maltalex.ineter.base.IPv6Address;
 
+@RunWith(JUnitPlatform.class)
 public class IPv6KnownAddressesTest {
 
 	@ParameterizedTest()
