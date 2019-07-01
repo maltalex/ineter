@@ -78,6 +78,15 @@ public class IPv4RangeTest {
 	}
 
 	@Test
+	void parse() {
+		IPv4Range range = IPv4Range.parse("1.2.3.4-5.4.3.2");
+		assertTrue(range.getFirst().equals(IPv4Address.of("1.2.3.4")));
+		assertTrue(range.getLast().equals(IPv4Address.of("5.4.3.2")));
+		assertTrue(range.toString().contains("1.2.3.4"));
+		assertTrue(range.toString().contains("5.4.3.2"));
+	}
+
+	@Test
 	void between() {
 		IPv4Range range = IPv4Range.between("1.2.3.4-5.4.3.2");
 		assertTrue(range.getFirst().equals(IPv4Address.of("1.2.3.4")));
@@ -89,48 +98,48 @@ public class IPv4RangeTest {
 	@ParameterizedTest
 	@CsvSource({ "1.2.3.4,2.3.4.5,1.2.3.4", "0.0.0.0,255.255.255.255,255.255.255.255",
 			"127.0.0.0,127.255.255.255,127.1.2.3" })
-	void contains(String start, String end, String between) {
-		assertTrue(IPv4Range.between(start + "-" + end).contains(IPv4Address.of(between)));
+	void contains(String start, String end, String parse) {
+		assertTrue(IPv4Range.parse(start + "-" + end).contains(IPv4Address.of(parse)));
 	}
 
 	@ParameterizedTest
 	@CsvSource({ "1.2.3.4,2.3.4.5,1.2.3.2", "0.0.0.0,127.255.255.255,255.255.255.255",
 			"127.0.0.0,127.255.255.255,128.0.0.0" })
-	void notContains(String start, String end, String between) {
-		assertFalse(IPv4Range.between(start + "-" + end).contains(IPv4Address.of(between)));
+	void notContains(String start, String end, String parse) {
+		assertFalse(IPv4Range.parse(start + "-" + end).contains(IPv4Address.of(parse)));
 	}
 
 	@ParameterizedTest
 	@CsvSource({ "1.2.3.4,2.3.4.5,1.2.4.0/24", "0.0.0.0,255.255.255.255,0.0.0.0/0",
 			"127.0.0.0,127.255.255.255,127.0.0.0/16" })
-	void containsRange(String start, String end, String between) {
-		assertTrue(IPv4Range.between(start + "-" + end).contains(IPv4Subnet.of(between)));
+	void containsRange(String start, String end, String parse) {
+		assertTrue(IPv4Range.parse(start + "-" + end).contains(IPv4Subnet.of(parse)));
 	}
 
 	@ParameterizedTest
 	@CsvSource({ "1.2.3.4,2.3.4.5,1.2.3.0/24", "0.0.0.1,255.255.255.255,0.0.0.0/0",
 			"127.0.0.0,127.255.255.255,127.0.0.0/7" })
-	void notContainsRange(String start, String end, String between) {
-		assertFalse(IPv4Range.between(start + "-" + end).contains(IPv4Subnet.of(between)));
+	void notContainsRange(String start, String end, String parse) {
+		assertFalse(IPv4Range.parse(start + "-" + end).contains(IPv4Subnet.of(parse)));
 	}
 
 	@ParameterizedTest
 	@CsvSource({ "1.2.3.4,2.3.4.5,1.0.0.0-1.2.3.5", "0.0.0.0,255.255.255.255,1.2.3.4-1.2.3.4",
 			"127.0.0.0,127.255.255.255,0.0.0.0-128.0.0.0" })
-	void overlaps(String start, String end, String between) {
-		assertTrue(IPv4Range.between(start + "-" + end).overlaps(IPv4Range.between(between)));
+	void overlaps(String start, String end, String parse) {
+		assertTrue(IPv4Range.parse(start + "-" + end).overlaps(IPv4Range.parse(parse)));
 	}
 
 	@ParameterizedTest
 	@CsvSource({ "1.2.3.4,2.3.4.5,128.0.0.0-128.2.3.5", "0.0.0.1,255.255.255.255,0.0.0.0-0.0.0.0",
 			"127.0.0.0,127.255.255.255,128.0.0.0-255.255.255.255" })
-	void notOverlaps(String start, String end, String between) {
-		assertFalse(IPv4Range.between(start + "-" + end).overlaps(IPv4Range.between(between)));
+	void notOverlaps(String start, String end, String parse) {
+		assertFalse(IPv4Range.parse(start + "-" + end).overlaps(IPv4Range.parse(parse)));
 	}
 
 	@Test
 	void equal() {
-		IPv4Range range1 = IPv4Range.between("192.168.0.0-192.168.255.255");
+		IPv4Range range1 = IPv4Range.parse("192.168.0.0-192.168.255.255");
 		IPv4Range range2 = IPv4Range.of(IPv4Address.of("192.168.0.0"), IPv4Address.of("192.168.255.255"));
 
 		assertEquals(range1.hashCode(), range2.hashCode());
@@ -139,7 +148,7 @@ public class IPv4RangeTest {
 
 	@Test
 	void notEqual() {
-		IPv4Range range1 = IPv4Range.between("192.168.0.0-192.168.255.255");
+		IPv4Range range1 = IPv4Range.parse("192.168.0.0-192.168.255.255");
 		IPv4Range range2 = IPv4Range.of(IPv4Address.of("10.0.0.0"), IPv4Address.of("10.255.255.255"));
 
 		assertNotEquals(range1, range2);
@@ -147,14 +156,14 @@ public class IPv4RangeTest {
 
 	@Test
 	void unequalToNull() {
-		IPv4Range range1 = IPv4Range.between("192.168.0.0-192.168.255.255");
+		IPv4Range range1 = IPv4Range.parse("192.168.0.0-192.168.255.255");
 		assertFalse(range1.equals(null));
 	}
 
 	@ParameterizedTest
 	@CsvSource({ "0.0.0.0-255.255.255.255,100000000", "10.0.0.0-10.0.0.255,100", "10.0.0.1-10.0.0.1,1" })
-	void length(String between, String length) {
-		assertEquals(IPv4Range.between(between).length().longValue(), Long.parseLong(length, 16));
+	void length(String parse, String length) {
+		assertEquals(IPv4Range.parse(parse).length().longValue(), Long.parseLong(length, 16));
 	}
 
 	@Test
@@ -217,10 +226,53 @@ public class IPv4RangeTest {
 			"10.100.0.0-10.255.255.255,10.100.0.0/14 10.104.0.0/13 10.112.0.0/12 10.128.0.0/9",
 			"123.45.67.89-123.45.68.4, 123.45.67.89/32 123.45.67.90/31 123.45.67.92/30 123.45.67.96/27 123.45.67.128/25 123.45.68.0/30 123.45.68.4/32" })
 	void toSubnets(String range, String subnets) {
-		List<IPv4Subnet> generated = IPv4Range.between(range).toSubnets();
+		List<IPv4Subnet> generated = IPv4Range.parse(range).toSubnets();
 		List<IPv4Subnet> manual = Arrays.stream(subnets.split(" ")).map(IPv4Subnet::of).collect(Collectors.toList());
 		assertEquals(generated, manual);
 		assertEquals(manual.stream().mapToLong(IPv4Subnet::length).sum(),
-				IPv4Range.between(range).length().longValue());
+				IPv4Range.parse(range).length().longValue());
+	}
+
+	@Test
+	void singleIPRangeParse() {
+		final IPv4Range explicitRange = IPv4Range.parse("127.0.0.1-127.0.0.1");
+		final IPv4Range range = IPv4Range.parse("127.0.0.1");
+		assertEquals(explicitRange, range, "Single address range doesn't match explicit range with same addresses on both ends.");
+	}
+
+	@Test
+	void singleIPRangeOfBytes() {
+		final IPv4Range explicitRange = IPv4Range.of(new byte[] { 1, 2, 3, 4 }, new byte[] { 1, 2, 3, 4 });
+		final IPv4Range range = IPv4Range.of(new byte[] { 1, 2, 3, 4 });
+		assertEquals(explicitRange, range, "Single address range doesn't match explicit range with same addresses on both ends.");
+	}
+
+	@Test
+	void singleIPRangeOfString() {
+		final IPv4Range explicitRange = IPv4Range.of("1.2.3.4", "1.2.3.4");
+		final IPv4Range range = IPv4Range.of("1.2.3.4");
+		assertEquals(explicitRange, range, "Single address range doesn't match explicit range with same addresses on both ends.");
+	}
+
+	@Test
+	void singleIPRangeOfIPv4Address() {
+		final IPv4Range explicitRange = IPv4Range.of(IPv4Address.of("1.2.3.4"), IPv4Address.of("1.2.3.4"));
+		final IPv4Range range = IPv4Range.of(IPv4Address.of("1.2.3.4"));
+		assertEquals(explicitRange, range, "Single address range doesn't match explicit range with same addresses on both ends.");
+	}
+
+	@Test
+	void singleIPRangeOfInetAddress() throws UnknownHostException {
+		final IPv4Range explicitRange = IPv4Range.of((Inet4Address) InetAddress.getByName("1.2.3.4"),
+				(Inet4Address) InetAddress.getByName("1.2.3.4"));
+		final IPv4Range range = IPv4Range.of((Inet4Address) InetAddress.getByName("1.2.3.4"));
+		assertEquals(explicitRange, range, "Single address range doesn't match explicit range with same addresses on both ends.");
+	}
+
+	@Test
+	void parsedSubnet() {
+		final IPv4Range range = IPv4Range.parse("127.0.0.0/24");
+		assertEquals(IPv4Address.of("127.0.0.0"), range.getFirst());
+		assertEquals(IPv4Address.of("127.0.0.255"), range.getLast());
 	}
 }

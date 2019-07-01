@@ -24,6 +24,7 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 		MASK_28, MASK_29, MASK_30, MASK_31, MASK_32;
 		// @formatter:on
 
+		//TODO: maybe we should unify mask type as int.
 		public static IPv4SubnetMask fromMaskLen(byte maskLen) {
 			if (maskLen >= 0 && maskLen <= IPv4Address.ADDRESS_BITS) {
 				return IPv4SubnetMask.values()[maskLen];
@@ -81,6 +82,14 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 
 	public static IPv4Subnet of(IPv4Address address, byte maskLen) {
 		return new IPv4Subnet(address, IPv4SubnetMask.fromMaskLen(maskLen));
+	}
+
+	public static IPv4Subnet parse(String from) throws IllegalArgumentException {
+		return parseSubnet(from, IPv4Subnet::of, 32);
+	}
+
+	static IPv4Subnet of(String address, Integer subnet) {
+		return IPv4Subnet.of(address, subnet.byteValue());
 	}
 
 	protected final byte networkBitCount;

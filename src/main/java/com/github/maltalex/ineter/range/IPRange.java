@@ -10,12 +10,39 @@ package com.github.maltalex.ineter.range;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import com.github.maltalex.ineter.base.IPAddress;
 
 public abstract class IPRange<T extends IPAddress & Comparable<T>> implements Iterable<T>, Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	protected static <T> T parseRange(String from, BiFunction<String, String, ? extends T> rangeProducer, Function<String, ? extends T> subnetProducer) {
+		String[] parts = from.split("-");
+		if (parts.length == 2) {
+			return rangeProducer.apply(parts[0].trim(), parts[1].trim());
+		} else if (parts.length == 1) {
+			if (from.contains("/")) {
+				return subnetProducer.apply(from);
+			}
+			return rangeProducer.apply(parts[0].trim(), parts[0].trim());
+		} else {
+			throw new IllegalArgumentException(String.format("Inappropriate format for address range string %s.", from));
+		}
+	}
+
+	protected static <T> T parseSubnet(String from, BiFunction<String, Integer, ? extends T> subnetProducer, int singleAddressMask) {
+		final String[] parts = from.split("/");
+		if (parts.length == 2) {
+			return subnetProducer.apply(parts[0].trim(), Integer.parseInt(parts[1].trim()));
+		} else if (parts.length == 1) {
+			return subnetProducer.apply(parts[0].trim(), singleAddressMask);
+		} else {
+			throw new IllegalArgumentException(String.format("Inappropriate format for address subnet string %s.", from));
+		}
+	}
 
 	public abstract T getFirst();
 
@@ -26,8 +53,7 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements It
 	 * range. To check whether all addresses are contained, use
 	 * {@link IPRange#contains(IPRange)}
 	 *
-	 * @param range
-	 *            the range to check for overlap
+	 * @param range the range to check for overlap
 	 * @return true if the given range overlaps with this one
 	 */
 	public boolean overlaps(IPRange<T> range) {
@@ -51,8 +77,7 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements It
 	 * Checks whether this range contains all addresses of a given range. To
 	 * check for partial overlap, use {@link IPRange#overlaps(IPRange)}
 	 *
-	 * @param range
-	 *            range to check
+	 * @param range range to check
 	 * @return true if the entire given range is contained within this range
 	 */
 	public boolean contains(IPRange<T> range) {
@@ -105,8 +130,7 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements It
 	 * Returns an iterator that optionally skips both the first and last
 	 * addresses in the range
 	 *
-	 * @param trim
-	 *            set to true to skip first and last addresses
+	 * @param trim set to true to skip first and last addresses
 	 * @return a new iterator instance
 	 */
 	public Iterator<T> iterator(boolean trim) {
@@ -117,11 +141,8 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements It
 	 * Returns an iterator that optionally skips the first, last or both
 	 * addresses in the range
 	 *
-	 * @param skipFirst
-	 *            set to true to skip the first address
-	 *
-	 * @param skipLast
-	 *            set to true to skip the last addresses
+	 * @param skipFirst set to true to skip the first address
+	 * @param skipLast  set to true to skip the last addresses
 	 * @return a new iterator instance
 	 */
 	public abstract Iterator<T> iterator(boolean skipFirst, boolean skipLast);
