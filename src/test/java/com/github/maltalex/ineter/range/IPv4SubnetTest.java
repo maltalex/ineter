@@ -84,6 +84,15 @@ public class IPv4SubnetTest {
 	}
 
 	@Test
+	void equalToRangeWithSameAddresses() {
+		IPv4Subnet subnet1 = IPv4Subnet.of("192.168.1.0/24");
+		IPv4Range subnet2 = IPv4Range.parse("192.168.1.0-192.168.1.255");
+		assertEquals(subnet1, subnet2);
+		assertEquals(subnet2, subnet1);
+		assertEquals(subnet1.hashCode(), subnet2.hashCode());
+	}
+
+	@Test
 	void parseCidr() {
 		final String cidr = "192.168.0.0/24";
 		final IPv4Subnet parsedSubnet = IPv4Subnet.parse(cidr);

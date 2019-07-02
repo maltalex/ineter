@@ -84,6 +84,15 @@ public class IPv6SubnetTest {
 	}
 
 	@Test
+	void equalToRangeWithSameAddresses() {
+		IPv6Subnet subnet1 = IPv6Subnet.of("1234::/16");
+		IPv6Range subnet2 = IPv6Range.parse("1234::-1234:ffff:ffff:ffff:ffff:ffff:ffff:ffff");
+		assertEquals(subnet1, subnet2);
+		assertEquals(subnet2, subnet1);
+		assertEquals(subnet1.hashCode(), subnet2.hashCode());
+	}
+
+	@Test
 	void parseSingleAddress() {
 		final String address = "1234::";
 		final IPv6Subnet parsedSubnet = IPv6Subnet.parse(address);
