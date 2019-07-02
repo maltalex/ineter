@@ -132,6 +132,9 @@ public class IPv6RangeTest {
 		IPv6Range range1 = IPv6Range.parse("1234::1234-1234::ffff");
 		IPv6Range range2 = IPv6Range.of(IPv6Address.of("1234::1234"), IPv6Address.of("1234::ffff"));
 
+		assertEquals(range1, range1);
+		assertEquals(range2, range2);
+
 		assertEquals(range1.hashCode(), range2.hashCode());
 		assertEquals(range1, range2);
 	}
@@ -142,6 +145,17 @@ public class IPv6RangeTest {
 		IPv6Range range2 = IPv6Range.of(IPv6Address.of("1234::"), IPv6Address.of("1234::ffff"));
 
 		assertNotEquals(range1, range2);
+	}
+	
+	@Test
+	void unequalToNull() {
+		IPv6Range range1 = IPv6Range.parse("1234::1234-1234::ffff");
+		assertFalse(range1.equals(null));
+	}
+	
+	@Test
+	void unequalToObject() {
+		assertFalse(IPv6Range.parse("1234::1234-1234::ffff").equals(new Object()));
 	}
 
 	@ParameterizedTest
@@ -254,14 +268,15 @@ public class IPv6RangeTest {
 
 	@Test
 	void singleIPRangeOfInet6Address() throws UnknownHostException {
-		final IPv6Range explicitRange = IPv6Range.of((Inet6Address) InetAddress.getByName("::1"), (Inet6Address) InetAddress.getByName("::1"));
+		final IPv6Range explicitRange = IPv6Range.of((Inet6Address) InetAddress.getByName("::1"),
+				(Inet6Address) InetAddress.getByName("::1"));
 		final IPv6Range range = IPv6Range.of((Inet6Address) InetAddress.getByName("::1"));
 		assertEquals(explicitRange, range,
 				"Single address range doesn't match explicit range with same addresses on both ends.");
 	}
 
 	@Test
-	void parseSubnet(){
+	void parseSubnet() {
 		final IPv6Range range = IPv6Range.parse("1234::/16");
 		assertEquals(IPv6Address.of("1234::"), range.getFirst());
 		assertEquals(IPv6Address.of("1235::").previous(), range.getLast());

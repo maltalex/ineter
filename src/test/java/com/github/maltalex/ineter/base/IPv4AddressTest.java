@@ -43,13 +43,13 @@ public class IPv4AddressTest {
 	@Test
 	void unequalToObject() {
 		IPv4Address ip1 = IPv4Address.of("1.2.3.4");
-		assertNotEquals(new Object(), ip1);
+		assertFalse(ip1.equals(new Object()));
 	}
 
 	@Test
 	void unequalToNull() {
 		IPv4Address ip1 = IPv4Address.of("1.2.3.4");
-		assertNotEquals(null, ip1);
+		assertFalse(ip1.equals(null));
 	}
 
 	@ParameterizedTest

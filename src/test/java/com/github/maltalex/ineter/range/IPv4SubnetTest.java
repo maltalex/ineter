@@ -15,9 +15,13 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 import com.github.maltalex.ineter.base.IPv4Address;
+import com.github.maltalex.ineter.range.IPv4Subnet.IPv4SubnetMask;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @RunWith(JUnitPlatform.class)
 public class IPv4SubnetTest {
@@ -48,12 +52,11 @@ public class IPv4SubnetTest {
 	}
 
 	@Test
-	void equaly() {
+	void equality() {
 		IPv4Subnet subnet1 = IPv4Subnet.of("192.168.1.0/24");
 		IPv4Subnet subnet2 = IPv4Subnet.of("192.168.1.0/24");
 		assertEquals(subnet1, subnet2);
 		assertEquals(subnet1.hashCode(), subnet2.hashCode());
-		assertNotEquals(null, subnet1);
 	}
 
 	@Test
@@ -72,12 +75,12 @@ public class IPv4SubnetTest {
 
 	@Test
 	void unequalToNull() {
-		assertNotEquals(null, IPv4Subnet.of("1.2.3.0/24"));
+		assertFalse(IPv4Subnet.of("1.2.3.0/24").equals(null));
 	}
 
 	@Test
 	void unequalToObject() {
-		assertNotEquals(new Object(), IPv4Subnet.of("1.2.3.0/24"));
+		assertFalse(IPv4Subnet.of("1.2.3.0/24").equals(new Object()));
 	}
 
 	@Test
@@ -95,5 +98,20 @@ public class IPv4SubnetTest {
 		final IPv4Subnet parsedSubnet = IPv4Subnet.parse(address);
 		final IPv4Subnet subnet = IPv4Subnet.of(address, (byte) 32);
 		assertEquals(subnet, parsedSubnet);
+	}
+
+	@Test
+	void validAndInvalidMaskTest() {
+		for (int i = 0; i <= 32; i++) {
+			assertNotNull(IPv4SubnetMask.fromMaskLen((byte) i));
+		}
+		for (int i = -100; i < 0; i++) {
+			int j = i;
+			assertThrows(IllegalArgumentException.class, () -> IPv4SubnetMask.fromMaskLen((byte) j));
+		}
+		for (int i = 33; i < 200; i++) {
+			int j = i;
+			assertThrows(IllegalArgumentException.class, () -> IPv4SubnetMask.fromMaskLen((byte) j));
+		}
 	}
 }

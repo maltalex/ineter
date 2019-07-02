@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
 public class IPAddressTest {
 
 	@Test
-	public void ofArrayIPv4() {
+	void ofArrayIPv4() {
 		byte[] arr = new byte[] { 1, 2, 3, 4 };
 		assertEquals(IPAddress.of(arr), IPv4Address.of(arr));
 		assertThrows(IllegalArgumentException.class, () -> IPAddress.of(new byte[] { 1, 2, 3 }));
@@ -29,19 +29,19 @@ public class IPAddressTest {
 	}
 
 	@Test
-	public void ofStringIPv4() {
+	void ofStringIPv4() {
 		String str = "1.2.3.4";
 		assertEquals(IPAddress.of(str), IPv4Address.of(str));
 	}
 
 	@Test
-	public void ofInetAddressV4() throws UnknownHostException {
+	void ofInetAddressV4() throws UnknownHostException {
 		InetAddress addr = InetAddress.getByName("1.2.3.4");
 		assertEquals(IPAddress.of(addr), IPv4Address.of(addr.getAddress()));
 	}
 
 	@Test
-	public void ofArrayIPv6() {
+	void ofArrayIPv6() {
 		byte[] arr = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 		assertEquals(IPAddress.of(arr), IPv6Address.of(arr));
 		assertThrows(IllegalArgumentException.class,
@@ -51,19 +51,19 @@ public class IPAddressTest {
 	}
 
 	@Test
-	public void ofStringIPv6() {
+	void ofStringIPv6() {
 		String str = "[1234:1234:1234:1234:1234:1234:1234:1234]";
 		assertEquals(IPAddress.of(str), IPv6Address.of(str));
 	}
 
 	@Test
-	public void ofInetAddressV6() throws UnknownHostException {
+	void ofInetAddressV6() throws UnknownHostException {
 		InetAddress addr = InetAddress.getByName("::");
 		assertEquals(IPAddress.of(addr), IPv6Address.of(addr.getAddress()));
 	}
 
 	@Test
-	public void ofStringBadString() {
+	void ofStringBadString() {
 		assertThrows(IllegalArgumentException.class, () -> IPAddress.of(":"));
 		assertThrows(IllegalArgumentException.class, () -> IPAddress.of(""));
 		assertThrows(IllegalArgumentException.class,

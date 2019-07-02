@@ -92,14 +92,14 @@ public class IPv6AddressTest {
 
 	@Test
 	void unequalToObject() {
-		assertNotEquals(new Object(), IPv6Address.of("::"));
-		assertNotEquals(new Object(), ZonedIPv6Address.of("::%foo"));
+		assertFalse(IPv6Address.of("::").equals(new Object()));
+		assertFalse(ZonedIPv6Address.of("::%foo").equals(new Object()));
 	}
 
 	@Test
 	void unequalToNull() {
-		assertNotEquals(null, IPv6Address.of("::"));
-		assertNotEquals(null, IPv6Address.of("::%foo"));
+		assertFalse(IPv6Address.of("::").equals(null));
+		assertFalse(ZonedIPv6Address.of("::%foo").equals(null));
 	}
 
 	@ParameterizedTest
@@ -259,11 +259,11 @@ public class IPv6AddressTest {
 	@Test
 	void toArray() {
 		IPv6Address ip = IPv6Address.of("0010:2030:4050:6070:8090:a0b0:c0d0:e0f0");
-		assertArrayEquals(ip.toArray(), new byte[]{0, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, (byte) 0x80,
-				(byte) 0x90, (byte) 0xa0, (byte) 0xb0, (byte) 0xc0, (byte) 0xd0, (byte) 0xe0, (byte) 0xf0});
-		assertArrayEquals(ip.toBigEndianArray(), new byte[]{0, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, (byte) 0x80, (byte) 0x90, (byte) 0xa0,
-				(byte) 0xb0, (byte) 0xc0, (byte) 0xd0, (byte) 0xe0, (byte) 0xf0});
-		assertArrayEquals(ip.toLittleEndianArray(), new byte[]{(byte) 0xf0, (byte) 0xe0, (byte) 0xd0, (byte) 0xc0, (byte) 0xb0, (byte) 0xa0, (byte) 0x90,
-				(byte) 0x80, 0x70, 0x60, 0x50, 0x40, 0x30, 0x20, 0x10, 0});
+		assertArrayEquals(ip.toArray(), new byte[] { 0, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, (byte) 0x80,
+				(byte) 0x90, (byte) 0xa0, (byte) 0xb0, (byte) 0xc0, (byte) 0xd0, (byte) 0xe0, (byte) 0xf0 });
+		assertArrayEquals(ip.toBigEndianArray(), new byte[] { 0, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, (byte) 0x80,
+				(byte) 0x90, (byte) 0xa0, (byte) 0xb0, (byte) 0xc0, (byte) 0xd0, (byte) 0xe0, (byte) 0xf0 });
+		assertArrayEquals(ip.toLittleEndianArray(), new byte[] { (byte) 0xf0, (byte) 0xe0, (byte) 0xd0, (byte) 0xc0,
+				(byte) 0xb0, (byte) 0xa0, (byte) 0x90, (byte) 0x80, 0x70, 0x60, 0x50, 0x40, 0x30, 0x20, 0x10, 0 });
 	}
 }

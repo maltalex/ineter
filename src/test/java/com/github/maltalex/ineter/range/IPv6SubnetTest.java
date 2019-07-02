@@ -7,8 +7,11 @@
  */
 package com.github.maltalex.ineter.range;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +21,7 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 import com.github.maltalex.ineter.base.IPv6Address;
+import com.github.maltalex.ineter.range.IPv6Subnet.IPv6SubnetMask;
 
 @RunWith(JUnitPlatform.class)
 public class IPv6SubnetTest {
@@ -53,7 +57,6 @@ public class IPv6SubnetTest {
 		IPv6Subnet subnet2 = IPv6Subnet.of("1234::/16");
 		assertEquals(subnet1, subnet2);
 		assertEquals(subnet1.hashCode(), subnet2.hashCode());
-		assertNotEquals(null, subnet1);
 	}
 
 	@Test
@@ -72,12 +75,12 @@ public class IPv6SubnetTest {
 
 	@Test
 	void unequalToNull() {
-		assertNotEquals(null, IPv6Subnet.of("::/24"));
+		assertFalse(IPv6Subnet.of("::/24").equals(null));
 	}
 
 	@Test
 	void unequalToObject() {
-		assertNotEquals(new Object(), IPv6Subnet.of("::/24"));
+		assertFalse(IPv6Subnet.of("::/24").equals(new Object()));
 	}
 
 	@Test
@@ -94,5 +97,20 @@ public class IPv6SubnetTest {
 		final IPv6Subnet parsedSubnet = IPv6Subnet.parse(address);
 		final IPv6Subnet subnet = IPv6Subnet.of("1234::", 64);
 		assertEquals(subnet, parsedSubnet);
+	}
+
+	@Test
+	void validAndInvalidMaskTest() {
+		for (int i = 0; i <= 128; i++) {
+			assertNotNull(IPv6SubnetMask.fromMaskLen(i));
+		}
+		for (int i = -100; i < 0; i++) {
+			int j = i;
+			assertThrows(IllegalArgumentException.class, () -> IPv6SubnetMask.fromMaskLen(j));
+		}
+		for (int i = 129; i < 200; i++) {
+			int j = i;
+			assertThrows(IllegalArgumentException.class, () -> IPv6SubnetMask.fromMaskLen(j));
+		}
 	}
 }

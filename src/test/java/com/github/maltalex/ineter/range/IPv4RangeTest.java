@@ -136,6 +136,9 @@ public class IPv4RangeTest {
 		IPv4Range range1 = IPv4Range.parse("192.168.0.0-192.168.255.255");
 		IPv4Range range2 = IPv4Range.of(IPv4Address.of("192.168.0.0"), IPv4Address.of("192.168.255.255"));
 
+		assertEquals(range1, range1);
+		assertEquals(range2, range2);
+
 		assertEquals(range1.hashCode(), range2.hashCode());
 		assertEquals(range1, range2);
 	}
@@ -151,7 +154,12 @@ public class IPv4RangeTest {
 	@Test
 	void unequalToNull() {
 		IPv4Range range1 = IPv4Range.parse("192.168.0.0-192.168.255.255");
-		assertNotEquals(null, range1);
+		assertFalse(range1.equals(null));
+	}
+	
+	@Test
+	void unequalToObject() {
+		assertFalse(IPv4Range.parse("192.168.0.0-192.168.255.255").equals(new Object()));
 	}
 
 	@ParameterizedTest
