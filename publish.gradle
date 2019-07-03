@@ -3,7 +3,7 @@ apply plugin: 'signing'
 
 group = 'com.github.maltalex'
 archivesBaseName = 'ineter'
-version = '0.1.1'
+version = '0.1.2'
 
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
