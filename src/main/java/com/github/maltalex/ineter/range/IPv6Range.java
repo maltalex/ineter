@@ -7,9 +7,13 @@
  */
 package com.github.maltalex.ineter.range;
 
+import static java.lang.String.format;
+
 import java.math.BigInteger;
 import java.net.Inet6Address;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -66,7 +70,7 @@ public class IPv6Range extends IPRange<IPv6Address> {
 	 * Parses the given String into an {@link IPv6Range} The String can be either a
 	 * single address, a range such as "2001::-2002::" or a subnet such as
 	 * "2001::/16"
-	 * 
+	 *
 	 * @param from - a String representation of a single IPv6 address, a range or a
 	 *             subnet
 	 * @return An {@link IPv6Range}
@@ -87,9 +91,17 @@ public class IPv6Range extends IPRange<IPv6Address> {
 
 		if (this.firstAddress.compareTo(lastAddress) > 0) {
 			throw new IllegalArgumentException(
-					String.format("The first address in the range (%s) has to be lower than the last address (%s)",
+					format("The first address in the range (%s) has to be lower than the last address (%s)",
 							firstAddress.toString(), lastAddress.toString()));
 		}
+	}
+
+	public static List<IPv6Range> merge(IPv6Range... addressesToMerge) {
+		return merge(Arrays.asList(addressesToMerge));
+	}
+
+	public static List<IPv6Range> merge(Collection<IPv6Range> addressesToMerge) {
+		return merge(addressesToMerge, IPv6Range::of);
 	}
 
 	@Override
@@ -178,5 +190,27 @@ public class IPv6Range extends IPRange<IPv6Address> {
 		} while (lastAddress.compareTo(this.lastAddress) < 0);
 
 		return result;
+	}
+
+	/**
+	 * Extends this range with adjacent one
+	 *
+	 * @param extension adjacent range to be merged with current one
+	 * @return merged range
+	 * @throws IllegalArgumentException extension range is not adjacent with this one
+	 */
+	public IPv6Range extend(IPv6Range extension) {
+		return IPRange.extend(this, extension, IPv6Range::of);
+	}
+
+	/**
+	 * Extends this range with adjacent IPv6 address
+	 *
+	 * @param extension adjacent address to be merged with current range
+	 * @return merged range
+	 * @throws IllegalArgumentException extension address is not adjacent with this range
+	 */
+	public IPv6Range extend(IPv6Address extension) {
+		return extend(IPv6Range.of(extension));
 	}
 }

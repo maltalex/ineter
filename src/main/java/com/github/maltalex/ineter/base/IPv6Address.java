@@ -12,7 +12,7 @@ import java.net.Inet6Address;
 import com.github.maltalex.ineter.range.IPv6Range;
 import com.github.maltalex.ineter.range.IPv6Subnet;
 
-public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
+public class IPv6Address extends IPAddress<IPv6Address> implements Comparable<IPv6Address> {
 
 	public static enum IPv6KnownRange {
 
@@ -191,10 +191,8 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 	 * Build an IPv6Address from two longs - upper and lower 64 bits in form of
 	 * longs
 	 *
-	 * @param upper
-	 *            upper 64 bits of the IPv6Address
-	 * @param lower
-	 *            lower 64 bits of the IPv6Address
+	 * @param upper upper 64 bits of the IPv6Address
+	 * @param lower lower 64 bits of the IPv6Address
 	 * @return new IPv6Address instance
 	 */
 	public static IPv6Address of(long upper, long lower) {
@@ -214,8 +212,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 	 * Build an IPv6Address from a 16 byte long big-endian (highest byte first)
 	 * byte array
 	 *
-	 * @param bigEndianByteArr
-	 *            16 byte big-endian byte array
+	 * @param bigEndianByteArr 16 byte big-endian byte array
 	 * @return new IPv6Address instance
 	 */
 	public static IPv6Address of(byte[] bigEndianByteArr) {
@@ -286,7 +283,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 				break;
 			}
 			if (ch == '%') { // This is a zoned address - take out the zone and
-								// move the "last" index
+				// move the "last" index
 				zone = address.substring(i + 1, last); // skip the "%" itself
 				last = i;
 				break;
@@ -452,10 +449,8 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 	 * Build an IPv6Address from two longs - upper and lower 64 bits in form of
 	 * longs
 	 *
-	 * @param upper
-	 *            upper 64 bits of the IPv6Address
-	 * @param lower
-	 *            lower 64 bits of the IPv6Address
+	 * @param upper upper 64 bits of the IPv6Address
+	 * @param lower lower 64 bits of the IPv6Address
 	 */
 	public IPv6Address(long upper, long lower) {
 		this.upper = upper;
@@ -660,6 +655,11 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 	}
 
 	@Override
+	public boolean isAdjacentTo(IPv6Address other) {
+		return this.next().equals(other) || this.previous().equals(other);
+	}
+
+	@Override
 	public int compareTo(IPv6Address o) {
 		if (o == null) {
 			return 1; // Bigger than null
@@ -708,7 +708,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 
 	/**
 	 * does this address have a specific zone?
-	 * 
+	 *
 	 * @return false
 	 */
 	public boolean isZoned() {

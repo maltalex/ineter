@@ -7,6 +7,15 @@
  */
 package com.github.maltalex.ineter.base;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.math.BigInteger;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -18,8 +27,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(JUnitPlatform.class)
 public class IPv4AddressTest {
@@ -163,8 +170,33 @@ public class IPv4AddressTest {
 	@Test
 	void toArray() {
 		IPv4Address ip = IPv4Address.of("130.123.1.2");
-		assertArrayEquals(ip.toArray(), new byte[]{(byte) 130, 123, 1, 2});
-		assertArrayEquals(ip.toBigEndianArray(), new byte[]{(byte) 130, 123, 1, 2});
-		assertArrayEquals(ip.toLittleEndianArray(), new byte[]{2, 1, 123, (byte) 130});
+		assertArrayEquals(ip.toArray(), new byte[] { (byte) 130, 123, 1, 2 });
+		assertArrayEquals(ip.toBigEndianArray(), new byte[] { (byte) 130, 123, 1, 2 });
+		assertArrayEquals(ip.toLittleEndianArray(), new byte[] { 2, 1, 123, (byte) 130 });
+	}
+
+	@Test
+	void shouldBeAdjacent() {
+		assertTrue(IPv4Address.of("127.0.0.1").isAdjacentTo(IPv4Address.of("127.0.0.2")));
+	}
+
+	@Test
+	void shouldNotConsiderSameAddressesAsAdjacent() {
+		assertFalse(IPv4Address.of("127.0.0.1").isAdjacentTo(IPv4Address.of("127.0.0.1")));
+	}
+
+	@Test
+	void shouldDetectAdjacencyAtIntervalBeginning() {
+		assertTrue(IPv4Address.of("0.0.0.0").isAdjacentTo(IPv4Address.of("0.0.0.1")));
+	}
+
+	@Test
+	void shouldDetectAdjacencyAtIntervalEnd() {
+		assertTrue(IPv4Address.of("255.255.255.255").isAdjacentTo(IPv4Address.of("255.255.255.254")));
+	}
+
+	@Test
+	void shouldNotBeAdjacent() {
+		assertFalse(IPv4Address.of("127.0.0.1").isAdjacentTo(IPv4Address.of("127.0.0.3")));
 	}
 }

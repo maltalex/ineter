@@ -7,6 +7,13 @@
  */
 package com.github.maltalex.ineter.range;
 
+import static java.util.Collections.singletonList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -18,6 +25,7 @@ import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.ImmutableList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -25,8 +33,6 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 import com.github.maltalex.ineter.base.IPv4Address;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(JUnitPlatform.class)
 public class IPv4RangeTest {
@@ -156,7 +162,7 @@ public class IPv4RangeTest {
 		IPv4Range range1 = IPv4Range.parse("192.168.0.0-192.168.255.255");
 		assertFalse(range1.equals(null));
 	}
-	
+
 	@Test
 	void unequalToObject() {
 		assertFalse(IPv4Range.parse("192.168.0.0-192.168.255.255").equals(new Object()));
@@ -276,5 +282,58 @@ public class IPv4RangeTest {
 		final IPv4Range range = IPv4Range.parse("127.0.0.0/24");
 		assertEquals(IPv4Address.of("127.0.0.0"), range.getFirst());
 		assertEquals(IPv4Address.of("127.0.0.255"), range.getLast());
+	}
+
+	@Test
+	void shouldMergeAdjacent() {
+		final IPv4Range first = IPv4Range.of("127.0.0.1", "127.0.0.2");
+		final IPv4Range second = IPv4Range.of("127.0.0.3", "127.0.0.4");
+		final List<IPv4Range> merge = IPv4Range.merge(first, second);
+		assertEquals(singletonList(IPv4Range.of("127.0.0.1", "127.0.0.4")), merge);
+	}
+
+	@Test
+	void shouldMergeOverlapping() {
+		final IPv4Range first = IPv4Range.of("127.0.0.1", "127.0.0.3");
+		final IPv4Range second = IPv4Range.of("127.0.0.2", "127.0.0.4");
+		final List<IPv4Range> merge = IPv4Range.merge(first, second);
+		assertEquals(singletonList(IPv4Range.of("127.0.0.1", "127.0.0.4")), merge);
+	}
+
+	@Test
+	void shouldMergeMixed() {
+		final IPv4Range first = IPv4Range.of("127.0.0.1", "127.0.0.3");
+		final IPv4Range second = IPv4Range.of("127.0.0.2", "127.0.0.4");
+		final IPv4Range third = IPv4Range.of("127.0.0.5", "127.0.0.6");
+		final List<IPv4Range> merge = IPv4Range.merge(first, second, third);
+		assertEquals(singletonList(IPv4Range.of("127.0.0.1", "127.0.0.6")), merge);
+	}
+
+	@Test
+	void shouldNotMergeSeparated() {
+		final IPv4Range first = IPv4Range.of("127.0.0.1", "127.0.0.3");
+		final IPv4Range second = IPv4Range.of("127.0.0.5", "127.0.0.6");
+		final List<IPv4Range> merge = IPv4Range.merge(first, second);
+		assertEquals(ImmutableList.of(second, first), merge);
+	}
+
+	@Test
+	void shouldThrowOnNotAdjacent() {
+		assertThrows(IllegalArgumentException.class, () -> IPv4Range.of("127.0.0.1").extend(IPv4Range.of("127.0.0.3")));
+	}
+
+	@Test
+	void shouldExtendWithAdjacent() {
+		assertEquals(IPv4Range.of("127.0.0.1", "127.0.0.2"), IPv4Range.of("127.0.0.1").extend(IPv4Range.of("127.0.0.2")));
+	}
+
+	@Test
+	void shouldStaySameOnExtensionByItself() {
+		assertEquals(IPv4Range.of("127.0.0.1"), IPv4Range.of("127.0.0.1").extend(IPv4Range.of("127.0.0.1")));
+	}
+
+	@Test
+	void shouldExtendByAddress() {
+		assertEquals(IPv4Range.of("127.0.0.1", "127.0.0.2"), IPv4Range.of("127.0.0.1").extend(IPv4Address.of("127.0.0.2")));
 	}
 }
