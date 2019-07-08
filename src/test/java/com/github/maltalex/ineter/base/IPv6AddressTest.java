@@ -7,6 +7,15 @@
  */
 package com.github.maltalex.ineter.base;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.math.BigInteger;
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -18,8 +27,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(JUnitPlatform.class)
 public class IPv6AddressTest {
@@ -265,5 +272,30 @@ public class IPv6AddressTest {
 				(byte) 0x90, (byte) 0xa0, (byte) 0xb0, (byte) 0xc0, (byte) 0xd0, (byte) 0xe0, (byte) 0xf0 });
 		assertArrayEquals(ip.toLittleEndianArray(), new byte[] { (byte) 0xf0, (byte) 0xe0, (byte) 0xd0, (byte) 0xc0,
 				(byte) 0xb0, (byte) 0xa0, (byte) 0x90, (byte) 0x80, 0x70, 0x60, 0x50, 0x40, 0x30, 0x20, 0x10, 0 });
+	}
+
+	@Test
+	void shouldNotBeAdjacent() {
+		assertFalse(IPv6Address.of("::1").isAdjacentTo(IPv6Address.of("::3")));
+	}
+
+	@Test
+	void shouldBeAdjacent() {
+		assertTrue(IPv6Address.of("::1").isAdjacentTo(IPv6Address.of("::2")));
+	}
+
+	@Test
+	void shouldNotConsiderSameAddressesAsAdjacent() {
+		assertFalse(IPv6Address.of("::1").isAdjacentTo(IPv6Address.of("::1")));
+	}
+
+	@Test
+	void shouldDetectAdjacencyAtTheIntervalBeginning() {
+		assertTrue(IPv6Address.of("::0").isAdjacentTo(IPv6Address.of("::1")));
+	}
+
+	@Test
+	void shouldDetectAdjacencyAtTheIntervalEnd() {
+		assertTrue(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff").isAdjacentTo(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffe")));
 	}
 }

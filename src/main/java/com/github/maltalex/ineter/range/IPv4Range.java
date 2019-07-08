@@ -7,8 +7,12 @@
  */
 package com.github.maltalex.ineter.range;
 
+import static java.lang.String.format;
+
 import java.net.Inet4Address;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -65,7 +69,7 @@ public class IPv4Range extends IPRange<IPv4Address> {
 	 * Parses the given String into an {@link IPv4Range} The String can be either a
 	 * single address, a range such as "192.168.0.0-192.168.1.2" or a subnet such as
 	 * "192.168.0.0/16"
-	 * 
+	 *
 	 * @param from - a String representation of a single IPv4 address, a range or a
 	 *             subnet
 	 * @return An {@link IPv4Range}
@@ -86,7 +90,7 @@ public class IPv4Range extends IPRange<IPv4Address> {
 
 		if (this.firstAddress.compareTo(lastAddress) > 0) {
 			throw new IllegalArgumentException(
-					String.format("The first address in the range (%s) has to be lower than the last address (%s)",
+					format("The first address in the range (%s) has to be lower than the last address (%s)",
 							firstAddress.toString(), lastAddress.toString()));
 		}
 	}
@@ -158,5 +162,47 @@ public class IPv4Range extends IPRange<IPv4Address> {
 		} while (lastAddress.compareTo(this.lastAddress) < 0);
 
 		return result;
+	}
+
+	/**
+	 * Merges adjacent ranges to the bigger ones
+	 *
+	 * @param addressesToMerge ranges to merge
+	 * @return list of merged ranges
+	 */
+	public static List<IPv4Range> merge(IPv4Range... addressesToMerge) {
+		return merge(Arrays.asList(addressesToMerge));
+	}
+
+	/**
+	 * Merges adjacent ranges to the bigger ones
+	 *
+	 * @param addressesToMerge ranges to merge
+	 * @return list of merged ranges
+	 */
+	public static List<IPv4Range> merge(Collection<IPv4Range> addressesToMerge) {
+		return merge(addressesToMerge, IPv4Range::of);
+	}
+
+	/**
+	 * Extends this range with adjacent one
+	 *
+	 * @param extension adjacent range to be merged with current one
+	 * @return merged range
+	 * @throws IllegalArgumentException extension range is not adjacent with this one
+	 */
+	public IPv4Range extend(IPv4Range extension) throws IllegalArgumentException {
+		return IPRange.extend(this, extension, IPv4Range::of);
+	}
+
+	/**
+	 * Extends this range with adjacent IPv4 address
+	 *
+	 * @param extension adjacent address to be merged with current range
+	 * @return merged range
+	 * @throws IllegalArgumentException extension address is not adjacent with this range
+	 */
+	public IPv4Range extend(IPv4Address extension) throws IllegalArgumentException {
+		return extend(IPv4Range.of(extension));
 	}
 }

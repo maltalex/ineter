@@ -12,7 +12,7 @@ import java.net.Inet4Address;
 import com.github.maltalex.ineter.range.IPv4Range;
 import com.github.maltalex.ineter.range.IPv4Subnet;
 
-public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
+public class IPv4Address extends IPAddress<IPv4Address> implements Comparable<IPv4Address> {
 
 	public static enum IPv4KnownRange {
 
@@ -127,8 +127,7 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 	 * Build an IPv4Address from a 4 byte long big-endian (highest byte first)
 	 * byte array
 	 *
-	 * @param bigEndianByteArr
-	 *            4 byte big-endian byte array
+	 * @param bigEndianByteArr 4 byte big-endian byte array
 	 * @return new IPv4Address instance
 	 */
 	public static IPv4Address of(byte[] bigEndianByteArr) {
@@ -159,8 +158,7 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 	 * Build an IPv4Address from a literal String representations such as
 	 * "192.168.1.1"
 	 *
-	 * @param ip
-	 *            literal IP address String
+	 * @param ip literal IP address String
 	 * @return new IPv4Address instance
 	 */
 	public static IPv4Address of(String ip) {
@@ -343,6 +341,11 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 	}
 
 	@Override
+	public boolean isAdjacentTo(IPv4Address other) {
+		return this.next().equals(other) || this.previous().equals(other);
+	}
+
+	@Override
 	public String toString() {
 		return String.join(".", Integer.toString(Ip4Octet.OCTET_A.isolateAsInt(this.ip)),
 				Integer.toString(Ip4Octet.OCTET_B.isolateAsInt(this.ip)),
@@ -367,5 +370,4 @@ public class IPv4Address extends IPAddress implements Comparable<IPv4Address> {
 	public long toLong() {
 		return this.ip & 0x00000000ffffffffL;
 	}
-
 }
