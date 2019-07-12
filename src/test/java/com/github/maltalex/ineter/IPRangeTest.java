@@ -1,4 +1,4 @@
-package com.github.maltalex.ineter.range;
+package com.github.maltalex.ineter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -9,6 +9,10 @@ import java.util.function.Function;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+
+import com.github.maltalex.ineter.IPRange;
+import com.github.maltalex.ineter.IPv4Range;
+import com.github.maltalex.ineter.IPv4Subnet;
 
 @RunWith(JUnitPlatform.class)
 class IPRangeTest {

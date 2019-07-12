@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.github.maltalex.ineter.range;
+package com.github.maltalex.ineter;
 
 import java.net.Inet4Address;
 import java.util.ArrayList;
@@ -13,8 +13,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
-
-import com.github.maltalex.ineter.base.IPv4Address;
 
 public class IPv4Range implements IPRange<IPv4Address> {
 

@@ -5,12 +5,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.github.maltalex.ineter.base;
+package com.github.maltalex.ineter;
 
 import java.net.Inet4Address;
-
-import com.github.maltalex.ineter.range.IPv4Range;
-import com.github.maltalex.ineter.range.IPv4Subnet;
 
 public class IPv4Address implements IPAddress, Comparable<IPv4Address> {
 
