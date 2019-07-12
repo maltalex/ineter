@@ -15,11 +15,9 @@ import java.util.function.Function;
 
 import com.github.maltalex.ineter.base.IPAddress;
 
-public abstract class IPRange<T extends IPAddress & Comparable<T>> implements Iterable<T>, Serializable {
+public interface IPRange<T extends IPAddress & Comparable<T>> extends Iterable<T>, Serializable {
 
-	private static final long serialVersionUID = 1L;
-
-	protected static <T> T parseRange(String from, BiFunction<String, String, ? extends T> rangeProducer,
+	static <T> T parseRange(String from, BiFunction<String, String, ? extends T> rangeProducer,
 			Function<String, ? extends T> subnetProducer) {
 		String[] parts = from.split("-");
 		if (parts.length == 2) {
@@ -35,7 +33,7 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements It
 		}
 	}
 
-	protected static <T> T parseSubnet(String from, BiFunction<String, Integer, ? extends T> subnetProducer,
+	static <T> T parseSubnet(String from, BiFunction<String, Integer, ? extends T> subnetProducer,
 			int singleAddressMask) {
 		final String[] parts = from.split("/");
 		if (parts.length == 2) {
@@ -48,9 +46,9 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements It
 		}
 	}
 
-	public abstract T getFirst();
+	public T getFirst();
 
-	public abstract T getLast();
+	public T getLast();
 
 	/**
 	 * Checks whether this range has any overlapping addresses with a given
@@ -61,7 +59,7 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements It
 	 *            the range to check for overlap
 	 * @return true if the given range overlaps with this one
 	 */
-	public boolean overlaps(IPRange<T> range) {
+	default boolean overlaps(IPRange<T> range) {
 		// Either one of the ends of the other range is within this one
 		// Or this range is completely inside the other range. In that case,
 		// it's enough to check just one of the edges of this range
@@ -74,7 +72,7 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements It
 	 * @param ip
 	 * @return true if the given address is inside this range
 	 */
-	public boolean contains(T ip) {
+	default boolean contains(T ip) {
 		return this.getFirst().compareTo(ip) <= 0 && this.getLast().compareTo(ip) >= 0;
 	}
 
@@ -86,38 +84,8 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements It
 	 *            range to check
 	 * @return true if the entire given range is contained within this range
 	 */
-	public boolean contains(IPRange<T> range) {
+	default boolean contains(IPRange<T> range) {
 		return this.contains(range.getFirst()) && this.contains(range.getLast());
-	}
-
-	@Override
-	public int hashCode() {
-		int prime = 31;
-		int result = 1;
-		result = prime * result + this.getFirst().hashCode();
-		result = prime * result + this.getLast().hashCode();
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof IPRange)) {
-			return false;
-		}
-		@SuppressWarnings("unchecked")
-		IPRange<T> other = (IPRange<T>) obj;
-		return this.getFirst().equals(other.getFirst()) && this.getLast().equals(other.getLast());
-	}
-
-	@Override
-	public String toString() {
-		return String.format("%s - %s", this.getFirst().toString(), this.getLast().toString());
 	}
 
 	/**
@@ -125,10 +93,10 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements It
 	 *
 	 * @return number of addresses in the range
 	 */
-	public abstract Number length();
+	public Number length();
 
 	@Override
-	public Iterator<T> iterator() {
+	default Iterator<T> iterator() {
 		return iterator(false);
 	}
 
@@ -140,7 +108,7 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements It
 	 *            set to true to skip first and last addresses
 	 * @return a new iterator instance
 	 */
-	public Iterator<T> iterator(boolean trim) {
+	default Iterator<T> iterator(boolean trim) {
 		return iterator(trim, trim);
 	}
 
@@ -154,7 +122,7 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements It
 	 *            set to true to skip the last addresses
 	 * @return a new iterator instance
 	 */
-	public abstract Iterator<T> iterator(boolean skipFirst, boolean skipLast);
+	public Iterator<T> iterator(boolean skipFirst, boolean skipLast);
 
 	/**
 	 * Calculates and returns the minimal list of Subnets that compose this
@@ -162,5 +130,5 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements It
 	 *
 	 * @return a list of Subnets that compose this address range
 	 */
-	public abstract List<? extends IPSubnet<? extends T>> toSubnets();
+	public List<? extends IPSubnet<? extends T>> toSubnets();
 }

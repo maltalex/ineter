@@ -7,11 +7,9 @@
  */
 package com.github.maltalex.ineter.range;
 
-import java.util.Iterator;
-
 import com.github.maltalex.ineter.base.IPAddress;
 
-public interface IPSubnet<T extends IPAddress & Comparable<T>> extends Iterable<T> {
+public interface IPSubnet<T extends IPAddress & Comparable<T>> extends IPRange<T> {
 
 	/**
 	 * Returns the network mask in address form
@@ -46,77 +44,4 @@ public interface IPSubnet<T extends IPAddress & Comparable<T>> extends Iterable<
 	 * @return
 	 */
 	public T getNetworkAddress();
-
-	/**
-	 * Checks whether this subnet has any overlapping addresses with a given
-	 * range. To check whether all addresses are contained, use
-	 * {@link IPSubnet#contains(IPRange)}
-	 *
-	 * @param range
-	 *            the range to check for overlap
-	 * @return true if the given range overlaps with this subnet
-	 */
-	public boolean overlaps(IPRange<T> range);
-
-	/**
-	 * Checks whether a given address is inside this subnet
-	 *
-	 * @param ip
-	 * @return true if the given address is inside this subnet
-	 */
-	public boolean contains(T ip);
-
-	/**
-	 * Checks whether this subnet contains all addresses of a given range. To
-	 * check for partial overlap, use {@link IPSubnet#overlaps(IPRange)}
-	 *
-	 * @param range
-	 *            range to check
-	 * @return true if the entire given range is contained within this subnet
-	 */
-	public boolean contains(IPRange<T> range);
-
-	/**
-	 * Returns the network address, same as {@link IPSubnet#getNetworkAddress()}
-	 *
-	 * @return the network address
-	 */
-	public T getFirst();
-
-	/**
-	 * Returns the last address in the subnet
-	 *
-	 * @return the last address in the subnet
-	 */
-	public T getLast();
-
-	/**
-	 * Returns an iterator that optionally skips both the first and last
-	 * addresses in the subnet
-	 *
-	 * @param trim
-	 *            set to true to skip first and last addresses
-	 * @return a new iterator instance
-	 */
-	public Iterator<T> iterator(boolean trim);
-
-	/**
-	 * Returns an iterator that optionally skips the first, last or both
-	 * addresses in the subnet
-	 *
-	 * @param skipFirst
-	 *            set to true to skip the first address
-	 *
-	 * @param skipLast
-	 *            set to true to skip the last addresses
-	 * @return a new iterator instance
-	 */
-	public Iterator<T> iterator(boolean skipFirst, boolean skipLast);
-
-	/**
-	 * Returns the number of addresses in the subnet
-	 *
-	 * @return number of addresses in the subnet
-	 */
-	public Number length();
 }

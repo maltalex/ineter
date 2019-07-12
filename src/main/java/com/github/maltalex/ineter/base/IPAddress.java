@@ -20,9 +20,7 @@ import java.net.UnknownHostException;
  * @author maltalex
  *
  */
-public abstract class IPAddress implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public interface IPAddress extends Serializable {
 
 	/**
 	 * Returns either an IPv4 or an IPv6 address
@@ -90,7 +88,7 @@ public abstract class IPAddress implements Serializable {
 	 *
 	 * @return true if the give address is a 6to4 address, false otherwise
 	 */
-	public abstract boolean is6To4();
+	public boolean is6To4();
 
 	/**
 	 * Martian addresses are reserved and private addresses that should not
@@ -98,63 +96,63 @@ public abstract class IPAddress implements Serializable {
 	 *
 	 * @return true if the address is martian, false otherwise
 	 */
-	public abstract boolean isMartian();
+	public boolean isMartian();
 
 	/**
 	 * Checks whether the address is a loopback address
 	 *
 	 * @return true if the address is for a loopback, false otherwise
 	 */
-	public abstract boolean isLoopback();
+	public boolean isLoopback();
 
 	/**
 	 * Checks whether the address is part of a range reserved for multicast
 	 *
 	 * @return true if the address is reserved for multicast, false otherwise
 	 */
-	public abstract boolean isMulticast();
+	public boolean isMulticast();
 
 	/**
 	 * Checks whether the address is private
 	 *
 	 * @return true if the address is private, false otherwise
 	 */
-	public abstract boolean isPrivate();
+	public boolean isPrivate();
 
 	/**
 	 * Checks whether the address part of a reserved range
 	 *
 	 * @return true if the address is part of a reserved range, false otherwise
 	 */
-	public abstract boolean isReserved();
+	public boolean isReserved();
 
 	/**
 	 * Checks whether the address is "unspecified"
 	 *
 	 * @return true if the address is "unspecified", false otherwise
 	 */
-	public abstract boolean isUnspecified();
+	public boolean isUnspecified();
 
 	/**
 	 * Checks whether the address is link-local
 	 *
 	 * @return true if the address is link-local, false otherwise
 	 */
-	public abstract boolean isLinkLocal();
+	public boolean isLinkLocal();
 
 	/**
 	 * Returns the version of the IP address
 	 *
 	 * @return 4 for IPv4, 6 for IPv6
 	 */
-	public abstract int version();
+	public int version();
 
 	/**
 	 * Returns the following address, with wraparound
 	 *
 	 * @return the address following this one
 	 */
-	public abstract IPAddress next();
+	public IPAddress next();
 
 	/**
 	 * Return an address larger than the current one by n, with wraparound
@@ -162,14 +160,14 @@ public abstract class IPAddress implements Serializable {
 	 * @param n
 	 * @return an address larger by n
 	 */
-	public abstract IPAddress plus(int n);
+	public IPAddress plus(int n);
 
 	/**
 	 * Returns the previous address, with wraparound
 	 *
 	 * @return the address before this one
 	 */
-	public abstract IPAddress previous();
+	public IPAddress previous();
 
 	/**
 	 * Return an address smaller than the current one by n, with wraparound
@@ -177,28 +175,28 @@ public abstract class IPAddress implements Serializable {
 	 * @param n
 	 * @return an address smaller by n
 	 */
-	public abstract IPAddress minus(int n);
+	public IPAddress minus(int n);
 
 	/**
 	 * The address as an array of bytes, with the highest byte first
 	 *
 	 * @return big-endian byte array
 	 */
-	public abstract byte[] toBigEndianArray();
+	public byte[] toBigEndianArray();
 
 	/**
 	 * The address as an array of bytes, with the highest byte last
 	 *
 	 * @return little-endian byte array
 	 */
-	public abstract byte[] toLittleEndianArray();
+	public byte[] toLittleEndianArray();
 
 	/**
 	 * The address as an array of bytes, with the highest byte first
 	 *
 	 * @return big-endian byte array
 	 */
-	public byte[] toArray() {
+	default byte[] toArray() {
 		return toBigEndianArray();
 	}
 
@@ -207,7 +205,7 @@ public abstract class IPAddress implements Serializable {
 	 *
 	 * @return The address as an BigInteger
 	 */
-	public BigInteger toBigInteger() {
+	default BigInteger toBigInteger() {
 		return new BigInteger(1, toBigEndianArray());
 	}
 
@@ -216,7 +214,7 @@ public abstract class IPAddress implements Serializable {
 	 *
 	 * @return The address as an BigInteger
 	 */
-	public BigInteger toSignedBigInteger() {
+	default BigInteger toSignedBigInteger() {
 		return new BigInteger(toBigEndianArray());
 	}
 
@@ -225,7 +223,7 @@ public abstract class IPAddress implements Serializable {
 	 *
 	 * @return The address as an InetAddress
 	 */
-	public InetAddress toInetAddress() {
+	default InetAddress toInetAddress() {
 		try {
 			return InetAddress.getByAddress(toBigEndianArray());
 		} catch (UnknownHostException e) {

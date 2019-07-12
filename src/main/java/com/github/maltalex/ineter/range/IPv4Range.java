@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.github.maltalex.ineter.base.IPv4Address;
 
-public class IPv4Range extends IPRange<IPv4Address> {
+public class IPv4Range implements IPRange<IPv4Address> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -62,16 +62,17 @@ public class IPv4Range extends IPRange<IPv4Address> {
 	}
 
 	/**
-	 * Parses the given String into an {@link IPv4Range} The String can be either a
-	 * single address, a range such as "192.168.0.0-192.168.1.2" or a subnet such as
-	 * "192.168.0.0/16"
+	 * Parses the given String into an {@link IPv4Range} The String can be
+	 * either a single address, a range such as "192.168.0.0-192.168.1.2" or a
+	 * subnet such as "192.168.0.0/16"
 	 * 
-	 * @param from - a String representation of a single IPv4 address, a range or a
-	 *             subnet
+	 * @param from
+	 *            - a String representation of a single IPv4 address, a range or
+	 *            a subnet
 	 * @return An {@link IPv4Range}
 	 */
 	public static IPv4Range parse(String from) {
-		return parseRange(from, IPv4Range::of, IPv4Subnet::of);
+		return IPRange.parseRange(from, IPv4Range::of, IPv4Subnet::of);
 	}
 
 	protected final IPv4Address firstAddress;
@@ -106,6 +107,42 @@ public class IPv4Range extends IPRange<IPv4Address> {
 		return Long.valueOf(this.lastAddress.toLong() - this.firstAddress.toLong() + 1);
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.firstAddress == null) ? 0 : this.firstAddress.hashCode());
+		result = prime * result + ((this.lastAddress == null) ? 0 : this.lastAddress.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof IPv4Range))
+			return false;
+		IPv4Range other = (IPv4Range) obj;
+		if (this.firstAddress == null) {
+			if (other.firstAddress != null)
+				return false;
+		} else if (!this.firstAddress.equals(other.firstAddress))
+			return false;
+		if (this.lastAddress == null) {
+			if (other.lastAddress != null)
+				return false;
+		} else if (!this.lastAddress.equals(other.lastAddress))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%s - %s", this.getFirst().toString(), this.getLast().toString());
+	}
+	
 	@Override
 	public Iterator<IPv4Address> iterator(boolean skipFirst, boolean skipLast) {
 		return new Iterator<IPv4Address>() {

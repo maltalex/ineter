@@ -12,7 +12,7 @@ import java.net.Inet6Address;
 import com.github.maltalex.ineter.range.IPv6Range;
 import com.github.maltalex.ineter.range.IPv6Subnet;
 
-public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
+public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
 
 	public static enum IPv6KnownRange {
 
@@ -677,7 +677,7 @@ public class IPv6Address extends IPAddress implements Comparable<IPv6Address> {
 	}
 
 	public Inet6Address toInet6Address() {
-		return (Inet6Address) super.toInetAddress();
+		return (Inet6Address) this.toInetAddress();
 	}
 
 	@Override
