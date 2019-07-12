@@ -74,15 +74,6 @@ public class IPv6RangeTest {
 	}
 
 	@Test
-	void between() {
-		IPv6Range range = IPv6Range.between("::-1::");
-		assertEquals(range.getFirst(), IPv6Address.of("::"));
-		assertEquals(range.getLast(), IPv6Address.of("1::"));
-		assertTrue(range.toString().contains("1:0:0:0:0:0:0:0"));
-		assertTrue(range.toString().contains("0:0:0:0:0:0:0:0"));
-	}
-
-	@Test
 	void parse() {
 		IPv6Range range = IPv6Range.parse("::-1::");
 		assertEquals(range.getFirst(), IPv6Address.of("::"));

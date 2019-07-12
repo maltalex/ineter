@@ -80,15 +80,6 @@ public class IPv4RangeTest {
 		assertTrue(range.toString().contains("5.4.3.2"));
 	}
 
-	@Test
-	void between() {
-		IPv4Range range = IPv4Range.between("1.2.3.4-5.4.3.2");
-		assertEquals(range.getFirst(), IPv4Address.of("1.2.3.4"));
-		assertEquals(range.getLast(), IPv4Address.of("5.4.3.2"));
-		assertTrue(range.toString().contains("1.2.3.4"));
-		assertTrue(range.toString().contains("5.4.3.2"));
-	}
-
 	@ParameterizedTest
 	@CsvSource({ "1.2.3.4,2.3.4.5,1.2.3.4", "0.0.0.0,255.255.255.255,255.255.255.255",
 			"127.0.0.0,127.255.255.255,127.1.2.3" })

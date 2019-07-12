@@ -54,15 +54,6 @@ public class IPv6Range implements IPRange<IPv6Address> {
 	}
 
 	/**
-	 * Use {@link IPv6Range#parse(String)} instead
-	 */
-	@Deprecated
-	public static IPv6Range between(String between) {
-		String[] parts = between.split("-");
-		return IPv6Range.of(IPv6Address.of(parts[0].trim()), IPv6Address.of(parts[1].trim()));
-	}
-
-	/**
 	 * Parses the given String into an {@link IPv6Range} The String can be
 	 * either a single address, a range such as "2001::-2002::" or a subnet such
 	 * as "2001::/16"
