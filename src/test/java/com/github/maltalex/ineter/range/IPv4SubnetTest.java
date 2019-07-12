@@ -29,8 +29,8 @@ public class IPv4SubnetTest {
 	@Test
 	void constructors() {
 		IPv4Subnet a = IPv4Subnet.of("10.0.0.0/8");
-		IPv4Subnet b = IPv4Subnet.of(IPv4Address.of("10.0.0.0"), (byte) 8);
-		IPv4Subnet c = IPv4Subnet.of("10.0.0.0", (byte) 8);
+		IPv4Subnet b = IPv4Subnet.of(IPv4Address.of("10.0.0.0"), 8);
+		IPv4Subnet c = IPv4Subnet.of("10.0.0.0", 8);
 
 		assertEquals(a.getFirst(), IPv4Address.of("10.0.0.0"));
 		assertEquals(a.getLast(), IPv4Address.of("10.255.255.255"));
@@ -105,22 +105,22 @@ public class IPv4SubnetTest {
 	void parseSingleAddress() {
 		final String address = "172.20.0.1";
 		final IPv4Subnet parsedSubnet = IPv4Subnet.parse(address);
-		final IPv4Subnet subnet = IPv4Subnet.of(address, (byte) 32);
+		final IPv4Subnet subnet = IPv4Subnet.of(address, 32);
 		assertEquals(subnet, parsedSubnet);
 	}
 
 	@Test
 	void validAndInvalidMaskTest() {
 		for (int i = 0; i <= 32; i++) {
-			assertNotNull(IPv4SubnetMask.fromMaskLen((byte) i));
+			assertNotNull(IPv4SubnetMask.fromMaskLen(i));
 		}
 		for (int i = -100; i < 0; i++) {
 			int j = i;
-			assertThrows(IllegalArgumentException.class, () -> IPv4SubnetMask.fromMaskLen((byte) j));
+			assertThrows(IllegalArgumentException.class, () -> IPv4SubnetMask.fromMaskLen(j));
 		}
 		for (int i = 33; i < 200; i++) {
 			int j = i;
-			assertThrows(IllegalArgumentException.class, () -> IPv4SubnetMask.fromMaskLen((byte) j));
+			assertThrows(IllegalArgumentException.class, () -> IPv4SubnetMask.fromMaskLen(j));
 		}
 	}
 }

@@ -31,7 +31,7 @@ class IPRangeTest {
 		final String from = "172.20.88.0/24";
 		final IPv4Range iPv4Addresses = IPRange.parseRange(from, IPv4_RANGE_PRODUCER, IPv4_SUBNET_PRODUCER);
 
-		final IPv4Subnet range = IPv4Subnet.of("172.20.88.0", (byte) 24);
+		final IPv4Subnet range = IPv4Subnet.of("172.20.88.0", 24);
 
 		assertEquals(range, iPv4Addresses);
 	}

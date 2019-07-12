@@ -181,7 +181,7 @@ public class IPv4Range implements IPRange<IPv4Address> {
 		}
 
 		int hostBits = Math.min(addrHostBits, hostBitsMax);
-		return IPv4Subnet.of(addr, (byte) (32 - hostBits));
+		return IPv4Subnet.of(addr, 32 - hostBits);
 	}
 
 	@Override
