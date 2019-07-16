@@ -711,4 +711,9 @@ public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
 	public boolean isZoned() {
 		return false;
 	}
+	
+	@Override
+	public IPv6Range toRange() {
+		return IPv6Range.of(this);
+	}
 }

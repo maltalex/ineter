@@ -365,4 +365,9 @@ public class IPv4Address implements IPAddress, Comparable<IPv4Address> {
 		return this.ip & 0x00000000ffffffffL;
 	}
 
+	@Override
+	public IPv4Range toRange() {
+		return IPv4Range.of(this);
+	}
+
 }

@@ -231,4 +231,6 @@ public interface IPAddress extends Serializable {
 		}
 	}
 
+	IPRange<?, ?> toRange();
+
 }
