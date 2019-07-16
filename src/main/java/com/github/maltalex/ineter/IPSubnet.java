@@ -7,7 +7,7 @@
  */
 package com.github.maltalex.ineter;
 
-public interface IPSubnet<T extends IPAddress & Comparable<T>> extends IPRange<T> {
+public interface IPSubnet<T extends IPAddress & Comparable<T>, S extends Number & Comparable<S>> extends IPRange<T, S> {
 
 	/**
 	 * Returns the network mask in address form

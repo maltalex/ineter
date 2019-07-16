@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public interface IPRange<T extends IPAddress & Comparable<T>> extends Iterable<T>, Serializable {
+public interface IPRange<T extends IPAddress & Comparable<T>, S extends Number & Comparable<S>> extends Iterable<T>, Serializable {
 
 	static <T> T parseRange(String from, BiFunction<String, String, ? extends T> rangeProducer,
 			Function<String, ? extends T> subnetProducer) {
@@ -57,7 +57,7 @@ public interface IPRange<T extends IPAddress & Comparable<T>> extends Iterable<T
 	 *            the range to check for overlap
 	 * @return true if the given range overlaps with this one
 	 */
-	default boolean overlaps(IPRange<T> range) {
+	default boolean overlaps(IPRange<T,S> range) {
 		// Either one of the ends of the other range is within this one
 		// Or this range is completely inside the other range. In that case,
 		// it's enough to check just one of the edges of this range
@@ -82,7 +82,7 @@ public interface IPRange<T extends IPAddress & Comparable<T>> extends Iterable<T
 	 *            range to check
 	 * @return true if the entire given range is contained within this range
 	 */
-	default boolean contains(IPRange<T> range) {
+	default boolean contains(IPRange<T,S> range) {
 		return this.contains(range.getFirst()) && this.contains(range.getLast());
 	}
 
@@ -91,7 +91,7 @@ public interface IPRange<T extends IPAddress & Comparable<T>> extends Iterable<T
 	 *
 	 * @return number of addresses in the range
 	 */
-	public Number length();
+	public S length();
 
 	@Override
 	default Iterator<T> iterator() {
@@ -128,5 +128,5 @@ public interface IPRange<T extends IPAddress & Comparable<T>> extends Iterable<T
 	 *
 	 * @return a list of Subnets that compose this address range
 	 */
-	public List<? extends IPSubnet<? extends T>> toSubnets();
+	public List<? extends IPSubnet<T,S>> toSubnets();
 }

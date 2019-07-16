@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class IPv6Range implements IPRange<IPv6Address> {
+public class IPv6Range implements IPRange<IPv6Address, BigInteger> {
 
 	private static final long serialVersionUID = 1L;
 

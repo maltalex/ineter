@@ -7,7 +7,9 @@
  */
 package com.github.maltalex.ineter;
 
-public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address> {
+import java.math.BigInteger;
+
+public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address, BigInteger> {
 
 	static enum IPv6SubnetMask {
 

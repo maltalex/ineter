@@ -7,7 +7,7 @@
  */
 package com.github.maltalex.ineter;
 
-public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
+public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address, Long> {
 
 	protected static enum IPv4SubnetMask {
 

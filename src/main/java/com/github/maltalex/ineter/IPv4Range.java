@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class IPv4Range implements IPRange<IPv4Address> {
+public class IPv4Range implements IPRange<IPv4Address, Long> {
 
 	private static final long serialVersionUID = 1L;
 
