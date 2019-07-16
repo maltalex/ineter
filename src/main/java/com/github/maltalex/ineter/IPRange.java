@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public interface IPRange<T extends IPAddress & Comparable<T>, S extends Number & Comparable<S>> extends Iterable<T>, Serializable {
+public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number & Comparable<L>> extends Iterable<I>, Serializable {
 
 	static <T> T parseRange(String from, BiFunction<String, String, ? extends T> rangeProducer,
 			Function<String, ? extends T> subnetProducer) {
@@ -44,9 +44,9 @@ public interface IPRange<T extends IPAddress & Comparable<T>, S extends Number &
 		}
 	}
 
-	public T getFirst();
+	public I getFirst();
 
-	public T getLast();
+	public I getLast();
 
 	/**
 	 * Checks whether this range has any overlapping addresses with a given
@@ -57,7 +57,7 @@ public interface IPRange<T extends IPAddress & Comparable<T>, S extends Number &
 	 *            the range to check for overlap
 	 * @return true if the given range overlaps with this one
 	 */
-	default boolean overlaps(IPRange<T,S> range) {
+	default boolean overlaps(IPRange<I,L> range) {
 		// Either one of the ends of the other range is within this one
 		// Or this range is completely inside the other range. In that case,
 		// it's enough to check just one of the edges of this range
@@ -70,7 +70,7 @@ public interface IPRange<T extends IPAddress & Comparable<T>, S extends Number &
 	 * @param ip
 	 * @return true if the given address is inside this range
 	 */
-	default boolean contains(T ip) {
+	default boolean contains(I ip) {
 		return this.getFirst().compareTo(ip) <= 0 && this.getLast().compareTo(ip) >= 0;
 	}
 
@@ -82,7 +82,7 @@ public interface IPRange<T extends IPAddress & Comparable<T>, S extends Number &
 	 *            range to check
 	 * @return true if the entire given range is contained within this range
 	 */
-	default boolean contains(IPRange<T,S> range) {
+	default boolean contains(IPRange<I,L> range) {
 		return this.contains(range.getFirst()) && this.contains(range.getLast());
 	}
 
@@ -91,10 +91,10 @@ public interface IPRange<T extends IPAddress & Comparable<T>, S extends Number &
 	 *
 	 * @return number of addresses in the range
 	 */
-	public S length();
+	public L length();
 
 	@Override
-	default Iterator<T> iterator() {
+	default Iterator<I> iterator() {
 		return iterator(false);
 	}
 
@@ -106,7 +106,7 @@ public interface IPRange<T extends IPAddress & Comparable<T>, S extends Number &
 	 *            set to true to skip first and last addresses
 	 * @return a new iterator instance
 	 */
-	default Iterator<T> iterator(boolean trim) {
+	default Iterator<I> iterator(boolean trim) {
 		return iterator(trim, trim);
 	}
 
@@ -120,7 +120,7 @@ public interface IPRange<T extends IPAddress & Comparable<T>, S extends Number &
 	 *            set to true to skip the last addresses
 	 * @return a new iterator instance
 	 */
-	public Iterator<T> iterator(boolean skipFirst, boolean skipLast);
+	public Iterator<I> iterator(boolean skipFirst, boolean skipLast);
 
 	/**
 	 * Calculates and returns the minimal list of Subnets that compose this
@@ -128,5 +128,5 @@ public interface IPRange<T extends IPAddress & Comparable<T>, S extends Number &
 	 *
 	 * @return a list of Subnets that compose this address range
 	 */
-	public List<? extends IPSubnet<T,S>> toSubnets();
+	public List<? extends IPSubnet<I,L>> toSubnets();
 }

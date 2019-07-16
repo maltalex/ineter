@@ -7,14 +7,14 @@
  */
 package com.github.maltalex.ineter;
 
-public interface IPSubnet<T extends IPAddress & Comparable<T>, S extends Number & Comparable<S>> extends IPRange<T, S> {
+public interface IPSubnet<I extends IPAddress & Comparable<I>, L extends Number & Comparable<L>> extends IPRange<I, L> {
 
 	/**
 	 * Returns the network mask in address form
 	 *
 	 * @return network mask of this subnet
 	 */
-	public T getNetworkMask();
+	public I getNetworkMask();
 
 	/**
 	 * Returns the number of bits used for the network address. This number is
@@ -41,5 +41,5 @@ public interface IPSubnet<T extends IPAddress & Comparable<T>, S extends Number 
 	 *
 	 * @return
 	 */
-	public T getNetworkAddress();
+	public I getNetworkAddress();
 }
