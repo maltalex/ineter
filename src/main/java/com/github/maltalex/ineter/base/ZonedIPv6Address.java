@@ -5,10 +5,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.github.maltalex.ineter;
+package com.github.maltalex.ineter.base;
 
 import java.net.Inet6Address;
 import java.util.Objects;
+
+import com.github.maltalex.ineter.base.IPv6Address.LongByte;
 
 public class ZonedIPv6Address extends IPv6Address {
 

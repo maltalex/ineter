@@ -5,13 +5,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.github.maltalex.ineter;
+package com.github.maltalex.ineter.range;
 
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+
+import com.github.maltalex.ineter.base.IPAddress;
 
 public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number & Comparable<L>> extends Iterable<I>, Serializable {
 

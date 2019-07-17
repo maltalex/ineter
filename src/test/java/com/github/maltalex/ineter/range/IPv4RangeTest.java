@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.github.maltalex.ineter;
+package com.github.maltalex.ineter.range;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -24,9 +24,9 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
-import com.github.maltalex.ineter.IPv4Address;
-import com.github.maltalex.ineter.IPv4Range;
-import com.github.maltalex.ineter.IPv4Subnet;
+import com.github.maltalex.ineter.base.IPv4Address;
+import com.github.maltalex.ineter.range.IPv4Range;
+import com.github.maltalex.ineter.range.IPv4Subnet;
 
 import static org.junit.jupiter.api.Assertions.*;
 

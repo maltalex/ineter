@@ -22,8 +22,8 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
-import com.github.maltalex.ineter.IPv6Address;
-import com.github.maltalex.ineter.IPv6AddressParseTest;
+import com.github.maltalex.ineter.base.IPv6Address;
+import com.github.maltalex.ineter.base.IPv6AddressParseTest;
 import com.google.common.net.InetAddresses;
 
 @Measurement(iterations = 5)
