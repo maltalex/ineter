@@ -7,6 +7,7 @@
  */
 package com.github.maltalex.ineter.range;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -315,6 +316,16 @@ public class IPv4RangeTest {
 		final IPv4Range second = IPv4Range.of("127.0.0.5", "127.0.0.6");
 		final List<IPv4Range> merge = IPv4Range.merge(first, second);
 		assertEquals(ImmutableList.of(second, first), merge);
+	}
+
+	@Test
+	void shouldReturnEmptyOnNull() {
+		assertTrue(IPv4Range.merge((IPv4Range) null).isEmpty());
+	}
+
+	@Test
+	void shouldReturnEmptyOnEmpty() {
+		assertTrue(IPv4Range.merge(emptyList()).isEmpty());
 	}
 
 	@Test

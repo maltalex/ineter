@@ -7,6 +7,7 @@
  */
 package com.github.maltalex.ineter.range;
 
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -318,6 +319,16 @@ public class IPv6RangeTest {
 		final IPv6Range second = IPv6Range.of("::5", "::6");
 		final List<IPv6Range> merge = IPv6Range.merge(first, second);
 		assertEquals(ImmutableList.of(second, first), merge);
+	}
+
+	@Test
+	void shouldReturnEmptyOnNull() {
+		assertTrue(IPv6Range.merge((IPv6Range) null).isEmpty());
+	}
+
+	@Test
+	void shouldReturnEmptyOnEmpty() {
+		assertTrue(IPv6Range.merge(emptyList()).isEmpty());
 	}
 
 	@Test

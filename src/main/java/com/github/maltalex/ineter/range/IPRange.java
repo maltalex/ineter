@@ -16,8 +16,10 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.github.maltalex.ineter.base.IPAddress;
 
@@ -181,8 +183,14 @@ public abstract class IPRange<T extends IPAddress & Comparable<T>> implements It
 			return emptyList();
 		}
 
-		final ArrayList<R> addressesToModify = new ArrayList<>(addressesToMerge);
-		addressesToModify.sort(Comparator.comparing(R::getFirst).reversed());
+		final ArrayList<R> addressesToModify = addressesToMerge.stream()
+				.filter(Objects::nonNull)
+				.sorted(Comparator.comparing(R::getFirst).reversed())
+				.collect(Collectors.toCollection(ArrayList::new));
+
+		if (addressesToModify.isEmpty()) {
+			return emptyList();
+		}
 
 		int idx = 0;
 		for (int i = 0; i < addressesToModify.size(); i++) {
