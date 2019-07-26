@@ -25,6 +25,7 @@ import org.openjdk.jmh.annotations.State;
 import com.github.maltalex.ineter.base.IPv6Address;
 import com.github.maltalex.ineter.base.IPv6AddressParseTest;
 import com.google.common.net.InetAddresses;
+import org.openjdk.jmh.infra.Blackhole;
 
 @Measurement(iterations = 5)
 @BenchmarkMode(Mode.AverageTime)
@@ -32,7 +33,7 @@ import com.google.common.net.InetAddresses;
 @State(Scope.Benchmark)
 public class IPv6ParsingBenchmark {
 	private static final int ADDR_CNT = 1000;
-	List<String> addresses;
+	private List<String> addresses;
 
 	@Setup(Level.Trial)
 	public void setUp() {
@@ -41,17 +42,17 @@ public class IPv6ParsingBenchmark {
 	}
 
 	@Benchmark
-	public void ineterParsing() {
+	public void ineterParsing(Blackhole hole) {
 		for (String addr : this.addresses) {
-			IPv6Address.of(addr);
+            hole.consume(IPv6Address.of(addr));
 		}
 	}
 
 	@Benchmark
-	public void inetAddressParsing() {
+	public void inetAddressParsing(Blackhole hole) {
 		for (String addr : this.addresses) {
 			try {
-				InetAddress.getAllByName(addr);
+				hole.consume(InetAddress.getAllByName(addr));
 			} catch (UnknownHostException e) {
 				//
 			}
@@ -59,9 +60,9 @@ public class IPv6ParsingBenchmark {
 	}
 
 	@Benchmark
-	public void guavaAddressParsing() {
+	public void guavaAddressParsing(Blackhole hole) {
 		for (String addr : this.addresses) {
-			InetAddresses.forString(addr);
+			hole.consume(InetAddresses.forString(addr));
 		}
 	}
 
