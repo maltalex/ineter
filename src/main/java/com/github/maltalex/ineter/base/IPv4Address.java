@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2018, Ineter Contributors
- *
+ * <p>
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -12,7 +12,7 @@ import java.net.Inet4Address;
 import com.github.maltalex.ineter.range.IPv4Range;
 import com.github.maltalex.ineter.range.IPv4Subnet;
 
-public class IPv4Address extends IPAddress<IPv4Address> implements Comparable<IPv4Address> {
+public class IPv4Address extends ExtendedIPAddress<IPv4Address> implements Comparable<IPv4Address> {
 
 	public static enum IPv4KnownRange {
 
@@ -127,7 +127,8 @@ public class IPv4Address extends IPAddress<IPv4Address> implements Comparable<IP
 	 * Build an IPv4Address from a 4 byte long big-endian (highest byte first)
 	 * byte array
 	 *
-	 * @param bigEndianByteArr 4 byte big-endian byte array
+	 * @param bigEndianByteArr
+	 * 		4 byte big-endian byte array
 	 * @return new IPv4Address instance
 	 */
 	public static IPv4Address of(byte[] bigEndianByteArr) {
@@ -158,7 +159,8 @@ public class IPv4Address extends IPAddress<IPv4Address> implements Comparable<IP
 	 * Build an IPv4Address from a literal String representations such as
 	 * "192.168.1.1"
 	 *
-	 * @param ip literal IP address String
+	 * @param ip
+	 * 		literal IP address String
 	 * @return new IPv4Address instance
 	 */
 	public static IPv4Address of(String ip) {

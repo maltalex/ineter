@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2018, Ineter Contributors
- *
+ * <p>
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -12,7 +12,7 @@ import java.net.Inet6Address;
 import com.github.maltalex.ineter.range.IPv6Range;
 import com.github.maltalex.ineter.range.IPv6Subnet;
 
-public class IPv6Address extends IPAddress<IPv6Address> implements Comparable<IPv6Address> {
+public class IPv6Address extends ExtendedIPAddress<IPv6Address> implements Comparable<IPv6Address> {
 
 	public static enum IPv6KnownRange {
 
@@ -191,8 +191,10 @@ public class IPv6Address extends IPAddress<IPv6Address> implements Comparable<IP
 	 * Build an IPv6Address from two longs - upper and lower 64 bits in form of
 	 * longs
 	 *
-	 * @param upper upper 64 bits of the IPv6Address
-	 * @param lower lower 64 bits of the IPv6Address
+	 * @param upper
+	 * 		upper 64 bits of the IPv6Address
+	 * @param lower
+	 * 		lower 64 bits of the IPv6Address
 	 * @return new IPv6Address instance
 	 */
 	public static IPv6Address of(long upper, long lower) {
@@ -212,7 +214,8 @@ public class IPv6Address extends IPAddress<IPv6Address> implements Comparable<IP
 	 * Build an IPv6Address from a 16 byte long big-endian (highest byte first)
 	 * byte array
 	 *
-	 * @param bigEndianByteArr 16 byte big-endian byte array
+	 * @param bigEndianByteArr
+	 * 		16 byte big-endian byte array
 	 * @return new IPv6Address instance
 	 */
 	public static IPv6Address of(byte[] bigEndianByteArr) {
@@ -449,8 +452,10 @@ public class IPv6Address extends IPAddress<IPv6Address> implements Comparable<IP
 	 * Build an IPv6Address from two longs - upper and lower 64 bits in form of
 	 * longs
 	 *
-	 * @param upper upper 64 bits of the IPv6Address
-	 * @param lower lower 64 bits of the IPv6Address
+	 * @param upper
+	 * 		upper 64 bits of the IPv6Address
+	 * @param lower
+	 * 		lower 64 bits of the IPv6Address
 	 */
 	public IPv6Address(long upper, long lower) {
 		this.upper = upper;
