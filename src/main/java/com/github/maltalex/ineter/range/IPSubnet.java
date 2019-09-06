@@ -11,7 +11,7 @@ import java.util.Iterator;
 
 import com.github.maltalex.ineter.base.ExtendedIPAddress;
 
-public interface IPSubnet<T extends ExtendedIPAddress & Comparable<T>> extends Iterable<T> {
+public interface IPSubnet<T extends ExtendedIPAddress<T>> extends Iterable<T> {
 
 	/**
 	 * Returns the network mask in address form

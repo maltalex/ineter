@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 import com.github.maltalex.ineter.base.ExtendedIPAddress;
 
-public abstract class IPRange<T extends ExtendedIPAddress & Comparable<T>> implements Iterable<T>, Serializable {
+public abstract class IPRange<T extends ExtendedIPAddress<T>> implements Iterable<T>, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -178,7 +178,7 @@ public abstract class IPRange<T extends ExtendedIPAddress & Comparable<T>> imple
 	 */
 	public abstract List<? extends IPSubnet<? extends T>> toSubnets();
 
-	protected static <T extends ExtendedIPAddress & Comparable<T>, R extends IPRange<T>> List<R> merge(Collection<R> addressesToMerge, BiFunction<T, T, R> rangeProducer) {
+	protected static <T extends ExtendedIPAddress<T>, R extends IPRange<T>> List<R> merge(Collection<R> addressesToMerge, BiFunction<T, T, R> rangeProducer) {
 		if (addressesToMerge == null || addressesToMerge.isEmpty()) {
 			return emptyList();
 		}
@@ -217,7 +217,7 @@ public abstract class IPRange<T extends ExtendedIPAddress & Comparable<T>> imple
 		return new ArrayList<>(addressesToModify.subList(0, idx));
 	}
 
-	protected static <T extends ExtendedIPAddress & Comparable<T>, R extends IPRange<T>> R extend(R self, R extension, BiFunction<T, T, R> rangeProducer) {
+	protected static <T extends ExtendedIPAddress<T>, R extends IPRange<T>> R extend(R self, R extension, BiFunction<T, T, R> rangeProducer) {
 		if (self.equals(extension)) {
 			return self;
 		}
@@ -228,7 +228,7 @@ public abstract class IPRange<T extends ExtendedIPAddress & Comparable<T>> imple
 		return merge(Arrays.asList(self, extension), rangeProducer).get(0);
 	}
 
-	private static <T extends ExtendedIPAddress & Comparable<T>, R extends IPRange<T>> boolean overlapsOrAdjacent(R first, R second) {
+	private static <T extends ExtendedIPAddress<T>, R extends IPRange<T>> boolean overlapsOrAdjacent(R first, R second) {
 		return first.overlaps(second) || first.isAdjacent(second);
 	}
 
