@@ -344,7 +344,7 @@ public class IPv4Address extends ExtendedIPAddress<IPv4Address> implements Compa
 
 	@Override
 	public boolean isAdjacentTo(IPv4Address other) {
-		return this.next().equals(other) || this.previous().equals(other);
+		return (this.ip != 0xffffffff && this.next().equals(other)) || (this.ip != 0 && this.previous().equals(other));
 	}
 
 	@Override

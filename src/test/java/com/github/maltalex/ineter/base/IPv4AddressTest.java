@@ -178,6 +178,16 @@ public class IPv4AddressTest {
 	@Test
 	void shouldBeAdjacent() {
 		assertTrue(IPv4Address.of("127.0.0.1").isAdjacentTo(IPv4Address.of("127.0.0.2")));
+		assertTrue(IPv4Address.of("127.0.0.2").isAdjacentTo(IPv4Address.of("127.0.0.1")));
+		
+		assertTrue(IPv4Address.of("0.0.0.0").isAdjacentTo(IPv4Address.of("0.0.0.1")));
+		assertTrue(IPv4Address.of("0.0.0.1").isAdjacentTo(IPv4Address.of("0.0.0.0")));
+		
+		assertTrue(IPv4Address.of("255.255.255.255").isAdjacentTo(IPv4Address.of("255.255.255.254")));
+		assertTrue(IPv4Address.of("255.255.255.254").isAdjacentTo(IPv4Address.of("255.255.255.255")));
+		
+		assertTrue(IPv4Address.of("127.255.255.255").isAdjacentTo(IPv4Address.of("128.0.0.0")));
+		assertTrue(IPv4Address.of("128.0.0.0").isAdjacentTo(IPv4Address.of("127.255.255.255")));
 	}
 
 	@Test
@@ -186,17 +196,14 @@ public class IPv4AddressTest {
 	}
 
 	@Test
-	void shouldDetectAdjacencyAtIntervalBeginning() {
-		assertTrue(IPv4Address.of("0.0.0.0").isAdjacentTo(IPv4Address.of("0.0.0.1")));
-	}
-
-	@Test
-	void shouldDetectAdjacencyAtIntervalEnd() {
-		assertTrue(IPv4Address.of("255.255.255.255").isAdjacentTo(IPv4Address.of("255.255.255.254")));
+	void shouldNotConsiderIntervalStartAndEndAdjacent() {
+		assertFalse(IPv4Address.of("255.255.255.255").isAdjacentTo(IPv4Address.of("0.0.0.0")));
+		assertFalse(IPv4Address.of("0.0.0.0").isAdjacentTo(IPv4Address.of("255.255.255.255")));
 	}
 
 	@Test
 	void shouldNotBeAdjacent() {
 		assertFalse(IPv4Address.of("127.0.0.1").isAdjacentTo(IPv4Address.of("127.0.0.3")));
+		assertFalse(IPv4Address.of("127.0.0.3").isAdjacentTo(IPv4Address.of("127.0.0.1")));
 	}
 }

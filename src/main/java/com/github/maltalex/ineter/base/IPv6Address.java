@@ -661,7 +661,15 @@ public class IPv6Address extends ExtendedIPAddress<IPv6Address> implements Compa
 
 	@Override
 	public boolean isAdjacentTo(IPv6Address other) {
-		return this.next().equals(other) || this.previous().equals(other);
+		return !this.isAllOnes() && this.next().equals(other) || !this.isAllZeroes() && this.previous().equals(other);
+	}
+	
+	protected boolean isAllOnes() {
+		return this.upper == 0xffff_ffff_ffff_ffffL && this.lower == 0xffff_ffff_ffff_ffffL;
+	}
+	
+	protected boolean isAllZeroes() {
+		return this.upper == 0 && this.lower == 0;
 	}
 
 	@Override
