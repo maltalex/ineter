@@ -309,8 +309,15 @@ public class IPv6RangeTest {
 		final IPv6Range first = IPv6Range.of("::1", "::3");
 		final IPv6Range second = IPv6Range.of("::2", "::4");
 		final IPv6Range third = IPv6Range.of("::5", "::6");
-		final List<IPv6Range> merge = IPv6Range.merge(first, second, third);
-		assertEquals(ImmutableList.of(IPv6Range.of("::1", "::6")), merge);
+
+		final IPv6Range fourth = IPv6Range.of("::8", "::10");
+		final IPv6Range fifth = IPv6Range.of("::8", "::11");
+
+		final IPv6Range sixth = IPv6Range.of("2001::", "2002::");
+
+		final List<IPv6Range> merge = IPv6Range.merge(sixth, fifth, fourth, third, second, first);
+		assertEquals(Arrays.asList(IPv6Range.of("::1", "::6"), IPv6Range.of("::8", "::11"),
+				IPv6Range.of("2001::", "2002::")), merge);
 	}
 
 	@Test
@@ -318,12 +325,12 @@ public class IPv6RangeTest {
 		final IPv6Range first = IPv6Range.of("::1", "::3");
 		final IPv6Range second = IPv6Range.of("::5", "::6");
 		final List<IPv6Range> merge = IPv6Range.merge(first, second);
-		assertEquals(ImmutableList.of(second, first), merge);
+		assertEquals(ImmutableList.of(first, second), merge);
 	}
 
 	@Test
-	void shouldReturnEmptyOnNull() {
-		assertTrue(IPv6Range.merge((IPv6Range) null).isEmpty());
+	void mergeShouldThrowOnNull() {
+		assertThrows(NullPointerException.class, () -> IPv6Range.merge((IPv6Range) null).isEmpty());
 	}
 
 	@Test
@@ -359,6 +366,6 @@ public class IPv6RangeTest {
 	@Test
 	void shouldNotBeAdjacentIfOverlaps() {
 		assertFalse(IPv6Range.parse("::-::2").isAdjacent(IPv6Range.parse("::1-::3")));
-		assertFalse(IPv6Range.parse("::1-::3").isAdjacent(IPv6Range.parse("127.0.0.1-127.0.0.3")));
+		assertFalse(IPv6Range.parse("::1-::3").isAdjacent(IPv6Range.parse("::-::2")));
 	}
 }
