@@ -329,13 +329,17 @@ public class IPv4RangeTest {
 	}
 
 	@Test
-	void shouldThrowOnNotAdjacent() {
+	void extendShouldThrowOnNotAdjacent() {
 		assertThrows(IllegalArgumentException.class, () -> IPv4Range.of("127.0.0.1").extend(IPv4Range.of("127.0.0.3")));
+		assertThrows(IllegalArgumentException.class, () -> IPv4Range.of("127.0.0.3").extend(IPv4Range.of("127.0.0.1")));
 	}
 
 	@Test
 	void shouldExtendWithAdjacent() {
-		assertEquals(IPv4Range.of("127.0.0.1", "127.0.0.2"), IPv4Range.of("127.0.0.1").extend(IPv4Range.of("127.0.0.2")));
+		assertEquals(IPv4Range.of("127.0.0.1", "127.0.0.2"),
+				IPv4Range.of("127.0.0.1").extend(IPv4Range.of("127.0.0.2")));
+		assertEquals(IPv4Range.of("127.0.0.1", "127.0.0.2"),
+				IPv4Range.of("127.0.0.2").extend(IPv4Range.of("127.0.0.1")));
 	}
 
 	@Test
@@ -345,7 +349,10 @@ public class IPv4RangeTest {
 
 	@Test
 	void shouldExtendByAddress() {
-		assertEquals(IPv4Range.of("127.0.0.1", "127.0.0.2"), IPv4Range.of("127.0.0.1").extend(IPv4Address.of("127.0.0.2")));
+		assertEquals(IPv4Range.of("127.0.0.1", "127.0.0.2"),
+				IPv4Range.of("127.0.0.1").extend(IPv4Address.of("127.0.0.2")));
+		assertEquals(IPv4Range.of("127.0.0.1", "127.0.0.2"),
+				IPv4Range.of("127.0.0.2").extend(IPv4Address.of("127.0.0.1")));
 	}
 
 	@Test
