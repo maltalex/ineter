@@ -353,4 +353,10 @@ public class IPv6RangeTest {
 	void shouldExtendByAddress() {
 		assertEquals(IPv6Range.of("::1", "::2"), IPv6Range.of("::1").extend(IPv6Address.of("::2")));
 	}
+	
+	@Test
+	void shouldNotBeAdjacentIfOverlaps() {
+		assertFalse(IPv6Range.parse("::-::2").isAdjacent(IPv6Range.parse("::1-::3")));
+		assertFalse(IPv6Range.parse("::1-::3").isAdjacent(IPv6Range.parse("127.0.0.1-127.0.0.3")));
+	}
 }

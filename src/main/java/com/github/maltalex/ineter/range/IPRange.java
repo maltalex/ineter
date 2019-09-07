@@ -76,7 +76,8 @@ public abstract class IPRange<T extends ExtendedIPAddress<T>> implements Iterabl
 	}
 
 	/**
-	 * Checks whether this range is adjacent to another one
+	 * Checks whether this range is adjacent to another one without overlap between
+	 * the two
 	 *
 	 * @param other range to check adjacency with the current one
 	 * @return true - is adjacent, false - is not adjacent
