@@ -229,15 +229,15 @@ public abstract class IPRange<T extends ExtendedIPAddress<T>> implements Iterabl
 		return merge(Arrays.asList(self, extension), rangeProducer).get(0);
 	}
 
-	private static <T extends ExtendedIPAddress<T>, R extends IPRange<T>> boolean overlapsOrAdjacent(R first, R second) {
+	protected static <T extends ExtendedIPAddress<T>, R extends IPRange<T>> boolean overlapsOrAdjacent(R first, R second) {
 		return first.overlaps(second) || first.isAdjacent(second);
 	}
 
-	private static <T extends Comparable<T>> T max(T a, T b) {
+	protected static <T extends Comparable<T>> T max(T a, T b) {
 		return a.compareTo(b) >= 0 ? a : b;
 	}
 
-	private static <T extends Comparable<T>> T min(T a, T b) {
+	protected static <T extends Comparable<T>> T min(T a, T b) {
 		return a.compareTo(b) < 0 ? a : b;
 	}
 }
