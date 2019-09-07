@@ -226,7 +226,7 @@ public abstract class IPRange<T extends ExtendedIPAddress<T>> implements Iterabl
 			throw new IllegalArgumentException(String.format("Extension %s is not adjacent to this range %s",
 					extension.toString(), self.toString()));
 		}
-		return merge(Arrays.asList(self, extension), rangeProducer).get(0);
+		return rangeProducer.apply(min(self.getFirst(),extension.getFirst()), max(self.getLast(), extension.getLast()));	
 	}
 
 	protected static <T extends ExtendedIPAddress<T>, R extends IPRange<T>> boolean overlapsOrAdjacent(R first, R second) {
