@@ -341,6 +341,7 @@ public class IPv6RangeTest {
 		final IPv6Range first = IPv6Range.of("::1");
 		final IPv6Range second = IPv6Range.of("::2", "::5");
 		assertEquals(IPv6Range.of("::1", "::5"), first.extend(second));
+		assertEquals(IPv6Range.of("::1", "::5"), second.extend(first));
 	}
 
 	@Test
@@ -352,6 +353,7 @@ public class IPv6RangeTest {
 	@Test
 	void shouldExtendByAddress() {
 		assertEquals(IPv6Range.of("::1", "::2"), IPv6Range.of("::1").extend(IPv6Address.of("::2")));
+		assertEquals(IPv6Range.of("::1", "::2"), IPv6Range.of("::2").extend(IPv6Address.of("::1")));
 	}
 	
 	@Test
