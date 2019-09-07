@@ -306,8 +306,15 @@ public class IPv4RangeTest {
 		final IPv4Range first = IPv4Range.of("127.0.0.1", "127.0.0.3");
 		final IPv4Range second = IPv4Range.of("127.0.0.2", "127.0.0.4");
 		final IPv4Range third = IPv4Range.of("127.0.0.5", "127.0.0.6");
-		final List<IPv4Range> merge = IPv4Range.merge(first, second, third);
-		assertEquals(singletonList(IPv4Range.of("127.0.0.1", "127.0.0.6")), merge);
+
+		final IPv4Range fourth = IPv4Range.of("127.0.0.8", "127.0.0.10");
+		final IPv4Range fifth = IPv4Range.of("127.0.0.8", "127.0.0.11");
+
+		final IPv4Range sixth = IPv4Range.of("128.0.0.0", "255.255.255.255");
+		final List<IPv4Range> merge = IPv4Range.merge(sixth, fifth, fourth, third, second, first);
+
+		assertEquals(Arrays.asList(IPv4Range.of("127.0.0.1", "127.0.0.6"), IPv4Range.of("127.0.0.8", "127.0.0.11"),
+				IPv4Range.of("128.0.0.0", "255.255.255.255")), merge);
 	}
 
 	@Test
@@ -315,12 +322,12 @@ public class IPv4RangeTest {
 		final IPv4Range first = IPv4Range.of("127.0.0.1", "127.0.0.3");
 		final IPv4Range second = IPv4Range.of("127.0.0.5", "127.0.0.6");
 		final List<IPv4Range> merge = IPv4Range.merge(first, second);
-		assertEquals(ImmutableList.of(second, first), merge);
+		assertEquals(ImmutableList.of(first, second), merge);
 	}
 
 	@Test
-	void shouldReturnEmptyOnNull() {
-		assertTrue(IPv4Range.merge((IPv4Range) null).isEmpty());
+	void mergeShouldThrowOnNull() {
+		assertThrows(NullPointerException.class, () -> IPv4Range.merge((IPv4Range) null));
 	}
 
 	@Test

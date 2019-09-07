@@ -7,19 +7,16 @@
  */
 package com.github.maltalex.ineter.range;
 
-import static java.util.Collections.emptyList;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import com.github.maltalex.ineter.base.ExtendedIPAddress;
 
@@ -179,43 +176,25 @@ public abstract class IPRange<T extends ExtendedIPAddress<T>> implements Iterabl
 	 */
 	public abstract List<? extends IPSubnet<? extends T>> toSubnets();
 
-	protected static <T extends ExtendedIPAddress<T>, R extends IPRange<T>> List<R> merge(Collection<R> addressesToMerge, BiFunction<T, T, R> rangeProducer) {
-		if (addressesToMerge == null || addressesToMerge.isEmpty()) {
-			return emptyList();
-		}
+	protected static <T extends ExtendedIPAddress<T>, R extends IPRange<T>> List<R> merge(Collection<R> rangesToMerge,
+			BiFunction<T, T, R> rangeProducer) {
+		ArrayList<R> sortedRanges = new ArrayList<>(rangesToMerge);
+		Collections.sort(sortedRanges, Comparator.comparing(R::getFirst));
 
-		final ArrayList<R> addressesToModify = addressesToMerge.stream()
-				.filter(Objects::nonNull)
-				.sorted(Comparator.comparing(R::getFirst).reversed())
-				.collect(Collectors.toCollection(ArrayList::new));
-
-		if (addressesToModify.isEmpty()) {
-			return emptyList();
-		}
-
-		int idx = 0;
-		for (int i = 0; i < addressesToModify.size(); i++) {
-
-			if (idx != 0 && overlapsOrAdjacent(addressesToModify.get(idx - 1), addressesToModify.get(i))) {
-
-				R prevIdx;
-				R lastI;
-				while (idx != 0
-						&& overlapsOrAdjacent(prevIdx = addressesToModify.get(idx - 1), lastI = addressesToModify.get(i))) {
-
-					final T end = max(prevIdx.getLast(), lastI.getLast());
-					final T beginning = min(prevIdx.getFirst(), lastI.getFirst());
-
-					addressesToModify.set(idx - 1, rangeProducer.apply(beginning, end));
-					idx--;
-				}
-			} else {
-				addressesToModify.set(idx, addressesToModify.get(i));
+		int mergedRangeIndex = 0, candidateIndex = 0;
+		while (candidateIndex < sortedRanges.size()) {
+			R mergedRange = sortedRanges.get(candidateIndex++); //Grab first un-merged range
+			T mergedRangeStart = mergedRange.getFirst();
+			//While subsequent ranges overlap (or are adjacent), keep expanding the merged range
+			while (candidateIndex < sortedRanges.size() && overlapsOrAdjacent(mergedRange, sortedRanges.get(candidateIndex))) {
+				T pendingRangeEnd = max(mergedRange.getLast(), sortedRanges.get(candidateIndex).getLast());
+				mergedRange = rangeProducer.apply(mergedRangeStart, pendingRangeEnd);
+				candidateIndex++;
 			}
-			idx++;
+			sortedRanges.set(mergedRangeIndex++, mergedRange);
 		}
 
-		return new ArrayList<>(addressesToModify.subList(0, idx));
+		return new ArrayList<>(sortedRanges.subList(0, mergedRangeIndex));
 	}
 
 	protected static <T extends ExtendedIPAddress<T>, R extends IPRange<T>> R extend(R self, R extension, BiFunction<T, T, R> rangeProducer) {
