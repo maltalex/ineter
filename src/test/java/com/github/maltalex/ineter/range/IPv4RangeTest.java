@@ -349,7 +349,8 @@ public class IPv4RangeTest {
 	}
 
 	@Test
-	void shouldNotBeAdjacentIfOverlaps(){
+	void shouldNotBeAdjacentIfOverlaps() {
 		assertFalse(IPv4Range.parse("127.0.0.1-127.0.0.3").isAdjacent(IPv4Range.parse("127.0.0.2-127.0.0.4")));
+		assertFalse(IPv4Range.parse("127.0.0.2-127.0.0.4").isAdjacent(IPv4Range.parse("127.0.0.1-127.0.0.3")));
 	}
 }
