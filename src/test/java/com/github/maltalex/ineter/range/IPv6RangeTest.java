@@ -26,7 +26,6 @@ import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.ImmutableList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -34,6 +33,7 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 import com.github.maltalex.ineter.base.IPv6Address;
+import com.google.common.collect.ImmutableList;
 
 @RunWith(JUnitPlatform.class)
 public class IPv6RangeTest {
@@ -362,7 +362,7 @@ public class IPv6RangeTest {
 		assertEquals(IPv6Range.of("::1", "::2"), IPv6Range.of("::1").extend(IPv6Address.of("::2")));
 		assertEquals(IPv6Range.of("::1", "::2"), IPv6Range.of("::2").extend(IPv6Address.of("::1")));
 	}
-	
+
 	@Test
 	void shouldNotBeAdjacentIfOverlaps() {
 		assertFalse(IPv6Range.parse("::-::2").isAdjacent(IPv6Range.parse("::1-::3")));

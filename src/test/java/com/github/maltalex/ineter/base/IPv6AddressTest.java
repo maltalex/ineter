@@ -284,19 +284,21 @@ public class IPv6AddressTest {
 	void shouldBeAdjacent() {
 		assertTrue(IPv6Address.of("::1").isAdjacentTo(IPv6Address.of("::2")));
 		assertTrue(IPv6Address.of("::2").isAdjacentTo(IPv6Address.of("::1")));
-		
+
 		assertTrue(IPv6Address.of("::0").isAdjacentTo(IPv6Address.of("::1")));
 		assertTrue(IPv6Address.of("::1").isAdjacentTo(IPv6Address.of("::0")));
-		
-		assertTrue(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff").isAdjacentTo(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffe")));
-		assertTrue(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffe").isAdjacentTo(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff")));
+
+		assertTrue(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff")
+				.isAdjacentTo(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffe")));
+		assertTrue(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffe")
+				.isAdjacentTo(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff")));
 	}
 
 	@Test
 	void shouldNotConsiderSameAddressesAsAdjacent() {
 		assertFalse(IPv6Address.of("::1").isAdjacentTo(IPv6Address.of("::1")));
 	}
-	
+
 	@Test
 	void shouldNotConsiderIntervalStartAndEndAdjacent() {
 		assertFalse(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff").isAdjacentTo(IPv6Address.of("::")));

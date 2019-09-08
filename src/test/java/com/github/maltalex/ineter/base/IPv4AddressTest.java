@@ -179,13 +179,13 @@ public class IPv4AddressTest {
 	void shouldBeAdjacent() {
 		assertTrue(IPv4Address.of("127.0.0.1").isAdjacentTo(IPv4Address.of("127.0.0.2")));
 		assertTrue(IPv4Address.of("127.0.0.2").isAdjacentTo(IPv4Address.of("127.0.0.1")));
-		
+
 		assertTrue(IPv4Address.of("0.0.0.0").isAdjacentTo(IPv4Address.of("0.0.0.1")));
 		assertTrue(IPv4Address.of("0.0.0.1").isAdjacentTo(IPv4Address.of("0.0.0.0")));
-		
+
 		assertTrue(IPv4Address.of("255.255.255.255").isAdjacentTo(IPv4Address.of("255.255.255.254")));
 		assertTrue(IPv4Address.of("255.255.255.254").isAdjacentTo(IPv4Address.of("255.255.255.255")));
-		
+
 		assertTrue(IPv4Address.of("127.255.255.255").isAdjacentTo(IPv4Address.of("128.0.0.0")));
 		assertTrue(IPv4Address.of("128.0.0.0").isAdjacentTo(IPv4Address.of("127.255.255.255")));
 	}

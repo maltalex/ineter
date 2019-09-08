@@ -21,11 +21,11 @@ import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.infra.Blackhole;
 
 import com.github.maltalex.ineter.base.IPv6Address;
 import com.github.maltalex.ineter.base.IPv6AddressParseTest;
 import com.google.common.net.InetAddresses;
-import org.openjdk.jmh.infra.Blackhole;
 
 @Measurement(iterations = 5)
 @BenchmarkMode(Mode.AverageTime)
@@ -44,7 +44,7 @@ public class IPv6ParsingBenchmark {
 	@Benchmark
 	public void ineterParsing(Blackhole hole) {
 		for (String addr : this.addresses) {
-            hole.consume(IPv6Address.of(addr));
+			hole.consume(IPv6Address.of(addr));
 		}
 	}
 

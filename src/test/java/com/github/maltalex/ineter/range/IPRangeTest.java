@@ -39,7 +39,8 @@ class IPRangeTest {
 	@Test
 	void throwOnNonsenseOnRange() {
 		String from = "127-127-127";
-		assertThrows(IllegalArgumentException.class, () -> IPRange.parseRange(from, IPv4_RANGE_PRODUCER, IPv4_SUBNET_PRODUCER));
+		assertThrows(IllegalArgumentException.class,
+				() -> IPRange.parseRange(from, IPv4_RANGE_PRODUCER, IPv4_SUBNET_PRODUCER));
 	}
 
 	@Test

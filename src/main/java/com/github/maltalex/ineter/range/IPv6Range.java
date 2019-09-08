@@ -67,12 +67,13 @@ public class IPv6Range extends IPRange<IPv6Address> {
 	}
 
 	/**
-	 * Parses the given String into an {@link IPv6Range} The String can be either a
-	 * single address, a range such as "2001::-2002::" or a subnet such as
-	 * "2001::/16"
+	 * Parses the given String into an {@link IPv6Range} The String can be
+	 * either a single address, a range such as "2001::-2002::" or a subnet such
+	 * as "2001::/16"
 	 *
-	 * @param from - a String representation of a single IPv6 address, a range or a
-	 *             subnet
+	 * @param from
+	 *            - a String representation of a single IPv6 address, a range or
+	 *            a subnet
 	 * @return An {@link IPv6Range}
 	 */
 	public static IPv6Range parse(String from) {
@@ -195,9 +196,11 @@ public class IPv6Range extends IPRange<IPv6Address> {
 	/**
 	 * Extends this range with adjacent one
 	 *
-	 * @param extension adjacent range to be merged with current one
+	 * @param extension
+	 *            adjacent range to be merged with current one
 	 * @return merged range
-	 * @throws IllegalArgumentException extension range is not adjacent with this one
+	 * @throws IllegalArgumentException
+	 *             extension range is not adjacent with this one
 	 */
 	public IPv6Range extend(IPv6Range extension) {
 		return IPRange.extend(this, extension, IPv6Range::of);
@@ -206,9 +209,11 @@ public class IPv6Range extends IPRange<IPv6Address> {
 	/**
 	 * Extends this range with adjacent IPv6 address
 	 *
-	 * @param extension adjacent address to be merged with current range
+	 * @param extension
+	 *            adjacent address to be merged with current range
 	 * @return merged range
-	 * @throws IllegalArgumentException extension address is not adjacent with this range
+	 * @throws IllegalArgumentException
+	 *             extension address is not adjacent with this range
 	 */
 	public IPv6Range extend(IPv6Address extension) {
 		return extend(IPv6Range.of(extension));

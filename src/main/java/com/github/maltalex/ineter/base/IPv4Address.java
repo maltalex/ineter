@@ -128,7 +128,7 @@ public class IPv4Address extends ExtendedIPAddress<IPv4Address> {
 	 * byte array
 	 *
 	 * @param bigEndianByteArr
-	 * 		4 byte big-endian byte array
+	 *            4 byte big-endian byte array
 	 * @return new IPv4Address instance
 	 */
 	public static IPv4Address of(byte[] bigEndianByteArr) {
@@ -160,7 +160,7 @@ public class IPv4Address extends ExtendedIPAddress<IPv4Address> {
 	 * "192.168.1.1"
 	 *
 	 * @param ip
-	 * 		literal IP address String
+	 *            literal IP address String
 	 * @return new IPv4Address instance
 	 */
 	public static IPv4Address of(String ip) {

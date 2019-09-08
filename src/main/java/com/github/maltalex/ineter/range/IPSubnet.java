@@ -53,7 +53,7 @@ public interface IPSubnet<T extends ExtendedIPAddress<T>> extends Iterable<T> {
 	 * {@link IPSubnet#contains(IPRange)}
 	 *
 	 * @param range
-	 * 		the range to check for overlap
+	 *            the range to check for overlap
 	 * @return true if the given range overlaps with this subnet
 	 */
 	public boolean overlaps(IPRange<T> range);
@@ -71,7 +71,7 @@ public interface IPSubnet<T extends ExtendedIPAddress<T>> extends Iterable<T> {
 	 * check for partial overlap, use {@link IPSubnet#overlaps(IPRange)}
 	 *
 	 * @param range
-	 * 		range to check
+	 *            range to check
 	 * @return true if the entire given range is contained within this subnet
 	 */
 	public boolean contains(IPRange<T> range);
@@ -95,7 +95,7 @@ public interface IPSubnet<T extends ExtendedIPAddress<T>> extends Iterable<T> {
 	 * addresses in the subnet
 	 *
 	 * @param trim
-	 * 		set to true to skip first and last addresses
+	 *            set to true to skip first and last addresses
 	 * @return a new iterator instance
 	 */
 	public Iterator<T> iterator(boolean trim);
@@ -105,9 +105,9 @@ public interface IPSubnet<T extends ExtendedIPAddress<T>> extends Iterable<T> {
 	 * addresses in the subnet
 	 *
 	 * @param skipFirst
-	 * 		set to true to skip the first address
+	 *            set to true to skip the first address
 	 * @param skipLast
-	 * 		set to true to skip the last addresses
+	 *            set to true to skip the last addresses
 	 * @return a new iterator instance
 	 */
 	public Iterator<T> iterator(boolean skipFirst, boolean skipLast);

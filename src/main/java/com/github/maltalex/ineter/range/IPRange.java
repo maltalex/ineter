@@ -7,7 +7,6 @@
  */
 package com.github.maltalex.ineter.range;
 
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +24,7 @@ public abstract class IPRange<T extends ExtendedIPAddress<T>> implements Iterabl
 	private static final long serialVersionUID = 1L;
 
 	protected static <T> T parseRange(String from, BiFunction<String, String, ? extends T> rangeProducer,
-									  Function<String, ? extends T> subnetProducer) {
+			Function<String, ? extends T> subnetProducer) {
 		String[] parts = from.split("-");
 		if (parts.length == 2) {
 			return rangeProducer.apply(parts[0].trim(), parts[1].trim());
@@ -41,7 +40,7 @@ public abstract class IPRange<T extends ExtendedIPAddress<T>> implements Iterabl
 	}
 
 	protected static <T> T parseSubnet(String from, BiFunction<String, Integer, ? extends T> subnetProducer,
-									   int singleAddressMask) {
+			int singleAddressMask) {
 		final String[] parts = from.split("/");
 		if (parts.length == 2) {
 			return subnetProducer.apply(parts[0].trim(), Integer.parseInt(parts[1].trim()));
@@ -62,7 +61,8 @@ public abstract class IPRange<T extends ExtendedIPAddress<T>> implements Iterabl
 	 * range. To check whether all addresses are contained, use
 	 * {@link IPRange#contains(IPRange)}
 	 *
-	 * @param range the range to check for overlap
+	 * @param range
+	 *            the range to check for overlap
 	 * @return true if the given range overlaps with this one
 	 */
 	public boolean overlaps(IPRange<T> range) {
@@ -73,10 +73,11 @@ public abstract class IPRange<T extends ExtendedIPAddress<T>> implements Iterabl
 	}
 
 	/**
-	 * Checks whether this range is adjacent to another one without overlap between
-	 * the two
+	 * Checks whether this range is adjacent to another one without overlap
+	 * between the two
 	 *
-	 * @param other range to check adjacency with the current one
+	 * @param other
+	 *            range to check adjacency with the current one
 	 * @return true - is adjacent, false - is not adjacent
 	 */
 	public <R extends IPRange<T>> boolean isAdjacent(R other) {
@@ -98,7 +99,8 @@ public abstract class IPRange<T extends ExtendedIPAddress<T>> implements Iterabl
 	 * Checks whether this range contains all addresses of a given range. To
 	 * check for partial overlap, use {@link IPRange#overlaps(IPRange)}
 	 *
-	 * @param range range to check
+	 * @param range
+	 *            range to check
 	 * @return true if the entire given range is contained within this range
 	 */
 	public boolean contains(IPRange<T> range) {
@@ -151,7 +153,8 @@ public abstract class IPRange<T extends ExtendedIPAddress<T>> implements Iterabl
 	 * Returns an iterator that optionally skips both the first and last
 	 * addresses in the range
 	 *
-	 * @param trim set to true to skip first and last addresses
+	 * @param trim
+	 *            set to true to skip first and last addresses
 	 * @return a new iterator instance
 	 */
 	public Iterator<T> iterator(boolean trim) {
@@ -162,8 +165,10 @@ public abstract class IPRange<T extends ExtendedIPAddress<T>> implements Iterabl
 	 * Returns an iterator that optionally skips the first, last or both
 	 * addresses in the range
 	 *
-	 * @param skipFirst set to true to skip the first address
-	 * @param skipLast  set to true to skip the last addresses
+	 * @param skipFirst
+	 *            set to true to skip the first address
+	 * @param skipLast
+	 *            set to true to skip the last addresses
 	 * @return a new iterator instance
 	 */
 	public abstract Iterator<T> iterator(boolean skipFirst, boolean skipLast);
@@ -183,10 +188,14 @@ public abstract class IPRange<T extends ExtendedIPAddress<T>> implements Iterabl
 
 		int mergedRangeIndex = 0, candidateIndex = 0;
 		while (candidateIndex < sortedRanges.size()) {
-			R mergedRange = sortedRanges.get(candidateIndex++); //Grab first un-merged range
+			R mergedRange = sortedRanges.get(candidateIndex++); // Grab first
+																// un-merged
+																// range
 			T mergedRangeStart = mergedRange.getFirst();
-			//While subsequent ranges overlap (or are adjacent), keep expanding the merged range
-			while (candidateIndex < sortedRanges.size() && overlapsOrAdjacent(mergedRange, sortedRanges.get(candidateIndex))) {
+			// While subsequent ranges overlap (or are adjacent), keep expanding
+			// the merged range
+			while (candidateIndex < sortedRanges.size()
+					&& overlapsOrAdjacent(mergedRange, sortedRanges.get(candidateIndex))) {
 				T pendingRangeEnd = max(mergedRange.getLast(), sortedRanges.get(candidateIndex).getLast());
 				mergedRange = rangeProducer.apply(mergedRangeStart, pendingRangeEnd);
 				candidateIndex++;
@@ -197,7 +206,8 @@ public abstract class IPRange<T extends ExtendedIPAddress<T>> implements Iterabl
 		return new ArrayList<>(sortedRanges.subList(0, mergedRangeIndex));
 	}
 
-	protected static <T extends ExtendedIPAddress<T>, R extends IPRange<T>> R extend(R self, R extension, BiFunction<T, T, R> rangeProducer) {
+	protected static <T extends ExtendedIPAddress<T>, R extends IPRange<T>> R extend(R self, R extension,
+			BiFunction<T, T, R> rangeProducer) {
 		if (self.equals(extension)) {
 			return self;
 		}
@@ -205,10 +215,12 @@ public abstract class IPRange<T extends ExtendedIPAddress<T>> implements Iterabl
 			throw new IllegalArgumentException(String.format("Extension %s is not adjacent to this range %s",
 					extension.toString(), self.toString()));
 		}
-		return rangeProducer.apply(min(self.getFirst(),extension.getFirst()), max(self.getLast(), extension.getLast()));	
+		return rangeProducer.apply(min(self.getFirst(), extension.getFirst()),
+				max(self.getLast(), extension.getLast()));
 	}
 
-	private static <T extends ExtendedIPAddress<T>, R extends IPRange<T>> boolean overlapsOrAdjacent(R first, R second) {
+	private static <T extends ExtendedIPAddress<T>, R extends IPRange<T>> boolean overlapsOrAdjacent(R first,
+			R second) {
 		return first.overlaps(second) || first.isAdjacent(second);
 	}
 

@@ -26,7 +26,6 @@ import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.ImmutableList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -34,6 +33,7 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 import com.github.maltalex.ineter.base.IPv4Address;
+import com.google.common.collect.ImmutableList;
 
 @RunWith(JUnitPlatform.class)
 public class IPv4RangeTest {
@@ -238,36 +238,39 @@ public class IPv4RangeTest {
 		List<IPv4Subnet> generated = IPv4Range.parse(range).toSubnets();
 		List<IPv4Subnet> manual = Arrays.stream(subnets.split(" ")).map(IPv4Subnet::of).collect(Collectors.toList());
 		assertEquals(generated, manual);
-		assertEquals(manual.stream().mapToLong(IPv4Subnet::length).sum(),
-				IPv4Range.parse(range).length().longValue());
+		assertEquals(manual.stream().mapToLong(IPv4Subnet::length).sum(), IPv4Range.parse(range).length().longValue());
 	}
 
 	@Test
 	void singleIPRangeParse() {
 		IPv4Range explicitRange = IPv4Range.parse("127.0.0.1-127.0.0.1");
 		IPv4Range range = IPv4Range.parse("127.0.0.1");
-		assertEquals(explicitRange, range, "Single address range doesn't match explicit range with same addresses on both ends.");
+		assertEquals(explicitRange, range,
+				"Single address range doesn't match explicit range with same addresses on both ends.");
 	}
 
 	@Test
 	void singleIPRangeOfBytes() {
 		IPv4Range explicitRange = IPv4Range.of(new byte[] { 1, 2, 3, 4 }, new byte[] { 1, 2, 3, 4 });
 		IPv4Range range = IPv4Range.of(new byte[] { 1, 2, 3, 4 });
-		assertEquals(explicitRange, range, "Single address range doesn't match explicit range with same addresses on both ends.");
+		assertEquals(explicitRange, range,
+				"Single address range doesn't match explicit range with same addresses on both ends.");
 	}
 
 	@Test
 	void singleIPRangeOfString() {
 		IPv4Range explicitRange = IPv4Range.of("1.2.3.4", "1.2.3.4");
 		IPv4Range range = IPv4Range.of("1.2.3.4");
-		assertEquals(explicitRange, range, "Single address range doesn't match explicit range with same addresses on both ends.");
+		assertEquals(explicitRange, range,
+				"Single address range doesn't match explicit range with same addresses on both ends.");
 	}
 
 	@Test
 	void singleIPRangeOfIPv4Address() {
 		IPv4Range explicitRange = IPv4Range.of(IPv4Address.of("1.2.3.4"), IPv4Address.of("1.2.3.4"));
 		IPv4Range range = IPv4Range.of(IPv4Address.of("1.2.3.4"));
-		assertEquals(explicitRange, range, "Single address range doesn't match explicit range with same addresses on both ends.");
+		assertEquals(explicitRange, range,
+				"Single address range doesn't match explicit range with same addresses on both ends.");
 	}
 
 	@Test
@@ -275,7 +278,8 @@ public class IPv4RangeTest {
 		IPv4Range explicitRange = IPv4Range.of((Inet4Address) InetAddress.getByName("1.2.3.4"),
 				(Inet4Address) InetAddress.getByName("1.2.3.4"));
 		IPv4Range range = IPv4Range.of((Inet4Address) InetAddress.getByName("1.2.3.4"));
-		assertEquals(explicitRange, range, "Single address range doesn't match explicit range with same addresses on both ends.");
+		assertEquals(explicitRange, range,
+				"Single address range doesn't match explicit range with same addresses on both ends.");
 	}
 
 	@Test

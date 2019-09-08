@@ -192,9 +192,9 @@ public class IPv6Address extends ExtendedIPAddress<IPv6Address> {
 	 * longs
 	 *
 	 * @param upper
-	 * 		upper 64 bits of the IPv6Address
+	 *            upper 64 bits of the IPv6Address
 	 * @param lower
-	 * 		lower 64 bits of the IPv6Address
+	 *            lower 64 bits of the IPv6Address
 	 * @return new IPv6Address instance
 	 */
 	public static IPv6Address of(long upper, long lower) {
@@ -215,7 +215,7 @@ public class IPv6Address extends ExtendedIPAddress<IPv6Address> {
 	 * byte array
 	 *
 	 * @param bigEndianByteArr
-	 * 		16 byte big-endian byte array
+	 *            16 byte big-endian byte array
 	 * @return new IPv6Address instance
 	 */
 	public static IPv6Address of(byte[] bigEndianByteArr) {
@@ -453,9 +453,9 @@ public class IPv6Address extends ExtendedIPAddress<IPv6Address> {
 	 * longs
 	 *
 	 * @param upper
-	 * 		upper 64 bits of the IPv6Address
+	 *            upper 64 bits of the IPv6Address
 	 * @param lower
-	 * 		lower 64 bits of the IPv6Address
+	 *            lower 64 bits of the IPv6Address
 	 */
 	public IPv6Address(long upper, long lower) {
 		this.upper = upper;
@@ -663,11 +663,11 @@ public class IPv6Address extends ExtendedIPAddress<IPv6Address> {
 	public boolean isAdjacentTo(IPv6Address other) {
 		return !this.isAllOnes() && this.next().equals(other) || !this.isAllZeroes() && this.previous().equals(other);
 	}
-	
+
 	protected boolean isAllOnes() {
 		return this.upper == 0xffff_ffff_ffff_ffffL && this.lower == 0xffff_ffff_ffff_ffffL;
 	}
-	
+
 	protected boolean isAllZeroes() {
 		return this.upper == 0 && this.lower == 0;
 	}

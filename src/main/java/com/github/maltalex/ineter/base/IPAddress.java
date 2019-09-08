@@ -27,10 +27,10 @@ public abstract class IPAddress implements Serializable {
 	 * Returns either an IPv4 or an IPv6 address
 	 *
 	 * @param bigEndianByteArr
-	 * 		array of 4 or 16 bytes
+	 *            array of 4 or 16 bytes
 	 * @return new IPv4Address / IPv6Address
 	 * @throws IllegalArgumentException
-	 * 		if the given array isn't 4 or 16 bytes long
+	 *             if the given array isn't 4 or 16 bytes long
 	 */
 	public static IPAddress of(byte[] bigEndianByteArr) {
 		if (bigEndianByteArr.length == IPv4Address.ADDRESS_BYTES) {
@@ -47,10 +47,10 @@ public abstract class IPAddress implements Serializable {
 	 * Returns either an IPv4 or an IPv6 address
 	 *
 	 * @param ip
-	 * 		an IPv4 or IPv6 address in literal String form
+	 *            an IPv4 or IPv6 address in literal String form
 	 * @return new IPv4Address / IPv6Address
 	 * @throws IllegalArgumentException
-	 * 		if the given array isn't an IPv4/IPv6 address
+	 *             if the given array isn't an IPv4/IPv6 address
 	 */
 	public static IPAddress of(String ip) {
 		if (ip.length() >= 2 && ip.length() <= 41) {
@@ -73,7 +73,7 @@ public abstract class IPAddress implements Serializable {
 	 * Returns either an IPv4 or an IPv6 address built from an InetAddress
 	 *
 	 * @param address
-	 * 		to copy from
+	 *            to copy from
 	 * @return IPv4Address or IPv6Address instance
 	 */
 	public static IPAddress of(InetAddress address) {
