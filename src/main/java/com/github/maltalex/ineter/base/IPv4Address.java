@@ -12,7 +12,7 @@ import java.net.Inet4Address;
 import com.github.maltalex.ineter.range.IPv4Range;
 import com.github.maltalex.ineter.range.IPv4Subnet;
 
-public class IPv4Address extends ExtendedIPAddress<IPv4Address> implements Comparable<IPv4Address> {
+public class IPv4Address extends ExtendedIPAddress<IPv4Address> {
 
 	public static enum IPv4KnownRange {
 
