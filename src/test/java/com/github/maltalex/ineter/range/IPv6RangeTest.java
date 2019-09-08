@@ -241,90 +241,90 @@ public class IPv6RangeTest {
 
 	@Test
 	void singleIPRangeParse() {
-		final IPv6Range explicitRange = IPv6Range.parse("1234::1234-1234::1234");
-		final IPv6Range range = IPv6Range.parse("1234::1234");
+		IPv6Range explicitRange = IPv6Range.parse("1234::1234-1234::1234");
+		IPv6Range range = IPv6Range.parse("1234::1234");
 		assertEquals(explicitRange, range,
 				"Single address range doesn't match explicit range with same addresses on both ends.");
 	}
 
 	@Test
 	void singleIPRangeOfBytes() {
-		final IPv6Range explicitRange = IPv6Range.of(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+		IPv6Range explicitRange = IPv6Range.of(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
 				new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 });
-		final IPv6Range range = IPv6Range.of(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 });
+		IPv6Range range = IPv6Range.of(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 });
 		assertEquals(explicitRange, range,
 				"Single address range doesn't match explicit range with same addresses on both ends.");
 	}
 
 	@Test
 	void singleIPRangeOfIPv6Address() {
-		final IPv6Range explicitRange = IPv6Range.of(IPv6Address.of("::1"), IPv6Address.of("::1"));
-		final IPv6Range range = IPv6Range.of(IPv6Address.of("::1"));
+		IPv6Range explicitRange = IPv6Range.of(IPv6Address.of("::1"), IPv6Address.of("::1"));
+		IPv6Range range = IPv6Range.of(IPv6Address.of("::1"));
 		assertEquals(explicitRange, range,
 				"Single address range doesn't match explicit range with same addresses on both ends.");
 	}
 
 	@Test
 	void singleIPRangeOfString() {
-		final IPv6Range explicitRange = IPv6Range.of("1234::1234", "1234::1234");
-		final IPv6Range range = IPv6Range.of("1234::1234");
+		IPv6Range explicitRange = IPv6Range.of("1234::1234", "1234::1234");
+		IPv6Range range = IPv6Range.of("1234::1234");
 		assertEquals(explicitRange, range,
 				"Single address range doesn't match explicit range with same addresses on both ends.");
 	}
 
 	@Test
 	void singleIPRangeOfInet6Address() throws UnknownHostException {
-		final IPv6Range explicitRange = IPv6Range.of((Inet6Address) InetAddress.getByName("::1"),
+		IPv6Range explicitRange = IPv6Range.of((Inet6Address) InetAddress.getByName("::1"),
 				(Inet6Address) InetAddress.getByName("::1"));
-		final IPv6Range range = IPv6Range.of((Inet6Address) InetAddress.getByName("::1"));
+		IPv6Range range = IPv6Range.of((Inet6Address) InetAddress.getByName("::1"));
 		assertEquals(explicitRange, range,
 				"Single address range doesn't match explicit range with same addresses on both ends.");
 	}
 
 	@Test
 	void parseSubnet() {
-		final IPv6Range range = IPv6Range.parse("1234::/16");
+		IPv6Range range = IPv6Range.parse("1234::/16");
 		assertEquals(IPv6Address.of("1234::"), range.getFirst());
 		assertEquals(IPv6Address.of("1235::").previous(), range.getLast());
 	}
 
 	@Test
 	void shouldMergeAdjacent() {
-		final IPv6Range first = IPv6Range.of("::1", "::2");
-		final IPv6Range second = IPv6Range.of("::3", "::4");
-		final List<IPv6Range> merge = IPv6Range.merge(first, second);
+		IPv6Range first = IPv6Range.of("::1", "::2");
+		IPv6Range second = IPv6Range.of("::3", "::4");
+		List<IPv6Range> merge = IPv6Range.merge(first, second);
 		assertEquals(ImmutableList.of(IPv6Range.of("::1", "::4")), merge);
 	}
 
 	@Test
 	void shouldMergeOverlapping() {
-		final IPv6Range first = IPv6Range.of("::1", "::3");
-		final IPv6Range second = IPv6Range.of("::2", "::4");
-		final List<IPv6Range> merge = IPv6Range.merge(first, second);
+		IPv6Range first = IPv6Range.of("::1", "::3");
+		IPv6Range second = IPv6Range.of("::2", "::4");
+		List<IPv6Range> merge = IPv6Range.merge(first, second);
 		assertEquals(ImmutableList.of(IPv6Range.of("::1", "::4")), merge);
 	}
 
 	@Test
 	void shouldMergeMixed() {
-		final IPv6Range first = IPv6Range.of("::1", "::3");
-		final IPv6Range second = IPv6Range.of("::2", "::4");
-		final IPv6Range third = IPv6Range.of("::5", "::6");
+		IPv6Range first = IPv6Range.of("::1", "::3");
+		IPv6Range second = IPv6Range.of("::2", "::4");
+		IPv6Range third = IPv6Range.of("::5", "::6");
 
-		final IPv6Range fourth = IPv6Range.of("::8", "::10");
-		final IPv6Range fifth = IPv6Range.of("::8", "::11");
+		IPv6Range fourth = IPv6Range.of("::8", "::10");
+		IPv6Range fifth = IPv6Range.of("::8", "::11");
 
-		final IPv6Range sixth = IPv6Range.of("2001::", "2002::");
+		IPv6Range sixth = IPv6Range.of("2001::", "2002::");
 
-		final List<IPv6Range> merge = IPv6Range.merge(sixth, fifth, fourth, third, second, first);
+		List<IPv6Range> merge = IPv6Range.merge(sixth, fifth, fourth, third, second, first);
 		assertEquals(Arrays.asList(IPv6Range.of("::1", "::6"), IPv6Range.of("::8", "::11"),
 				IPv6Range.of("2001::", "2002::")), merge);
 	}
 
 	@Test
 	void shouldNotMergeSeparated() {
-		final IPv6Range first = IPv6Range.of("::1", "::3");
-		final IPv6Range second = IPv6Range.of("::5", "::6");
-		final List<IPv6Range> merge = IPv6Range.merge(first, second);
+		IPv6Range first = IPv6Range.of("::1", "::3");
+		IPv6Range second = IPv6Range.of("::5", "::6");
+		List<IPv6Range> merge = IPv6Range.merge(first, second);
 		assertEquals(ImmutableList.of(first, second), merge);
 	}
 
@@ -345,15 +345,15 @@ public class IPv6RangeTest {
 
 	@Test
 	void shouldExtendAdjacent() {
-		final IPv6Range first = IPv6Range.of("::1");
-		final IPv6Range second = IPv6Range.of("::2", "::5");
+		IPv6Range first = IPv6Range.of("::1");
+		IPv6Range second = IPv6Range.of("::2", "::5");
 		assertEquals(IPv6Range.of("::1", "::5"), first.extend(second));
 		assertEquals(IPv6Range.of("::1", "::5"), second.extend(first));
 	}
 
 	@Test
 	void shouldStaySameOnExtensionByItself() {
-		final IPv6Range range = IPv6Range.of("::1");
+		IPv6Range range = IPv6Range.of("::1");
 		assertEquals(range, range.extend(range));
 	}
 

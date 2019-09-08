@@ -94,17 +94,17 @@ public class IPv6SubnetTest {
 
 	@Test
 	void parseSingleAddress() {
-		final String address = "1234::";
-		final IPv6Subnet parsedSubnet = IPv6Subnet.parse(address);
-		final IPv6Subnet subnet = IPv6Subnet.of("1234::/128");
+		String address = "1234::";
+		IPv6Subnet parsedSubnet = IPv6Subnet.parse(address);
+		IPv6Subnet subnet = IPv6Subnet.of("1234::/128");
 		assertEquals(subnet, parsedSubnet);
 	}
 
 	@Test
 	void parseCidr() {
-		final String address = "1234::/64";
-		final IPv6Subnet parsedSubnet = IPv6Subnet.parse(address);
-		final IPv6Subnet subnet = IPv6Subnet.of("1234::", 64);
+		String address = "1234::/64";
+		IPv6Subnet parsedSubnet = IPv6Subnet.parse(address);
+		IPv6Subnet subnet = IPv6Subnet.of("1234::", 64);
 		assertEquals(subnet, parsedSubnet);
 	}
 

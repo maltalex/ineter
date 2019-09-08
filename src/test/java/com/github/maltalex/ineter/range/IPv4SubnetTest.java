@@ -94,18 +94,18 @@ public class IPv4SubnetTest {
 
 	@Test
 	void parseCidr() {
-		final String cidr = "192.168.0.0/24";
-		final IPv4Subnet parsedSubnet = IPv4Subnet.parse(cidr);
-		final IPv4Subnet cidrSubnet = IPv4Subnet.of(cidr);
+		String cidr = "192.168.0.0/24";
+		IPv4Subnet parsedSubnet = IPv4Subnet.parse(cidr);
+		IPv4Subnet cidrSubnet = IPv4Subnet.of(cidr);
 
 		assertEquals(cidrSubnet, parsedSubnet);
 	}
 
 	@Test
 	void parseSingleAddress() {
-		final String address = "172.20.0.1";
-		final IPv4Subnet parsedSubnet = IPv4Subnet.parse(address);
-		final IPv4Subnet subnet = IPv4Subnet.of(address, (byte) 32);
+		String address = "172.20.0.1";
+		IPv4Subnet parsedSubnet = IPv4Subnet.parse(address);
+		IPv4Subnet subnet = IPv4Subnet.of(address, (byte) 32);
 		assertEquals(subnet, parsedSubnet);
 	}
 
