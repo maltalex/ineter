@@ -187,4 +187,9 @@ public class IPv4Range implements IPRange<IPv4Address, Long> {
 
 		return result;
 	}
+	
+	@Override
+	public int intLength() {
+		return this.length() >= Integer.MAX_VALUE ? Integer.MAX_VALUE : this.length().intValue();
+	}
 }

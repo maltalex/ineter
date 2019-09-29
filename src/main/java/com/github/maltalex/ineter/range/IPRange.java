@@ -95,6 +95,15 @@ public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number &
 	 */
 	public L length();
 
+	/**
+	 * Returns the number of addresses in the range
+	 * 
+	 * If the number is larger than Integer.MAX_VALUE, returns Integer.MAX_VALUE
+	 * 
+	 * @return number of addresses in the range, up to Integer.MAX_VALUE
+	 */
+	public int intLength();
+
 	@Override
 	default Iterator<I> iterator() {
 		return iterator(false);
