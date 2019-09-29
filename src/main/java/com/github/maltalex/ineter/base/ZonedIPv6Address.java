@@ -10,8 +10,6 @@ package com.github.maltalex.ineter.base;
 import java.net.Inet6Address;
 import java.util.Objects;
 
-import com.github.maltalex.ineter.base.IPv6Address.LongByte;
-
 public class ZonedIPv6Address extends IPv6Address {
 
 	private static final long serialVersionUID = 1L;
