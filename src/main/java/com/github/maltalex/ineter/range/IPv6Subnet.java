@@ -73,7 +73,7 @@ public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address, BigIn
 
 	public static IPv6Subnet of(String cidr) {
 		String[] cidrSplit = cidr.split("/");
-		return new IPv6Subnet(IPv6Address.of(cidrSplit[0]), IPv6SubnetMask.fromMaskLen(Integer.parseInt(cidrSplit[1])));
+		return of(cidrSplit[0], cidrSplit[1]);
 	}
 
 	public static IPv6Subnet parse(String from) {
@@ -86,6 +86,10 @@ public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address, BigIn
 
 	public static IPv6Subnet of(IPv6Address address, int maskLen) {
 		return new IPv6Subnet(address, IPv6SubnetMask.fromMaskLen(maskLen));
+	}
+
+	public static IPv6Subnet of(String address, String maskLen) {
+		return new IPv6Subnet(IPv6Address.of(address), IPv6SubnetMask.fromMaskLen(Integer.parseInt(maskLen)));
 	}
 
 	protected final int networkBitCount;

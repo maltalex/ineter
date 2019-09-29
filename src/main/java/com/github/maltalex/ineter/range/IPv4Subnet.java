@@ -72,7 +72,7 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address, Long>
 
 	public static IPv4Subnet of(String cidr) {
 		String[] cidrSplit = cidr.split("/");
-		return new IPv4Subnet(IPv4Address.of(cidrSplit[0]), IPv4SubnetMask.fromMaskLen(Integer.parseInt(cidrSplit[1])));
+		return of(cidrSplit[0], cidrSplit[1]);
 	}
 
 	public static IPv4Subnet of(String address, int maskLen) {
@@ -81,6 +81,10 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address, Long>
 
 	public static IPv4Subnet of(IPv4Address address, int maskLen) {
 		return new IPv4Subnet(address, IPv4SubnetMask.fromMaskLen(maskLen));
+	}
+	
+	public static IPv4Subnet of(String address, String maskLen) {
+		return new IPv4Subnet(IPv4Address.of(address), IPv4SubnetMask.fromMaskLen(Integer.parseInt(maskLen)));
 	}
 
 	public static IPv4Subnet parse(String from) throws IllegalArgumentException {
