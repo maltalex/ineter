@@ -192,4 +192,14 @@ public class IPv4Range implements IPRange<IPv4Address, Long> {
 	public int intLength() {
 		return this.length() >= Integer.MAX_VALUE ? Integer.MAX_VALUE : this.length().intValue();
 	}
+
+	@Override
+	public IPv4Range withFirst(IPv4Address address) {
+		return IPv4Range.of(address, this.getLast());
+	}
+	
+	@Override
+	public IPv4Range withLast(IPv4Address address) {
+		return IPv4Range.of(this.getFirst(), address);
+	}
 }

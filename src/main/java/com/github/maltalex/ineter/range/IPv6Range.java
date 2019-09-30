@@ -213,4 +213,14 @@ public class IPv6Range implements IPRange<IPv6Address, BigInteger> {
 	public int intLength() {
 		return this.length().compareTo(INTEGER_MAX_VALUE) >= 0 ? Integer.MAX_VALUE : this.length().intValue();
 	}
+
+	@Override
+	public IPv6Range withFirst(IPv6Address address) {
+		return IPv6Range.of(address, this.getLast());
+	}
+	
+	@Override
+	public IPv6Range withLast(IPv6Address address) {
+		return IPv6Range.of(this.getFirst(), address);
+	}
 }

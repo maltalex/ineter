@@ -110,4 +110,8 @@ public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number &
 	 * @return a list of Subnets that compose this address range
 	 */
 	public List<? extends IPSubnet<I,L>> toSubnets();
+
+	public IPRange<I,L> withFirst(I address);
+	
+	public IPRange<I,L> withLast(I address);
 }
