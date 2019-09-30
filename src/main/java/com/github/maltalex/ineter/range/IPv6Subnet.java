@@ -77,7 +77,7 @@ public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address, BigIn
 	}
 
 	public static IPv6Subnet parse(String from) {
-		return IPRange.parseSubnet(from, IPv6Subnet::of, 128);
+		return IPRangeUtils.parseSubnet(from, IPv6Subnet::of, 128);
 	}
 
 	public static IPv6Subnet of(String address, int maskLen) {

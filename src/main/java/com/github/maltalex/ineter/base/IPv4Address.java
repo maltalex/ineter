@@ -10,9 +10,10 @@ package com.github.maltalex.ineter.base;
 import java.net.Inet4Address;
 
 import com.github.maltalex.ineter.range.IPv4Range;
+import com.github.maltalex.ineter.base.IPAddress.GenericIPAddress;
 import com.github.maltalex.ineter.range.IPv4Subnet;
 
-public class IPv4Address implements IPAddress, Comparable<IPv4Address> {
+public class IPv4Address implements GenericIPAddress<IPv4Address, Long> {
 
 	public static enum IPv4KnownRange {
 
@@ -369,8 +370,23 @@ public class IPv4Address implements IPAddress, Comparable<IPv4Address> {
 	}
 
 	@Override
-	public IPv4Range toRange() {
-		return IPv4Range.of(this);
+	public IPv4Subnet toSubnet() {
+		return IPv4Subnet.of(this, ADDRESS_BITS);
+	}
+
+	@Override
+	public IPv4Range toRange(IPv4Address address) {
+		return this.compareTo(address) <0 ? IPv4Range.of(this, address) : IPv4Range.of(address, this);
+	}
+
+	@Override
+	public boolean isAdjacentTo(IPv4Address other) {
+		return distanceTo(other) == 1;
+	}
+
+	@Override
+	public Long distanceTo(IPv4Address other) {
+		return Math.abs(this.toLong() - other.toLong());
 	}
 
 }

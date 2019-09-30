@@ -7,12 +7,16 @@
  */
 package com.github.maltalex.ineter.base;
 
+import java.math.BigInteger;
 import java.net.Inet6Address;
 
+import com.github.maltalex.ineter.base.IPAddress.GenericIPAddress;
+import com.github.maltalex.ineter.range.IPRange;
+import com.github.maltalex.ineter.range.IPSubnet;
 import com.github.maltalex.ineter.range.IPv6Range;
 import com.github.maltalex.ineter.range.IPv6Subnet;
 
-public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
+public class IPv6Address implements GenericIPAddress<IPv6Address, BigInteger> {
 
 	public static enum IPv6KnownRange {
 
@@ -714,9 +718,24 @@ public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
 	public boolean isZoned() {
 		return false;
 	}
-	
+
 	@Override
-	public IPv6Range toRange() {
-		return IPv6Range.of(this);
+	public IPSubnet<IPv6Address, BigInteger> toSubnet() {
+		return IPv6Subnet.of(this, ADDRESS_BITS);
+	}
+
+	@Override
+	public IPRange<IPv6Address, BigInteger> toRange(IPv6Address address) {
+		return this.compareTo(address) < 0 ? IPv6Range.of(this, address) : IPv6Range.of(address, this);
+	}
+
+	@Override
+	public boolean isAdjacentTo(IPv6Address other) {
+		return distanceTo(other).equals(BigInteger.ONE);
+	}
+
+	@Override
+	public BigInteger distanceTo(IPv6Address other) {
+		return this.toBigInteger().min(other.toBigInteger()).abs();
 	}
 }

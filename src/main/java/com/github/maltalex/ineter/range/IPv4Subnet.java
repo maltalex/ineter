@@ -88,7 +88,7 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address, Long>
 	}
 
 	public static IPv4Subnet parse(String from) throws IllegalArgumentException {
-		return IPRange.parseSubnet(from, IPv4Subnet::of, 32);
+		return IPRangeUtils.parseSubnet(from, IPv4Subnet::of, 32);
 	}
 
 	static IPv4Subnet of(String address, Integer subnet) {

@@ -15,6 +15,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import com.github.maltalex.ineter.range.IPRange;
+import com.github.maltalex.ineter.range.IPSubnet;
 
 /**
  * Abstract class that represents a single IP address
@@ -24,6 +25,20 @@ import com.github.maltalex.ineter.range.IPRange;
  */
 public interface IPAddress extends Serializable {
 
+	public interface GenericIPAddress<I extends IPAddress & Comparable<I>, L extends Number & Comparable<L>>
+			extends IPAddress, Comparable<I> {
+		@Override
+		int compareTo(I other);
+
+		IPSubnet<I, L> toSubnet();
+
+		IPRange<I, L> toRange(I address);
+
+		boolean isAdjacentTo(I other);
+
+		L distanceTo(I other);
+	}
+	
 	/**
 	 * Returns either an IPv4 or an IPv6 address
 	 *
@@ -232,7 +247,4 @@ public interface IPAddress extends Serializable {
 			throw new RuntimeException(e);
 		}
 	}
-
-	IPRange<?, ?> toRange();
-
 }

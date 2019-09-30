@@ -63,7 +63,7 @@ public class IPv4Range implements IPRange<IPv4Address, Long> {
 	 * @return An {@link IPv4Range}
 	 */
 	public static IPv4Range parse(String from) {
-		return IPRange.parseRange(from, IPv4Range::of, IPv4Subnet::of);
+		return IPRangeUtils.parseRange(from, IPv4Range::of, IPv4Subnet::of);
 	}
 
 	protected final IPv4Address firstAddress;

@@ -65,7 +65,7 @@ public class IPv6Range implements IPRange<IPv6Address, BigInteger> {
 	 * @return An {@link IPv6Range}
 	 */
 	public static IPv6Range parse(String from) {
-		return IPRange.parseRange(from, IPv6Range::of, IPv6Subnet::of);
+		return IPRangeUtils.parseRange(from, IPv6Range::of, IPv6Subnet::of);
 	}
 
 	final IPv6Address firstAddress;
