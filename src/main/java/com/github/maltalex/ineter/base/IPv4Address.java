@@ -384,4 +384,19 @@ public class IPv4Address implements IPAddress, Comparable<IPv4Address> {
 		return Math.abs(this.toLong() - other.toLong());
 	}
 
+	public IPv4Address and(IPv4Address other) {
+		return IPv4Address.of(this.ip & other.ip);
+	}
+
+	public IPv4Address or(IPv4Address other) {
+		return IPv4Address.of(this.ip | other.ip);
+	}
+	
+	public IPv4Address xor(IPv4Address other) {
+		return IPv4Address.of(this.ip ^ other.ip);
+	}
+
+	public IPv4Address not() {
+		return IPv4Address.of(~this.ip);
+	}
 }

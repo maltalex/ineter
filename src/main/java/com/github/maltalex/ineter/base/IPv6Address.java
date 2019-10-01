@@ -731,4 +731,20 @@ public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
 	public BigInteger distanceTo(IPv6Address other) {
 		return this.toBigInteger().subtract(other.toBigInteger()).abs();
 	}
+	
+	public IPv6Address and(IPv6Address other) {
+		return IPv6Address.of(this.upper & other.upper, this.lower & other.lower);
+	}
+
+	public IPv6Address or(IPv6Address other) {
+		return IPv6Address.of(this.upper | other.upper, this.lower | other.lower);
+	}
+
+	public IPv6Address xor(IPv6Address other) {
+		return IPv6Address.of(this.upper ^ other.upper, this.lower ^ other.lower);
+	}
+
+	public IPv6Address not() {
+		return IPv6Address.of(~this.upper, ~this.lower);
+	}
 }
