@@ -7,8 +7,6 @@
  */
 package com.github.maltalex.ineter.range;
 
-import static java.lang.String.format;
-
 import java.math.BigInteger;
 import java.net.Inet6Address;
 import java.util.ArrayList;
@@ -21,8 +19,9 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.github.maltalex.ineter.base.IPv6Address;
 
-public class IPv6Range extends IPRange<IPv6Address> {
+public class IPv6Range implements IPRange<IPv6Address, BigInteger> {
 
+	private static final BigInteger INTEGER_MAX_VALUE = new BigInteger(new byte[] {0x7f,(byte) 0xff,(byte) 0xff,(byte) 0xff});
 	private static final long serialVersionUID = 1L;
 
 	public static IPv6Range of(IPv6Address firstAddress, IPv6Address lastAddress) {
@@ -56,28 +55,27 @@ public class IPv6Range extends IPRange<IPv6Address> {
 	public static IPv6Range of(Inet6Address address) {
 		return IPv6Range.of(address, address);
 	}
-
-	/**
-	 * Use {@link IPv6Range#parse(String)} instead
-	 */
-	@Deprecated
-	public static IPv6Range between(String between) {
-		String[] parts = between.split("-");
-		return IPv6Range.of(IPv6Address.of(parts[0].trim()), IPv6Address.of(parts[1].trim()));
+	
+	public static List<IPv6Range> merge(IPv6Range... ranges){
+		return merge(Arrays.asList(ranges));
+	}
+	
+	public static List<IPv6Range> merge(Collection<IPv6Range> ranges){
+		return IPRangeUtils.merge(ranges, IPv6Range::of);
 	}
 
 	/**
 	 * Parses the given String into an {@link IPv6Range} The String can be
 	 * either a single address, a range such as "2001::-2002::" or a subnet such
 	 * as "2001::/16"
-	 *
+	 * 
 	 * @param from
 	 *            - a String representation of a single IPv6 address, a range or
 	 *            a subnet
 	 * @return An {@link IPv6Range}
 	 */
 	public static IPv6Range parse(String from) {
-		return parseRange(from, IPv6Range::of, IPv6Subnet::of);
+		return IPRangeUtils.parseRange(from, IPv6Range::of, IPv6Subnet::of);
 	}
 
 	final IPv6Address firstAddress;
@@ -92,17 +90,9 @@ public class IPv6Range extends IPRange<IPv6Address> {
 
 		if (this.firstAddress.compareTo(lastAddress) > 0) {
 			throw new IllegalArgumentException(
-					format("The first address in the range (%s) has to be lower than the last address (%s)",
+					String.format("The first address in the range (%s) has to be lower than the last address (%s)",
 							firstAddress.toString(), lastAddress.toString()));
 		}
-	}
-
-	public static List<IPv6Range> merge(IPv6Range... addressesToMerge) {
-		return merge(Arrays.asList(addressesToMerge));
-	}
-
-	public static List<IPv6Range> merge(Collection<IPv6Range> addressesToMerge) {
-		return merge(addressesToMerge, IPv6Range::of);
 	}
 
 	@Override
@@ -118,6 +108,42 @@ public class IPv6Range extends IPRange<IPv6Address> {
 	@Override
 	public BigInteger length() {
 		return this.lastAddress.toBigInteger().subtract(this.firstAddress.toBigInteger()).add(BigInteger.ONE);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.firstAddress == null) ? 0 : this.firstAddress.hashCode());
+		result = prime * result + ((this.lastAddress == null) ? 0 : this.lastAddress.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof IPv6Range))
+			return false;
+		IPv6Range other = (IPv6Range) obj;
+		if (this.firstAddress == null) {
+			if (other.firstAddress != null)
+				return false;
+		} else if (!this.firstAddress.equals(other.firstAddress))
+			return false;
+		if (this.lastAddress == null) {
+			if (other.lastAddress != null)
+				return false;
+		} else if (!this.lastAddress.equals(other.lastAddress))
+			return false;
+		return true;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s - %s", this.getFirst().toString(), this.getLast().toString());
 	}
 
 	@Override
@@ -192,30 +218,19 @@ public class IPv6Range extends IPRange<IPv6Address> {
 
 		return result;
 	}
-
-	/**
-	 * Extends this range with adjacent one
-	 *
-	 * @param extension
-	 *            adjacent range to be merged with current one
-	 * @return merged range
-	 * @throws IllegalArgumentException
-	 *             extension range is not adjacent with this one
-	 */
-	public IPv6Range extend(IPv6Range extension) {
-		return IPRange.extend(this, extension, IPv6Range::of);
+	
+	@Override
+	public int intLength() {
+		return this.length().compareTo(INTEGER_MAX_VALUE) >= 0 ? Integer.MAX_VALUE : this.length().intValue();
 	}
-
-	/**
-	 * Extends this range with adjacent IPv6 address
-	 *
-	 * @param extension
-	 *            adjacent address to be merged with current range
-	 * @return merged range
-	 * @throws IllegalArgumentException
-	 *             extension address is not adjacent with this range
-	 */
-	public IPv6Range extend(IPv6Address extension) {
-		return extend(IPv6Range.of(extension));
+	
+	@Override
+	public IPv6Range withFirst(IPv6Address address) {
+		return IPv6Range.of(address, this.getLast());
+	}
+	
+	@Override
+	public IPv6Range withLast(IPv6Address address) {
+		return IPv6Range.of(this.getFirst(), address);
 	}
 }

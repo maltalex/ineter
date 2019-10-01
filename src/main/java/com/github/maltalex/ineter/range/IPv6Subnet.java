@@ -7,9 +7,11 @@
  */
 package com.github.maltalex.ineter.range;
 
+import java.math.BigInteger;
+
 import com.github.maltalex.ineter.base.IPv6Address;
 
-public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address> {
+public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address, BigInteger> {
 
 	static enum IPv6SubnetMask {
 
@@ -71,11 +73,11 @@ public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address> {
 
 	public static IPv6Subnet of(String cidr) {
 		String[] cidrSplit = cidr.split("/");
-		return new IPv6Subnet(IPv6Address.of(cidrSplit[0]), IPv6SubnetMask.fromMaskLen(Integer.parseInt(cidrSplit[1])));
+		return of(cidrSplit[0], cidrSplit[1]);
 	}
 
 	public static IPv6Subnet parse(String from) {
-		return parseSubnet(from, IPv6Subnet::of, 128);
+		return IPRangeUtils.parseSubnet(from, IPv6Subnet::of, 128);
 	}
 
 	public static IPv6Subnet of(String address, int maskLen) {
@@ -84,6 +86,10 @@ public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address> {
 
 	public static IPv6Subnet of(IPv6Address address, int maskLen) {
 		return new IPv6Subnet(address, IPv6SubnetMask.fromMaskLen(maskLen));
+	}
+
+	public static IPv6Subnet of(String address, String maskLen) {
+		return new IPv6Subnet(IPv6Address.of(address), IPv6SubnetMask.fromMaskLen(Integer.parseInt(maskLen)));
 	}
 
 	protected final int networkBitCount;

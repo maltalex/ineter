@@ -1,18 +1,19 @@
 /**
  * Copyright (c) 2018, Ineter Contributors
- * <p>
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package com.github.maltalex.ineter.base;
 
+import java.math.BigInteger;
 import java.net.Inet6Address;
 
 import com.github.maltalex.ineter.range.IPv6Range;
 import com.github.maltalex.ineter.range.IPv6Subnet;
 
-public class IPv6Address extends ExtendedIPAddress<IPv6Address> {
+public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
 
 	public static enum IPv6KnownRange {
 
@@ -286,7 +287,7 @@ public class IPv6Address extends ExtendedIPAddress<IPv6Address> {
 				break;
 			}
 			if (ch == '%') { // This is a zoned address - take out the zone and
-				// move the "last" index
+								// move the "last" index
 				zone = address.substring(i + 1, last); // skip the "%" itself
 				last = i;
 				break;
@@ -660,19 +661,6 @@ public class IPv6Address extends ExtendedIPAddress<IPv6Address> {
 	}
 
 	@Override
-	public boolean isAdjacentTo(IPv6Address other) {
-		return !this.isAllOnes() && this.next().equals(other) || !this.isAllZeroes() && this.previous().equals(other);
-	}
-
-	protected boolean isAllOnes() {
-		return this.upper == 0xffff_ffff_ffff_ffffL && this.lower == 0xffff_ffff_ffff_ffffL;
-	}
-
-	protected boolean isAllZeroes() {
-		return this.upper == 0 && this.lower == 0;
-	}
-
-	@Override
 	public int compareTo(IPv6Address o) {
 		if (o == null) {
 			return 1; // Bigger than null
@@ -690,7 +678,7 @@ public class IPv6Address extends ExtendedIPAddress<IPv6Address> {
 	}
 
 	public Inet6Address toInet6Address() {
-		return (Inet6Address) super.toInetAddress();
+		return (Inet6Address) this.toInetAddress();
 	}
 
 	@Override
@@ -721,10 +709,42 @@ public class IPv6Address extends ExtendedIPAddress<IPv6Address> {
 
 	/**
 	 * does this address have a specific zone?
-	 *
+	 * 
 	 * @return false
 	 */
 	public boolean isZoned() {
 		return false;
+	}
+
+	public IPv6Subnet toSubnet() {
+		return IPv6Subnet.of(this, ADDRESS_BITS);
+	}
+
+	public IPv6Range toRange(IPv6Address address) {
+		return this.compareTo(address) < 0 ? IPv6Range.of(this, address) : IPv6Range.of(address, this);
+	}
+
+	public boolean isAdjacentTo(IPv6Address other) {
+		return distanceTo(other).equals(BigInteger.ONE);
+	}
+
+	public BigInteger distanceTo(IPv6Address other) {
+		return this.toBigInteger().subtract(other.toBigInteger()).abs();
+	}
+	
+	public IPv6Address and(IPv6Address other) {
+		return IPv6Address.of(this.upper & other.upper, this.lower & other.lower);
+	}
+
+	public IPv6Address or(IPv6Address other) {
+		return IPv6Address.of(this.upper | other.upper, this.lower | other.lower);
+	}
+
+	public IPv6Address xor(IPv6Address other) {
+		return IPv6Address.of(this.upper ^ other.upper, this.lower ^ other.lower);
+	}
+
+	public IPv6Address not() {
+		return IPv6Address.of(~this.upper, ~this.lower);
 	}
 }

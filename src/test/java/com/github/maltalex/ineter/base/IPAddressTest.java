@@ -17,6 +17,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
+import com.github.maltalex.ineter.base.IPAddress;
+import com.github.maltalex.ineter.base.IPv4Address;
+import com.github.maltalex.ineter.base.IPv6Address;
+
 @RunWith(JUnitPlatform.class)
 public class IPAddressTest {
 

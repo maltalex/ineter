@@ -21,6 +21,8 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 import com.github.maltalex.ineter.base.IPv6Address;
+import com.github.maltalex.ineter.range.IPv6Range;
+import com.github.maltalex.ineter.range.IPv6Subnet;
 import com.github.maltalex.ineter.range.IPv6Subnet.IPv6SubnetMask;
 
 @RunWith(JUnitPlatform.class)

@@ -7,8 +7,6 @@
  */
 package com.github.maltalex.ineter.range;
 
-import static java.lang.String.format;
-
 import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +18,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.github.maltalex.ineter.base.IPv4Address;
 
-public class IPv4Range extends IPRange<IPv4Address> {
+public class IPv4Range implements IPRange<IPv4Address, Long> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -56,27 +54,26 @@ public class IPv4Range extends IPRange<IPv4Address> {
 		return IPv4Range.of(address, address);
 	}
 
-	/**
-	 * Use {@link IPv4Range#parse(String)} instead
-	 */
-	@Deprecated
-	public static IPv4Range between(String between) {
-		String[] parts = between.split("-");
-		return IPv4Range.of(IPv4Address.of(parts[0].trim()), IPv4Address.of(parts[1].trim()));
+	public static List<IPv4Range> merge(IPv4Range... ranges){
+		return merge(Arrays.asList(ranges));
+	}
+	
+	public static List<IPv4Range> merge(Collection<IPv4Range> ranges){
+		return IPRangeUtils.merge(ranges, IPv4Range::of);
 	}
 
 	/**
 	 * Parses the given String into an {@link IPv4Range} The String can be
 	 * either a single address, a range such as "192.168.0.0-192.168.1.2" or a
 	 * subnet such as "192.168.0.0/16"
-	 *
+	 * 
 	 * @param from
 	 *            - a String representation of a single IPv4 address, a range or
 	 *            a subnet
 	 * @return An {@link IPv4Range}
 	 */
 	public static IPv4Range parse(String from) {
-		return parseRange(from, IPv4Range::of, IPv4Subnet::of);
+		return IPRangeUtils.parseRange(from, IPv4Range::of, IPv4Subnet::of);
 	}
 
 	protected final IPv4Address firstAddress;
@@ -91,7 +88,7 @@ public class IPv4Range extends IPRange<IPv4Address> {
 
 		if (this.firstAddress.compareTo(lastAddress) > 0) {
 			throw new IllegalArgumentException(
-					format("The first address in the range (%s) has to be lower than the last address (%s)",
+					String.format("The first address in the range (%s) has to be lower than the last address (%s)",
 							firstAddress.toString(), lastAddress.toString()));
 		}
 	}
@@ -111,6 +108,42 @@ public class IPv4Range extends IPRange<IPv4Address> {
 		return Long.valueOf(this.lastAddress.toLong() - this.firstAddress.toLong() + 1);
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.firstAddress == null) ? 0 : this.firstAddress.hashCode());
+		result = prime * result + ((this.lastAddress == null) ? 0 : this.lastAddress.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof IPv4Range))
+			return false;
+		IPv4Range other = (IPv4Range) obj;
+		if (this.firstAddress == null) {
+			if (other.firstAddress != null)
+				return false;
+		} else if (!this.firstAddress.equals(other.firstAddress))
+			return false;
+		if (this.lastAddress == null) {
+			if (other.lastAddress != null)
+				return false;
+		} else if (!this.lastAddress.equals(other.lastAddress))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%s - %s", this.getFirst().toString(), this.getLast().toString());
+	}
+	
 	@Override
 	public Iterator<IPv4Address> iterator(boolean skipFirst, boolean skipLast) {
 		return new Iterator<IPv4Address>() {
@@ -149,7 +182,7 @@ public class IPv4Range extends IPRange<IPv4Address> {
 		}
 
 		int hostBits = Math.min(addrHostBits, hostBitsMax);
-		return IPv4Subnet.of(addr, (byte) (32 - hostBits));
+		return IPv4Subnet.of(addr, 32 - hostBits);
 	}
 
 	@Override
@@ -164,52 +197,19 @@ public class IPv4Range extends IPRange<IPv4Address> {
 
 		return result;
 	}
-
-	/**
-	 * Merges adjacent ranges to the bigger ones
-	 *
-	 * @param addressesToMerge
-	 *            ranges to merge
-	 * @return list of merged ranges
-	 */
-	public static List<IPv4Range> merge(IPv4Range... addressesToMerge) {
-		return merge(Arrays.asList(addressesToMerge));
+	
+	@Override
+	public int intLength() {
+		return this.length() >= Integer.MAX_VALUE ? Integer.MAX_VALUE : this.length().intValue();
 	}
 
-	/**
-	 * Merges adjacent ranges to the bigger ones
-	 *
-	 * @param addressesToMerge
-	 *            ranges to merge
-	 * @return list of merged ranges
-	 */
-	public static List<IPv4Range> merge(Collection<IPv4Range> addressesToMerge) {
-		return merge(addressesToMerge, IPv4Range::of);
+	@Override
+	public IPv4Range withFirst(IPv4Address address) {
+		return IPv4Range.of(address, this.getLast());
 	}
-
-	/**
-	 * Extends this range with adjacent one
-	 *
-	 * @param extension
-	 *            adjacent range to be merged with current one
-	 * @return merged range
-	 * @throws IllegalArgumentException
-	 *             extension range is not adjacent with this one
-	 */
-	public IPv4Range extend(IPv4Range extension) throws IllegalArgumentException {
-		return IPRange.extend(this, extension, IPv4Range::of);
-	}
-
-	/**
-	 * Extends this range with adjacent IPv4 address
-	 *
-	 * @param extension
-	 *            adjacent address to be merged with current range
-	 * @return merged range
-	 * @throws IllegalArgumentException
-	 *             extension address is not adjacent with this range
-	 */
-	public IPv4Range extend(IPv4Address extension) throws IllegalArgumentException {
-		return extend(IPv4Range.of(extension));
+	
+	@Override
+	public IPv4Range withLast(IPv4Address address) {
+		return IPv4Range.of(this.getFirst(), address);
 	}
 }

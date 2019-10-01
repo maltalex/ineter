@@ -1,69 +1,65 @@
 package com.github.maltalex.ineter.range;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.function.BiFunction;
-import java.util.function.Function;
+import java.util.Iterator;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
+import com.github.maltalex.ineter.base.IPv4Address;
+import com.github.maltalex.ineter.range.IPv4Range;
+
 @RunWith(JUnitPlatform.class)
 class IPRangeTest {
 
-	private static final BiFunction<String, String, IPv4Range> IPv4_RANGE_PRODUCER = IPv4Range::of;
-	private static final Function<String, IPv4Subnet> IPv4_SUBNET_PRODUCER = IPv4Subnet::of;
+	static class TestIPRange extends IPv4Range {
+		private static final long serialVersionUID = 1L;
+		boolean intLengthUsed = false;
+		boolean lengthUsed = false;
+		private int intLength;
 
-	@Test
-	void parseRange() {
-		String from = "127.0.0.1-127.0.0.2";
-		IPv4Range iPv4Addresses = IPRange.parseRange(from, IPv4_RANGE_PRODUCER, IPv4_SUBNET_PRODUCER);
+		public TestIPRange(IPv4Address firstAddress, IPv4Address lastAddress, int intLength) {
+			super(firstAddress, lastAddress);
+			this.intLength = intLength;
+		}
 
-		IPv4Range range = IPv4Range.of("127.0.0.1", "127.0.0.2");
+		@Override
+		public int intLength() {
+			this.intLengthUsed = true;
+			return this.intLength;
+		}
 
-		assertEquals(range, iPv4Addresses);
+		@Override
+		public Long length() {
+			this.lengthUsed = true;
+			return super.length();
+		}
 	}
 
 	@Test
-	void parseSubnetAsRange() {
-		String from = "172.20.88.0/24";
-		IPv4Range iPv4Addresses = IPRange.parseRange(from, IPv4_RANGE_PRODUCER, IPv4_SUBNET_PRODUCER);
-
-		IPv4Subnet range = IPv4Subnet.of("172.20.88.0", (byte) 24);
-
-		assertEquals(range, iPv4Addresses);
+	void testListEqualToIter() {
+		IPv4Range range = IPv4Range.of("10.0.0.0", "10.0.0.100");
+		List<IPv4Address> list = range.toList();
+		assertEquals(range.intLength(), list.size());
+		Iterator<IPv4Address> iterator = range.iterator();
+		int i = 0;
+		while (iterator.hasNext()) {
+			assertEquals(iterator.next(), list.get(i++));
+		}
 	}
 
 	@Test
-	void throwOnNonsenseOnRange() {
-		String from = "127-127-127";
-		assertThrows(IllegalArgumentException.class,
-				() -> IPRange.parseRange(from, IPv4_RANGE_PRODUCER, IPv4_SUBNET_PRODUCER));
+	void testToListUsesIntLength_NotLength() {
+		TestIPRange range = new TestIPRange(IPv4Address.of("10.0.0.0"), IPv4Address.of("10.0.0.100"), 5);
+		List<IPv4Address> list = range.toList();
+		assertEquals(range.intLength(), list.size());
+		assertTrue(range.intLengthUsed);
+		assertFalse(range.lengthUsed);
 	}
 
-	@Test
-	void parseSubnet() {
-		String from = "172.20.88.0/24";
-		IPv4Subnet parsedSubnet = IPRange.parseSubnet(from, IPv4Subnet::of, (byte) 32);
-
-		IPv4Subnet subnet = IPv4Subnet.of("172.20.88.0/24");
-		assertEquals(subnet, parsedSubnet);
-	}
-
-	@Test
-	void parseSingleAddressSubnet() {
-		String from = "172.20.88.1";
-		IPv4Subnet parsedSubnet = IPRange.parseSubnet(from, IPv4Subnet::of, (byte) 32);
-
-		IPv4Subnet subnet = IPv4Subnet.of("172.20.88.1/32");
-		assertEquals(subnet, parsedSubnet);
-	}
-
-	@Test
-	void throwOnNonsenseOnSubnet() {
-		String from = "127/127/127";
-		assertThrows(IllegalArgumentException.class, () -> IPRange.parseSubnet(from, IPv4Subnet::of, (byte) 32));
-	}
 }

@@ -9,7 +9,7 @@ package com.github.maltalex.ineter.range;
 
 import com.github.maltalex.ineter.base.IPv4Address;
 
-public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
+public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address, Long> {
 
 	protected static enum IPv4SubnetMask {
 
@@ -24,8 +24,7 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 		MASK_28, MASK_29, MASK_30, MASK_31, MASK_32;
 		// @formatter:on
 
-		// TODO: maybe we should unify mask type as int.
-		public static IPv4SubnetMask fromMaskLen(byte maskLen) {
+		public static IPv4SubnetMask fromMaskLen(int maskLen) {
 			if (maskLen >= 0 && maskLen <= IPv4Address.ADDRESS_BITS) {
 				return IPv4SubnetMask.values()[maskLen];
 			}
@@ -33,10 +32,10 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 		}
 
 		private final int mask;
-		private final byte bitCount;
+		private final int bitCount;
 
 		private IPv4SubnetMask() {
-			this.bitCount = (byte) ordinal();
+			this.bitCount = ordinal();
 			this.mask = this.bitCount != 0 ? 0xffffffff << (32 - this.bitCount) : 0;
 		}
 
@@ -44,7 +43,7 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 			return this.mask;
 		}
 
-		public byte maskBitCount() {
+		public int maskBitCount() {
 			return this.bitCount;
 		}
 
@@ -73,26 +72,30 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 
 	public static IPv4Subnet of(String cidr) {
 		String[] cidrSplit = cidr.split("/");
-		return new IPv4Subnet(IPv4Address.of(cidrSplit[0]), IPv4SubnetMask.fromMaskLen(Byte.parseByte(cidrSplit[1])));
+		return of(cidrSplit[0], cidrSplit[1]);
 	}
 
-	public static IPv4Subnet of(String address, byte maskLen) {
+	public static IPv4Subnet of(String address, int maskLen) {
 		return new IPv4Subnet(IPv4Address.of(address), IPv4SubnetMask.fromMaskLen(maskLen));
 	}
 
-	public static IPv4Subnet of(IPv4Address address, byte maskLen) {
+	public static IPv4Subnet of(IPv4Address address, int maskLen) {
 		return new IPv4Subnet(address, IPv4SubnetMask.fromMaskLen(maskLen));
+	}
+	
+	public static IPv4Subnet of(String address, String maskLen) {
+		return new IPv4Subnet(IPv4Address.of(address), IPv4SubnetMask.fromMaskLen(Integer.parseInt(maskLen)));
 	}
 
 	public static IPv4Subnet parse(String from) throws IllegalArgumentException {
-		return parseSubnet(from, IPv4Subnet::of, 32);
+		return IPRangeUtils.parseSubnet(from, IPv4Subnet::of, 32);
 	}
 
 	static IPv4Subnet of(String address, Integer subnet) {
-		return IPv4Subnet.of(address, subnet.byteValue());
+		return IPv4Subnet.of(address, subnet.intValue());
 	}
 
-	protected final byte networkBitCount;
+	protected final int networkBitCount;
 
 	public IPv4Subnet(IPv4Address address, IPv4SubnetMask mask) {
 		super(mask.and(address), mask.orInverted(address));
@@ -123,4 +126,5 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address> {
 	public IPv4Address getNetworkAddress() {
 		return getFirst();
 	}
+
 }

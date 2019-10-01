@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2018, Ineter Contributors
- * <p>
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -12,7 +12,7 @@ import java.net.Inet4Address;
 import com.github.maltalex.ineter.range.IPv4Range;
 import com.github.maltalex.ineter.range.IPv4Subnet;
 
-public class IPv4Address extends ExtendedIPAddress<IPv4Address> {
+public class IPv4Address implements IPAddress, Comparable<IPv4Address> {
 
 	public static enum IPv4KnownRange {
 
@@ -343,11 +343,6 @@ public class IPv4Address extends ExtendedIPAddress<IPv4Address> {
 	}
 
 	@Override
-	public boolean isAdjacentTo(IPv4Address other) {
-		return (this.ip != 0xffffffff && this.next().equals(other)) || (this.ip != 0 && this.previous().equals(other));
-	}
-
-	@Override
 	public String toString() {
 		return String.join(".", Integer.toString(Ip4Octet.OCTET_A.isolateAsInt(this.ip)),
 				Integer.toString(Ip4Octet.OCTET_B.isolateAsInt(this.ip)),
@@ -371,5 +366,37 @@ public class IPv4Address extends ExtendedIPAddress<IPv4Address> {
 	 */
 	public long toLong() {
 		return this.ip & 0x00000000ffffffffL;
+	}
+
+	public IPv4Subnet toSubnet() {
+		return IPv4Subnet.of(this, ADDRESS_BITS);
+	}
+
+	public IPv4Range toRange(IPv4Address address) {
+		return this.compareTo(address) <0 ? IPv4Range.of(this, address) : IPv4Range.of(address, this);
+	}
+
+	public boolean isAdjacentTo(IPv4Address other) {
+		return distanceTo(other) == 1;
+	}
+
+	public Long distanceTo(IPv4Address other) {
+		return Math.abs(this.toLong() - other.toLong());
+	}
+
+	public IPv4Address and(IPv4Address other) {
+		return IPv4Address.of(this.ip & other.ip);
+	}
+
+	public IPv4Address or(IPv4Address other) {
+		return IPv4Address.of(this.ip | other.ip);
+	}
+	
+	public IPv4Address xor(IPv4Address other) {
+		return IPv4Address.of(this.ip ^ other.ip);
+	}
+
+	public IPv4Address not() {
+		return IPv4Address.of(~this.ip);
 	}
 }

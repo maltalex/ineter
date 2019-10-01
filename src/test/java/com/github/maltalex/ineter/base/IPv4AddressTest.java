@@ -7,15 +7,6 @@
  */
 package com.github.maltalex.ineter.base;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.math.BigInteger;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -27,6 +18,12 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+
+import com.github.maltalex.ineter.base.IPv4Address;
+import com.github.maltalex.ineter.range.IPv4Range;
+import com.github.maltalex.ineter.range.IPv4Subnet;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(JUnitPlatform.class)
 public class IPv4AddressTest {
@@ -178,16 +175,6 @@ public class IPv4AddressTest {
 	@Test
 	void shouldBeAdjacent() {
 		assertTrue(IPv4Address.of("127.0.0.1").isAdjacentTo(IPv4Address.of("127.0.0.2")));
-		assertTrue(IPv4Address.of("127.0.0.2").isAdjacentTo(IPv4Address.of("127.0.0.1")));
-
-		assertTrue(IPv4Address.of("0.0.0.0").isAdjacentTo(IPv4Address.of("0.0.0.1")));
-		assertTrue(IPv4Address.of("0.0.0.1").isAdjacentTo(IPv4Address.of("0.0.0.0")));
-
-		assertTrue(IPv4Address.of("255.255.255.255").isAdjacentTo(IPv4Address.of("255.255.255.254")));
-		assertTrue(IPv4Address.of("255.255.255.254").isAdjacentTo(IPv4Address.of("255.255.255.255")));
-
-		assertTrue(IPv4Address.of("127.255.255.255").isAdjacentTo(IPv4Address.of("128.0.0.0")));
-		assertTrue(IPv4Address.of("128.0.0.0").isAdjacentTo(IPv4Address.of("127.255.255.255")));
 	}
 
 	@Test
@@ -196,14 +183,52 @@ public class IPv4AddressTest {
 	}
 
 	@Test
-	void shouldNotConsiderIntervalStartAndEndAdjacent() {
-		assertFalse(IPv4Address.of("255.255.255.255").isAdjacentTo(IPv4Address.of("0.0.0.0")));
-		assertFalse(IPv4Address.of("0.0.0.0").isAdjacentTo(IPv4Address.of("255.255.255.255")));
+	void shouldDetectAdjacencyAtIntervalBeginning() {
+		assertTrue(IPv4Address.of("0.0.0.0").isAdjacentTo(IPv4Address.of("0.0.0.1")));
+	}
+
+	@Test
+	void shouldDetectAdjacencyAtIntervalEnd() {
+		assertTrue(IPv4Address.of("255.255.255.255").isAdjacentTo(IPv4Address.of("255.255.255.254")));
 	}
 
 	@Test
 	void shouldNotBeAdjacent() {
 		assertFalse(IPv4Address.of("127.0.0.1").isAdjacentTo(IPv4Address.of("127.0.0.3")));
-		assertFalse(IPv4Address.of("127.0.0.3").isAdjacentTo(IPv4Address.of("127.0.0.1")));
+	}
+	
+	@Test
+	void toRangeExtendRight() {
+		assertEquals(IPv4Range.of("0.0.0.0","1.2.3.4"),IPv4Address.of("0.0.0.0").toRange(IPv4Address.of("1.2.3.4")));
+	}
+
+	@Test
+	void toRangeExtendLeft() {
+		assertEquals(IPv4Range.of("0.0.0.0","1.2.3.4"),IPv4Address.of("1.2.3.4").toRange(IPv4Address.of("0.0.0.0")));
+	}
+	
+	@Test
+	void toSubnet() {
+		assertEquals(IPv4Subnet.of("1.2.3.4/32"), IPv4Address.of("1.2.3.4").toSubnet());
+	}
+	
+	@Test
+	void and() {
+		assertEquals(IPv4Address.of("1.2.3.0"), IPv4Address.of("1.2.3.4").and(IPv4Address.of("255.255.255.0")));
+	}
+
+	@Test
+	void or() {
+		assertEquals(IPv4Address.of("1.2.3.255"), IPv4Address.of("1.2.3.0").or(IPv4Address.of("0.0.0.255")));
+	}
+	
+	@Test
+	void xor() {
+		assertEquals(IPv4Address.of("1.2.0.255"), IPv4Address.of("1.2.255.0").xor(IPv4Address.of("0.0.255.255")));
+	}
+	
+	@Test
+	void not() {
+		assertEquals(IPv4Address.of("0.255.0.255"), IPv4Address.of("255.0.255.0").not());
 	}
 }
