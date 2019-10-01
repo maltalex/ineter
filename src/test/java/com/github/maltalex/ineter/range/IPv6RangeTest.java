@@ -13,6 +13,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -28,6 +29,7 @@ import org.junit.runner.RunWith;
 import com.github.maltalex.ineter.base.IPv6Address;
 import com.github.maltalex.ineter.range.IPv6Range;
 import com.github.maltalex.ineter.range.IPv6Subnet;
+import com.google.common.collect.ImmutableList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -273,5 +275,55 @@ public class IPv6RangeTest {
 		final IPv6Range range = IPv6Range.parse("1234::/16");
 		assertEquals(IPv6Address.of("1234::"), range.getFirst());
 		assertEquals(IPv6Address.of("1235::").previous(), range.getLast());
+	}
+
+	@Test
+	void shouldMergeAdjacent() {
+		final IPv6Range first = IPv6Range.of("::1", "::2");
+		final IPv6Range second = IPv6Range.of("::3", "::4");
+		final List<IPv6Range> merge = IPv6Range.merge(first, second);
+		assertEquals(ImmutableList.of(IPv6Range.of("::1", "::4")), merge);
+	}
+
+	@Test
+	void shouldMergeOverlapping() {
+		final IPv6Range first = IPv6Range.of("::1", "::3");
+		final IPv6Range second = IPv6Range.of("::2", "::4");
+		final List<IPv6Range> merge = IPv6Range.merge(first, second);
+		assertEquals(ImmutableList.of(IPv6Range.of("::1", "::4")), merge);
+	}
+
+	@Test
+	void shouldMergeMixed() {
+		final IPv6Range first = IPv6Range.of("::1", "::3");
+		final IPv6Range second = IPv6Range.of("::2", "::4");
+		final IPv6Range third = IPv6Range.of("::5", "::6");
+
+		final IPv6Range fourth = IPv6Range.of("::8", "::10");
+		final IPv6Range fifth = IPv6Range.of("::8", "::11");
+
+		final IPv6Range sixth = IPv6Range.of("2001::", "2002::");
+
+		final List<IPv6Range> merge = IPv6Range.merge(sixth, fifth, fourth, third, second, first);
+		assertEquals(Arrays.asList(IPv6Range.of("::1", "::6"), IPv6Range.of("::8", "::11"),
+				IPv6Range.of("2001::", "2002::")), merge);
+	}
+
+	@Test
+	void shouldNotMergeSeparated() {
+		final IPv6Range first = IPv6Range.of("::1", "::3");
+		final IPv6Range second = IPv6Range.of("::5", "::6");
+		final List<IPv6Range> merge = IPv6Range.merge(first, second);
+		assertEquals(ImmutableList.of(first, second), merge);
+	}
+
+	@Test
+	void mergeShouldThrowOnNull() {
+		assertThrows(NullPointerException.class, () -> IPv6Range.merge((IPv6Range) null).isEmpty());
+	}
+
+	@Test
+	void shouldReturnEmptyOnEmpty() {
+		assertTrue(IPv6Range.merge(Collections.emptyList()).isEmpty());
 	}
 }

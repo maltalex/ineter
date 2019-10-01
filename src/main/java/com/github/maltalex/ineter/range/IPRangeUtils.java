@@ -56,11 +56,10 @@ abstract class IPRangeUtils {
 			// Grab first un-merged range
 			R mergedRange = sortedRanges.get(candidateIndex++);
 			I mergedRangeStart = mergedRange.getFirst();
-			R second = sortedRanges.get(candidateIndex);
 			// While subsequent ranges overlap (or are adjacent), keep expanding
 			// the merged range
-			while (candidateIndex < sortedRanges.size() && (mergedRange.overlaps(second)
-					|| ipAdjacencyChecker.apply(mergedRange.getLast(), second.getFirst()))) {
+			while (candidateIndex < sortedRanges.size() && (mergedRange.overlaps(sortedRanges.get(candidateIndex))
+					|| ipAdjacencyChecker.apply(mergedRange.getLast(), sortedRanges.get(candidateIndex).getFirst()))) {
 				I pendingRangeEnd = max(mergedRange.getLast(), sortedRanges.get(candidateIndex).getLast());
 				mergedRange = rangeCreator.apply(mergedRangeStart, pendingRangeEnd);
 				candidateIndex++;

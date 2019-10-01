@@ -12,12 +12,14 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.ImmutableList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -269,5 +271,55 @@ public class IPv4RangeTest {
 		final IPv4Range range = IPv4Range.parse("127.0.0.0/24");
 		assertEquals(IPv4Address.of("127.0.0.0"), range.getFirst());
 		assertEquals(IPv4Address.of("127.0.0.255"), range.getLast());
+	}
+
+	@Test
+	void shouldMergeAdjacent() {
+		final IPv4Range first = IPv4Range.of("127.0.0.1", "127.0.0.2");
+		final IPv4Range second = IPv4Range.of("127.0.0.3", "127.0.0.4");
+		final List<IPv4Range> merge = IPv4Range.merge(first, second);
+		assertEquals(Collections.singletonList(IPv4Range.of("127.0.0.1", "127.0.0.4")), merge);
+	}
+
+	@Test
+	void shouldMergeOverlapping() {
+		final IPv4Range first = IPv4Range.of("127.0.0.1", "127.0.0.3");
+		final IPv4Range second = IPv4Range.of("127.0.0.2", "127.0.0.4");
+		final List<IPv4Range> merge = IPv4Range.merge(first, second);
+		assertEquals(Collections.singletonList(IPv4Range.of("127.0.0.1", "127.0.0.4")), merge);
+	}
+
+	@Test
+	void shouldMergeMixed() {
+		final IPv4Range first = IPv4Range.of("127.0.0.1", "127.0.0.3");
+		final IPv4Range second = IPv4Range.of("127.0.0.2", "127.0.0.4");
+		final IPv4Range third = IPv4Range.of("127.0.0.5", "127.0.0.6");
+
+		final IPv4Range fourth = IPv4Range.of("127.0.0.8", "127.0.0.10");
+		final IPv4Range fifth = IPv4Range.of("127.0.0.8", "127.0.0.11");
+
+		final IPv4Range sixth = IPv4Range.of("128.0.0.0", "255.255.255.255");
+		final List<IPv4Range> merge = IPv4Range.merge(sixth, fifth, fourth, third, second, first);
+
+		assertEquals(Arrays.asList(IPv4Range.of("127.0.0.1", "127.0.0.6"), IPv4Range.of("127.0.0.8", "127.0.0.11"),
+				IPv4Range.of("128.0.0.0", "255.255.255.255")), merge);
+	}
+
+	@Test
+	void shouldNotMergeSeparated() {
+		final IPv4Range first = IPv4Range.of("127.0.0.1", "127.0.0.3");
+		final IPv4Range second = IPv4Range.of("127.0.0.5", "127.0.0.6");
+		final List<IPv4Range> merge = IPv4Range.merge(first, second);
+		assertEquals(ImmutableList.of(first, second), merge);
+	}
+
+	@Test
+	void mergeShouldThrowOnNull() {
+		assertThrows(NullPointerException.class, () -> IPv4Range.merge((IPv4Range) null));
+	}
+
+	@Test
+	void shouldReturnEmptyOnEmpty() {
+		assertTrue(IPv4Range.merge(Collections.emptyList()).isEmpty());
 	}
 }
