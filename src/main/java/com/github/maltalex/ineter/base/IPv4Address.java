@@ -13,7 +13,7 @@ import com.github.maltalex.ineter.range.IPv4Range;
 import com.github.maltalex.ineter.base.IPAddress.GenericIPAddress;
 import com.github.maltalex.ineter.range.IPv4Subnet;
 
-public class IPv4Address implements GenericIPAddress<IPv4Address, Long> {
+public class IPv4Address implements GenericIPAddress<IPv4Address, Long,IPv4Range, IPv4Subnet> {
 
 	public static enum IPv4KnownRange {
 

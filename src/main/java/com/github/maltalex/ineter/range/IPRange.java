@@ -109,9 +109,24 @@ public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number &
 	 *
 	 * @return a list of Subnets that compose this address range
 	 */
-	public List<? extends IPSubnet<I,L>> toSubnets();
+	public List<? extends IPSubnet<I, L>> toSubnets();
 
-	public IPRange<I,L> withFirst(I address);
-	
+	/**
+	 * Returns the list of addresses contained in the range. The list is
+	 * {@link IPRange#intLength()} elements long (up to Integer.MAX_VALUE)
+	 * 
+	 * @return The list of addresses contained in the range
+	 */
+	default List<I> toList() {
+		ArrayList<I> list = new ArrayList<>(this.intLength());
+		Iterator<I> iter = this.iterator();
+		for (int i = 0; i < this.intLength(); i++) {
+			list.add(iter.next());
+		}
+		return list;
+	}
+
 	public IPRange<I,L> withLast(I address);
+	 
+	public IPRange<I,L> withFirst(I address);
 }

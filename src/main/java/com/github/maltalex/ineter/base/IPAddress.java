@@ -25,14 +25,14 @@ import com.github.maltalex.ineter.range.IPSubnet;
  */
 public interface IPAddress extends Serializable {
 
-	public interface GenericIPAddress<I extends IPAddress & Comparable<I>, L extends Number & Comparable<L>>
+	public interface GenericIPAddress<I extends IPAddress & Comparable<I>, L extends Number & Comparable<L>,R extends IPRange<I, L>, S extends IPSubnet<I, L>>
 			extends IPAddress, Comparable<I> {
 		@Override
 		int compareTo(I other);
 
-		IPSubnet<I, L> toSubnet();
+		S toSubnet();
 
-		IPRange<I, L> toRange(I address);
+		R toRange(I address);
 
 		boolean isAdjacentTo(I other);
 

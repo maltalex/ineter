@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import com.github.maltalex.ineter.base.IPAddress;
+import com.github.maltalex.ineter.base.IPAddress.GenericIPAddress;
 
 abstract class IPRangeUtils {
 
@@ -40,4 +40,38 @@ abstract class IPRangeUtils {
 					String.format("Inappropriate format for address subnet string %s.", from));
 		}
 	}
+
+	static <L extends Number & Comparable<L>, I extends GenericIPAddress<I, L, R, ?>, R extends IPRange<I, L>> List<R> merge(
+			Collection<R> rangesToMerge) {
+		if (rangesToMerge.isEmpty()) {
+			return Collections.emptyList();
+		}
+
+		ArrayList<R> sortedRanges = new ArrayList<>(rangesToMerge);
+		Collections.sort(sortedRanges, Comparator.comparing(R::getFirst));
+
+		int mergedRangeIndex = 0, candidateIndex = 0;
+		while (candidateIndex < sortedRanges.size()) {
+			// Grab first un-merged range
+			R mergedRange = sortedRanges.get(candidateIndex++);
+			I mergedRangeStart = mergedRange.getFirst();
+			R second = sortedRanges.get(candidateIndex);
+			// While subsequent ranges overlap (or are adjacent), keep expanding
+			// the merged range
+			while (candidateIndex < sortedRanges.size()
+					&& (mergedRange.overlaps(second) || mergedRange.getLast().isAdjacentTo(second.getFirst()))) {
+				I pendingRangeEnd = max(mergedRange.getLast(), sortedRanges.get(candidateIndex).getLast());
+				mergedRange = mergedRangeStart.toRange(pendingRangeEnd);
+				candidateIndex++;
+			}
+			sortedRanges.set(mergedRangeIndex++, mergedRange);
+		}
+
+		return new ArrayList<>(sortedRanges.subList(0, mergedRangeIndex));
+	}
+	
+	static <C extends Comparable<C>> C max(C a, C b) {
+		return a.compareTo(b) > 0 ? a : b;
+	}
+
 }
