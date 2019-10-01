@@ -326,4 +326,25 @@ public class IPv6RangeTest {
 	void shouldReturnEmptyOnEmpty() {
 		assertTrue(IPv6Range.merge(Collections.emptyList()).isEmpty());
 	}
+	
+	@Test
+	void testIntLength() {
+		assertEquals(256, IPv6Subnet.of("::/120").intLength());
+		assertEquals(8, IPv6Subnet.of("::/125").intLength());
+		assertEquals(Integer.MAX_VALUE, IPv6Subnet.of("::/64").intLength());
+	}
+
+	@Test
+	void testWithLast() {
+		assertEquals(IPv6Range.of("::", "1234::"), IPv6Subnet.of("::/120").withLast(IPv6Address.of("1234::")));
+		assertEquals(IPv6Range.of("1234::", "1235::"), IPv6Subnet.of("1234::/16").withLast(IPv6Address.of("1235::")));
+		assertThrows(IllegalArgumentException.class, () -> IPv6Subnet.of("1234::/16").withLast(IPv6Address.of("::")));
+	}
+	
+	@Test
+	void testWithFirst() {
+		assertEquals(IPv6Range.of("::5", "::00ff"), IPv6Subnet.of("::/120").withFirst(IPv6Address.of("::5")));
+		assertEquals(IPv6Range.of("::", "::123f"), IPv6Subnet.of("::1230/124").withFirst(IPv6Address.of("::")));
+		assertThrows(IllegalArgumentException.class, () -> IPv6Subnet.of("1234::/16").withFirst(IPv6Address.of("2222::")));
+	}
 }

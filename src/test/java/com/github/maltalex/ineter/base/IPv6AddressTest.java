@@ -22,6 +22,8 @@ import org.junit.runner.RunWith;
 import com.github.maltalex.ineter.base.IPAddress;
 import com.github.maltalex.ineter.base.IPv6Address;
 import com.github.maltalex.ineter.base.ZonedIPv6Address;
+import com.github.maltalex.ineter.range.IPv6Range;
+import com.github.maltalex.ineter.range.IPv6Subnet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -294,5 +296,40 @@ public class IPv6AddressTest {
 	@Test
 	void shouldDetectAdjacencyAtTheIntervalEnd() {
 		assertTrue(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff").isAdjacentTo(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffe")));
+	}
+	
+	@Test
+	void toRangeExtendRight() {
+		assertEquals(IPv6Range.of("::","::1234"),IPv6Address.of("::").toRange(IPv6Address.of("::1234")));
+	}
+
+	@Test
+	void toRangeExtendLeft() {
+		assertEquals(IPv6Range.of("::","::1234"),IPv6Address.of("::1234").toRange(IPv6Address.of("::")));
+	}
+	
+	@Test
+	void toSubnet() {
+		assertEquals(IPv6Subnet.of("::1234/128"), IPv6Address.of("::1234").toSubnet());
+	}
+	
+	@Test
+	void and() {
+		assertEquals(IPv6Address.of("::1230"), IPv6Address.of("::1234").and(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:fff0")));
+	}
+
+	@Test
+	void or() {
+		assertEquals(IPv6Address.of("::123f"), IPv6Address.of("::1230").or(IPv6Address.of("::f")));
+	}
+	
+	@Test
+	void xor() {
+		assertEquals(IPv6Address.of("::aaaa"), IPv6Address.of("::ffff").xor(IPv6Address.of("::5555")));
+	}
+	
+	@Test
+	void not() {
+		assertEquals(IPv6Address.of("::"), IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff").not());
 	}
 }

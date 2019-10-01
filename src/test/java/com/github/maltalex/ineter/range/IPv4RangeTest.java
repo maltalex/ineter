@@ -322,4 +322,25 @@ public class IPv4RangeTest {
 	void shouldReturnEmptyOnEmpty() {
 		assertTrue(IPv4Range.merge(Collections.emptyList()).isEmpty());
 	}
+	
+	@Test
+	void testIntLength() {
+		assertEquals(256, IPv4Subnet.of("192.168.0.0/24").intLength());
+		assertEquals(8, IPv4Subnet.of("10.0.0.0/29").intLength());
+		assertEquals(Integer.MAX_VALUE, IPv4Subnet.of("0.0.0.0/0").intLength());
+	}
+
+	@Test
+	void testWithLast() {
+		assertEquals(IPv4Range.of("0.0.0.0", "1.2.3.4"), IPv4Subnet.of("0.0.0.0/0").withLast(IPv4Address.of("1.2.3.4")));
+		assertEquals(IPv4Range.of("1.2.3.0", "1.2.3.4"), IPv4Subnet.of("1.2.3.0/24").withLast(IPv4Address.of("1.2.3.4")));
+		assertThrows(IllegalArgumentException.class, () -> IPv4Subnet.of("1.2.3.0/24").withLast(IPv4Address.of("0.0.0.0")));
+	}
+	
+	@Test
+	void testWithFirst() {
+		assertEquals(IPv4Range.of("0.0.0.0", "255.255.255.255"), IPv4Subnet.of("128.0.0.0/1").withFirst(IPv4Address.of("0.0.0.0")));
+		assertEquals(IPv4Range.of("10.0.0.255", "10.0.0.255"), IPv4Subnet.of("10.0.0.0/24").withFirst(IPv4Address.of("10.0.0.255")));
+		assertThrows(IllegalArgumentException.class, () -> IPv4Subnet.of("10.0.0.0/8").withFirst(IPv4Address.of("12.12.12.12")));
+	}
 }
