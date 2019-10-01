@@ -42,8 +42,7 @@ abstract class IPRangeUtils {
 	}
 
 	static <L extends Number & Comparable<L>, I extends IPAddress & Comparable<I>, R extends IPRange<I, L>> List<R> merge(
-			Collection<R> rangesToMerge, BiFunction<I, I, Boolean> ipAdjacencyChecker,
-			BiFunction<I, I, R> rangeCreator) {
+			Collection<R> rangesToMerge, BiFunction<I, I, R> rangeCreator) {
 		if (rangesToMerge.isEmpty()) {
 			return Collections.emptyList();
 		}
@@ -55,13 +54,13 @@ abstract class IPRangeUtils {
 		while (candidateIndex < sortedRanges.size()) {
 			// Grab first un-merged range
 			R mergedRange = sortedRanges.get(candidateIndex++);
-			I mergedRangeStart = mergedRange.getFirst();
+			I pendingRangeStart = mergedRange.getFirst();
 			// While subsequent ranges overlap (or are adjacent), keep expanding
 			// the merged range
 			while (candidateIndex < sortedRanges.size() && (mergedRange.overlaps(sortedRanges.get(candidateIndex))
-					|| ipAdjacencyChecker.apply(mergedRange.getLast(), sortedRanges.get(candidateIndex).getFirst()))) {
+					|| mergedRange.getLast().next().equals(sortedRanges.get(candidateIndex).getFirst()))) {
 				I pendingRangeEnd = max(mergedRange.getLast(), sortedRanges.get(candidateIndex).getLast());
-				mergedRange = rangeCreator.apply(mergedRangeStart, pendingRangeEnd);
+				mergedRange = rangeCreator.apply(pendingRangeStart, pendingRangeEnd);
 				candidateIndex++;
 			}
 			sortedRanges.set(mergedRangeIndex++, mergedRange);

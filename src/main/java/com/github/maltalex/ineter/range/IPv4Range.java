@@ -59,7 +59,7 @@ public class IPv4Range implements IPRange<IPv4Address, Long> {
 	}
 	
 	public static List<IPv4Range> merge(Collection<IPv4Range> ranges){
-		return IPRangeUtils.merge(ranges, (i1, i2)-> i1.isAdjacentTo(i2), IPv4Range::of);
+		return IPRangeUtils.merge(ranges, IPv4Range::of);
 	}
 
 	/**

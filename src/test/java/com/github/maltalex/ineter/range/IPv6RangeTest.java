@@ -319,7 +319,7 @@ public class IPv6RangeTest {
 
 	@Test
 	void mergeShouldThrowOnNull() {
-		assertThrows(NullPointerException.class, () -> IPv6Range.merge((IPv6Range) null).isEmpty());
+		assertThrows(NullPointerException.class, () -> IPv6Range.merge((IPv6Range) null));
 	}
 
 	@Test

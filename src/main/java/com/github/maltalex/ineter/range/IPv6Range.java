@@ -61,7 +61,7 @@ public class IPv6Range implements IPRange<IPv6Address, BigInteger> {
 	}
 	
 	public static List<IPv6Range> merge(Collection<IPv6Range> ranges){
-		return IPRangeUtils.merge(ranges, (i1, i2)-> i1.isAdjacentTo(i2), IPv6Range::of);
+		return IPRangeUtils.merge(ranges, IPv6Range::of);
 	}
 
 	/**
@@ -223,7 +223,7 @@ public class IPv6Range implements IPRange<IPv6Address, BigInteger> {
 	public int intLength() {
 		return this.length().compareTo(INTEGER_MAX_VALUE) >= 0 ? Integer.MAX_VALUE : this.length().intValue();
 	}
-
+	
 	@Override
 	public IPv6Range withFirst(IPv6Address address) {
 		return IPv6Range.of(address, this.getLast());
