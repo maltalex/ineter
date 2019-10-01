@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import com.github.maltalex.ineter.base.IPAddress.GenericIPAddress;
+import com.github.maltalex.ineter.base.IPAddress;
 
 abstract class IPRangeUtils {
 
@@ -41,8 +41,9 @@ abstract class IPRangeUtils {
 		}
 	}
 
-	static <L extends Number & Comparable<L>, I extends GenericIPAddress<I, L, R, ?>, R extends IPRange<I, L>> List<R> merge(
-			Collection<R> rangesToMerge) {
+	static <L extends Number & Comparable<L>, I extends IPAddress & Comparable<I>, R extends IPRange<I, L>> List<R> merge(
+			Collection<R> rangesToMerge, BiFunction<I, I, Boolean> ipAdjacencyChecker,
+			BiFunction<I, I, R> rangeCreator) {
 		if (rangesToMerge.isEmpty()) {
 			return Collections.emptyList();
 		}
@@ -58,10 +59,10 @@ abstract class IPRangeUtils {
 			R second = sortedRanges.get(candidateIndex);
 			// While subsequent ranges overlap (or are adjacent), keep expanding
 			// the merged range
-			while (candidateIndex < sortedRanges.size()
-					&& (mergedRange.overlaps(second) || mergedRange.getLast().isAdjacentTo(second.getFirst()))) {
+			while (candidateIndex < sortedRanges.size() && (mergedRange.overlaps(second)
+					|| ipAdjacencyChecker.apply(mergedRange.getLast(), second.getFirst()))) {
 				I pendingRangeEnd = max(mergedRange.getLast(), sortedRanges.get(candidateIndex).getLast());
-				mergedRange = mergedRangeStart.toRange(pendingRangeEnd);
+				mergedRange = rangeCreator.apply(mergedRangeStart, pendingRangeEnd);
 				candidateIndex++;
 			}
 			sortedRanges.set(mergedRangeIndex++, mergedRange);
