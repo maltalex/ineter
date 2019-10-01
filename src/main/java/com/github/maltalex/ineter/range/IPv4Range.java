@@ -9,6 +9,8 @@ package com.github.maltalex.ineter.range;
 
 import java.net.Inet4Address;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -50,6 +52,14 @@ public class IPv4Range implements IPRange<IPv4Address, Long> {
 
 	public static IPv4Range of(Inet4Address address) {
 		return IPv4Range.of(address, address);
+	}
+
+	public static List<IPv4Range> merge(IPv4Range... ranges){
+		return merge(Arrays.asList(ranges));
+	}
+	
+	public static List<IPv4Range> merge(Collection<IPv4Range> ranges){
+		return IPRangeUtils.merge(ranges, (i1, i2)-> i1.isAdjacentTo(i2), IPv4Range::of);
 	}
 
 	/**

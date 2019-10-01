@@ -10,6 +10,8 @@ package com.github.maltalex.ineter.range;
 import java.math.BigInteger;
 import java.net.Inet6Address;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -52,6 +54,14 @@ public class IPv6Range implements IPRange<IPv6Address, BigInteger> {
 
 	public static IPv6Range of(Inet6Address address) {
 		return IPv6Range.of(address, address);
+	}
+	
+	public static List<IPv6Range> merge(IPv6Range... ranges){
+		return merge(Arrays.asList(ranges));
+	}
+	
+	public static List<IPv6Range> merge(Collection<IPv6Range> ranges){
+		return IPRangeUtils.merge(ranges, (i1, i2)-> i1.isAdjacentTo(i2), IPv6Range::of);
 	}
 
 	/**
