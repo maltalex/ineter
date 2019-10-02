@@ -368,34 +368,78 @@ public class IPv4Address implements IPAddress, Comparable<IPv4Address> {
 		return this.ip & 0x00000000ffffffffL;
 	}
 
+	/**
+	 * Return this address in /32 subnet form. Note that {@link IPv4Subnet} is a
+	 * type of {@link IPv4Range}, so the returned value is also a single address
+	 * range
+	 * 
+	 * @return This address as a single /32 subnet
+	 */
 	public IPv4Subnet toSubnet() {
 		return IPv4Subnet.of(this, ADDRESS_BITS);
 	}
 
+	/**
+	 * Returns a range between this address and an arbitrary one This method
+	 * takes care of comparing the addresses so they're always passed to the
+	 * range factory in the right order
+	 * 
+	 * @return an IPv4Range between this address and a given one
+	 */
 	public IPv4Range toRange(IPv4Address address) {
-		return this.compareTo(address) <0 ? IPv4Range.of(this, address) : IPv4Range.of(address, this);
+		return this.compareTo(address) < 0 ? IPv4Range.of(this, address) : IPv4Range.of(address, this);
 	}
 
+	/**
+	 * Returns true iff the given address is adjacent (above or below) the current one
+	 * @return true iff the given address is adjacent to this one
+	 */
 	public boolean isAdjacentTo(IPv4Address other) {
 		return distanceTo(other) == 1;
 	}
 
+	/**
+	 * Returns the distance between this address and given one. A return value
+	 * of zero means it's the same address. One means they're adjacent. As with all distances, the result is nonnegative. 
+	 * 
+	 * @return the distance between this address and the given one
+	 */
 	public Long distanceTo(IPv4Address other) {
 		return Math.abs(this.toLong() - other.toLong());
 	}
 
+	/**
+	 * Returns the address which is the results of a bitwise AND between this address and the given one.
+	 * This operation is useful for masking and various low level bit manipulation
+	 * @return a bitwise AND between this address and the given one
+	 */
 	public IPv4Address and(IPv4Address other) {
 		return IPv4Address.of(this.ip & other.ip);
 	}
 
+	/**
+	 * Returns the address which is the results of a bitwise OR between this address and the given one.
+	 * This operation is useful for masking and various low level bit manipulation
+	 * @return a bitwise OR between this address and the given one
+	 */
 	public IPv4Address or(IPv4Address other) {
 		return IPv4Address.of(this.ip | other.ip);
 	}
 	
+	/**
+	 * Returns the address which is the results of a bitwise XOR between this address and the given one.
+	 * This operation is useful for masking and various low level bit manipulation
+	 * @return a bitwise XOR between this address and the given one
+	 */
 	public IPv4Address xor(IPv4Address other) {
 		return IPv4Address.of(this.ip ^ other.ip);
 	}
 
+	/**
+	 * Returns the address which is the results of a bitwise NOT of this address
+	 * This operation is useful for masking and various low level bit manipulation
+	 * @return a bitwise NOT of this address
+	 */
 	public IPv4Address not() {
 		return IPv4Address.of(~this.ip);
 	}

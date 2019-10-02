@@ -55,11 +55,23 @@ public class IPv6Range implements IPRange<IPv6Address, BigInteger> {
 	public static IPv6Range of(Inet6Address address) {
 		return IPv6Range.of(address, address);
 	}
-	
+
+	/**
+	 * merges the given {@link IPv6Range} instances to a minimal list of
+	 * non-overlapping ranges
+	 * 
+	 * @return a list of {@link IPv6Range}
+	 */
 	public static List<IPv6Range> merge(IPv6Range... ranges){
 		return merge(Arrays.asList(ranges));
 	}
-	
+
+	/**
+	 * merges the given collection of {@link IPv6Range} instances to a minimal list of
+	 * non-overlapping ranges
+	 * 
+	 * @return a list of {@link IPv6Range}
+	 */
 	public static List<IPv6Range> merge(Collection<IPv6Range> ranges){
 		return IPRangeUtils.merge(ranges, IPv6Range::of);
 	}

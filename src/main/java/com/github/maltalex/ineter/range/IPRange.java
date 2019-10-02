@@ -125,8 +125,16 @@ public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number &
 		}
 		return list;
 	}
-
+	
+	/**
+	 * Return a new range instance with the <b>same first address</b> as the current range, and <b>the given last address</b>
+	 * @return a new range instance
+	 */
 	public IPRange<I,L> withLast(I address);
 	 
+	/**
+	 * Return a new range instance with the <b>same last address</b> as the current range, and <b>the given first address</b>
+	 * @return a new range instance
+	 */
 	public IPRange<I,L> withFirst(I address);
 }

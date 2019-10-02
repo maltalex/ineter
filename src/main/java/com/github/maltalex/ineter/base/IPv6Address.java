@@ -716,34 +716,78 @@ public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
 		return false;
 	}
 
+	/**
+	 * Return this address in /128 subnet form. Note that {@link IPv6Subnet} is a
+	 * type of {@link IPv6Range}, so the returned value is also a single address
+	 * range
+	 * 
+	 * @return This address as a single /128 subnet
+	 */
 	public IPv6Subnet toSubnet() {
 		return IPv6Subnet.of(this, ADDRESS_BITS);
 	}
 
+	/**
+	 * Returns a range between this address and an arbitrary one This method
+	 * takes care of comparing the addresses so they're always passed to the
+	 * range factory in the right order
+	 * 
+	 * @return an IPv6Range between this address and a given one
+	 */
 	public IPv6Range toRange(IPv6Address address) {
 		return this.compareTo(address) < 0 ? IPv6Range.of(this, address) : IPv6Range.of(address, this);
 	}
 
+	/**
+	 * Returns true iff the given address is adjacent (above or below) the current one
+	 * @return true iff the given address is adjacent to this one
+	 */
 	public boolean isAdjacentTo(IPv6Address other) {
 		return distanceTo(other).equals(BigInteger.ONE);
 	}
 
+	/**
+	 * Returns the distance between this address and given one. A return value
+	 * of zero means it's the same address. One means they're adjacent. As with all distances, the result is nonnegative. 
+	 * 
+	 * @return the distance between this address and the given one
+	 */
 	public BigInteger distanceTo(IPv6Address other) {
 		return this.toBigInteger().subtract(other.toBigInteger()).abs();
 	}
-	
+
+	/**
+	 * Returns the address which is the results of a bitwise AND between this address and the given one.
+	 * This operation is useful for masking and various low level bit manipulation
+	 * @return a bitwise AND between this address and the given one
+	 */
 	public IPv6Address and(IPv6Address other) {
 		return IPv6Address.of(this.upper & other.upper, this.lower & other.lower);
 	}
 
+	/**
+	 * Returns the address which is the results of a bitwise OR between this address and the given one.
+	 * This operation is useful for masking and various low level bit manipulation
+	 * @return a bitwise OR between this address and the given one
+	 */
 	public IPv6Address or(IPv6Address other) {
 		return IPv6Address.of(this.upper | other.upper, this.lower | other.lower);
 	}
 
+	/**
+	 * Returns the address which is the results of a bitwise XOR between this address and the given one.
+	 * This operation is useful for masking and various low level bit manipulation
+	 * @return a bitwise XOR between this address and the given one
+	 */
 	public IPv6Address xor(IPv6Address other) {
 		return IPv6Address.of(this.upper ^ other.upper, this.lower ^ other.lower);
 	}
 
+	/**
+	 * Returns the address which is the results of a bitwise NOT of this address
+	 * This operation is useful for masking and various low level bit manipulation
+	 * @return a bitwise NOT of this address
+	 */
 	public IPv6Address not() {
 		return IPv6Address.of(~this.upper, ~this.lower);
 	}

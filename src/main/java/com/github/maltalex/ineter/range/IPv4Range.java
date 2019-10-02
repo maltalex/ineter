@@ -54,11 +54,23 @@ public class IPv4Range implements IPRange<IPv4Address, Long> {
 		return IPv4Range.of(address, address);
 	}
 
-	public static List<IPv4Range> merge(IPv4Range... ranges){
+	/**
+	 * merges the given {@link IPv4Range} instances to a minimal list of
+	 * non-overlapping ranges
+	 * 
+	 * @return a list of {@link IPv4Range}
+	 */
+	public static List<IPv4Range> merge(IPv4Range... ranges) {
 		return merge(Arrays.asList(ranges));
 	}
-	
-	public static List<IPv4Range> merge(Collection<IPv4Range> ranges){
+
+	/**
+	 * merges the given collection of {@link IPv4Range} instances to a minimal
+	 * list of non-overlapping ranges
+	 *
+	 * @return a list of {@link IPv4Range}
+	 */
+	public static List<IPv4Range> merge(Collection<IPv4Range> ranges) {
 		return IPRangeUtils.merge(ranges, IPv4Range::of);
 	}
 
