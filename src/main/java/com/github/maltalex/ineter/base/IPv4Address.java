@@ -121,7 +121,7 @@ public class IPv4Address implements IPAddress, Comparable<IPv4Address> {
 	public static final int ADDRESS_BITS = 32;
 	public static final int ADDRESS_BYTES = 4;
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
 	/**
 	 * Build an IPv4Address from a 4 byte long big-endian (highest byte first)

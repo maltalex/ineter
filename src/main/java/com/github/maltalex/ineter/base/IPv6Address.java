@@ -186,7 +186,7 @@ public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
 	public static final int ADDRESS_SHORTS = 8;
 	public static final int HOLDER_BITS = 64;
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
 	/**
 	 * Build an IPv6Address from two longs - upper and lower 64 bits in form of

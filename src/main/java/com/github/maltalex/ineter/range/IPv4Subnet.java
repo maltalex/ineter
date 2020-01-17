@@ -68,7 +68,7 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address, Long>
 		}
 	}
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
 	public static IPv4Subnet of(String cidr) {
 		String[] cidrSplit = cidr.split("/");

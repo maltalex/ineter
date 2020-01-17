@@ -22,7 +22,7 @@ import com.github.maltalex.ineter.base.IPv6Address;
 public class IPv6Range implements IPRange<IPv6Address, BigInteger> {
 
 	private static final BigInteger INTEGER_MAX_VALUE = new BigInteger(new byte[] {0x7f,(byte) 0xff,(byte) 0xff,(byte) 0xff});
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
 	public static IPv6Range of(IPv6Address firstAddress, IPv6Address lastAddress) {
 		return new IPv6Range(firstAddress, lastAddress);
