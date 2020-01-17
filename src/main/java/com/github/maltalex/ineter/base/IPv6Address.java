@@ -187,6 +187,7 @@ public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
 	public static final int HOLDER_BITS = 64;
 
 	private static final long serialVersionUID = 2L;
+	private static final BigInteger NEGATIVE_ONE = BigInteger.ONE.negate();
 
 	/**
 	 * Build an IPv6Address from two longs - upper and lower 64 bits in form of
@@ -739,21 +740,27 @@ public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
 	}
 
 	/**
-	 * Returns true iff the given address is adjacent (above or below) the current one
+	 * Returns true iff the given address is adjacent (above or below) the
+	 * current one
+	 * 
 	 * @return true iff the given address is adjacent to this one
 	 */
 	public boolean isAdjacentTo(IPv6Address other) {
-		return distanceTo(other).equals(BigInteger.ONE);
+		BigInteger distance = distanceTo(other);
+		return distance.equals(BigInteger.ONE) || distance.equals(NEGATIVE_ONE);
 	}
 
 	/**
-	 * Returns the distance between this address and given one. A return value
-	 * of zero means it's the same address. One means they're adjacent. As with all distances, the result is nonnegative. 
+	 * Returns the distance to the given address. If the provided address is
+	 * bigger, the result will be positive. If it's smaller, the result will be
+	 * negative.
+	 * 
+	 * For example, the distance from ::1 to ::3 is 2, the distance from ::3 to ::1 is -2
 	 * 
 	 * @return the distance between this address and the given one
 	 */
 	public BigInteger distanceTo(IPv6Address other) {
-		return this.toBigInteger().subtract(other.toBigInteger()).abs();
+		return other.toBigInteger().subtract(this.toBigInteger());
 	}
 
 	/**

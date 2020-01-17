@@ -274,38 +274,30 @@ public class IPv6AddressTest {
 	}
 
 	@Test
-	void shouldNotBeAdjacent() {
+	void distanceTo() {
+		assertEquals(BigInteger.valueOf(2), IPv6Address.of("::1").distanceTo(IPv6Address.of("::3")));
+		assertEquals(BigInteger.valueOf(-2), IPv6Address.of("::3").distanceTo(IPv6Address.of("::1")));
+		assertEquals(BigInteger.ZERO, IPv6Address.of("::1").distanceTo(IPv6Address.of("::1")));
+		assertEquals(BigInteger.valueOf(2).pow(128).subtract(BigInteger.ONE),
+				IPv6Address.of("::").distanceTo(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff")));
+		assertEquals(BigInteger.valueOf(2).pow(128).subtract(BigInteger.ONE).negate(),
+				IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff").distanceTo(IPv6Address.of("::")));
+	}
+
+	@Test
+	void isAdjacentTo() {
 		assertFalse(IPv6Address.of("::1").isAdjacentTo(IPv6Address.of("::3")));
-	}
-
-	@Test
-	void shouldBeAdjacent() {
 		assertTrue(IPv6Address.of("::1").isAdjacentTo(IPv6Address.of("::2")));
-	}
-
-	@Test
-	void shouldNotConsiderSameAddressesAsAdjacent() {
 		assertFalse(IPv6Address.of("::1").isAdjacentTo(IPv6Address.of("::1")));
-	}
-
-	@Test
-	void shouldDetectAdjacencyAtTheIntervalBeginning() {
 		assertTrue(IPv6Address.of("::0").isAdjacentTo(IPv6Address.of("::1")));
+		assertTrue(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff")
+				.isAdjacentTo(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffe")));
 	}
 
 	@Test
-	void shouldDetectAdjacencyAtTheIntervalEnd() {
-		assertTrue(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff").isAdjacentTo(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffe")));
-	}
-	
-	@Test
-	void toRangeExtendRight() {
-		assertEquals(IPv6Range.of("::","::1234"),IPv6Address.of("::").toRange(IPv6Address.of("::1234")));
-	}
-
-	@Test
-	void toRangeExtendLeft() {
-		assertEquals(IPv6Range.of("::","::1234"),IPv6Address.of("::1234").toRange(IPv6Address.of("::")));
+	void toRange() {
+		assertEquals(IPv6Range.of("::", "::1234"), IPv6Address.of("::").toRange(IPv6Address.of("::1234")));
+		assertEquals(IPv6Range.of("::", "::1234"), IPv6Address.of("::1234").toRange(IPv6Address.of("::")));
 	}
 	
 	@Test

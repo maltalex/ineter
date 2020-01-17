@@ -395,17 +395,21 @@ public class IPv4Address implements IPAddress, Comparable<IPv4Address> {
 	 * @return true iff the given address is adjacent to this one
 	 */
 	public boolean isAdjacentTo(IPv4Address other) {
-		return distanceTo(other) == 1;
+		Long distance = distanceTo(other);
+		return distance == 1 || distance == -1;
 	}
 
 	/**
-	 * Returns the distance between this address and given one. A return value
-	 * of zero means it's the same address. One means they're adjacent. As with all distances, the result is nonnegative. 
+	 * Returns the distance to the given address. If the provided address is
+	 * bigger, the result will be positive. If it's smaller, the result will be
+	 * negative.
+	 * 
+	 * For example, the distance from 10.0.0.1 to 10.0.0.3 is 2, the distance from 10.0.0.3 to 10.0.0.1 is -2
 	 * 
 	 * @return the distance between this address and the given one
 	 */
 	public Long distanceTo(IPv4Address other) {
-		return Math.abs(this.toLong() - other.toLong());
+		return other.toLong() - this.toLong();
 	}
 
 	/**

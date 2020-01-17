@@ -173,45 +173,36 @@ public class IPv4AddressTest {
 	}
 
 	@Test
-	void shouldBeAdjacent() {
+	void distanceTo() {
+		assertEquals(2, IPv4Address.of("127.0.0.1").distanceTo(IPv4Address.of("127.0.0.3")));
+		assertEquals(-2, IPv4Address.of("127.0.0.3").distanceTo(IPv4Address.of("127.0.0.1")));
+		assertEquals(1, IPv4Address.of("127.255.255.255").distanceTo(IPv4Address.of("128.0.0.0")));
+		assertEquals(-1, IPv4Address.of("128.0.0.0").distanceTo(IPv4Address.of("127.255.255.255")));
+		assertEquals(0, IPv4Address.of("1.2.3.4").distanceTo(IPv4Address.of("1.2.3.4")));
+		assertEquals(0x0ffffffffL, IPv4Address.of("0.0.0.0").distanceTo(IPv4Address.of("255.255.255.255")));
+		assertEquals(-0x0ffffffffL, IPv4Address.of("255.255.255.255").distanceTo(IPv4Address.of("0.0.0.0")));
+	}
+
+	@Test
+	void isAdjacent() {
 		assertTrue(IPv4Address.of("127.0.0.1").isAdjacentTo(IPv4Address.of("127.0.0.2")));
-	}
-
-	@Test
-	void shouldNotConsiderSameAddressesAsAdjacent() {
 		assertFalse(IPv4Address.of("127.0.0.1").isAdjacentTo(IPv4Address.of("127.0.0.1")));
-	}
-
-	@Test
-	void shouldDetectAdjacencyAtIntervalBeginning() {
 		assertTrue(IPv4Address.of("0.0.0.0").isAdjacentTo(IPv4Address.of("0.0.0.1")));
-	}
-
-	@Test
-	void shouldDetectAdjacencyAtIntervalEnd() {
 		assertTrue(IPv4Address.of("255.255.255.255").isAdjacentTo(IPv4Address.of("255.255.255.254")));
-	}
-
-	@Test
-	void shouldNotBeAdjacent() {
 		assertFalse(IPv4Address.of("127.0.0.1").isAdjacentTo(IPv4Address.of("127.0.0.3")));
 	}
-	
-	@Test
-	void toRangeExtendRight() {
-		assertEquals(IPv4Range.of("0.0.0.0","1.2.3.4"),IPv4Address.of("0.0.0.0").toRange(IPv4Address.of("1.2.3.4")));
-	}
 
 	@Test
-	void toRangeExtendLeft() {
-		assertEquals(IPv4Range.of("0.0.0.0","1.2.3.4"),IPv4Address.of("1.2.3.4").toRange(IPv4Address.of("0.0.0.0")));
+	void toRange() {
+		assertEquals(IPv4Range.of("0.0.0.0", "1.2.3.4"), IPv4Address.of("0.0.0.0").toRange(IPv4Address.of("1.2.3.4")));
+		assertEquals(IPv4Range.of("0.0.0.0", "1.2.3.4"), IPv4Address.of("1.2.3.4").toRange(IPv4Address.of("0.0.0.0")));
 	}
-	
+
 	@Test
 	void toSubnet() {
 		assertEquals(IPv4Subnet.of("1.2.3.4/32"), IPv4Address.of("1.2.3.4").toSubnet());
 	}
-	
+
 	@Test
 	void and() {
 		assertEquals(IPv4Address.of("1.2.3.0"), IPv4Address.of("1.2.3.4").and(IPv4Address.of("255.255.255.0")));
@@ -221,12 +212,12 @@ public class IPv4AddressTest {
 	void or() {
 		assertEquals(IPv4Address.of("1.2.3.255"), IPv4Address.of("1.2.3.0").or(IPv4Address.of("0.0.0.255")));
 	}
-	
+
 	@Test
 	void xor() {
 		assertEquals(IPv4Address.of("1.2.0.255"), IPv4Address.of("1.2.255.0").xor(IPv4Address.of("0.0.255.255")));
 	}
-	
+
 	@Test
 	void not() {
 		assertEquals(IPv4Address.of("0.255.0.255"), IPv4Address.of("255.0.255.0").not());
