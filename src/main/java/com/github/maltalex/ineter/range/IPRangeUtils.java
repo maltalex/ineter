@@ -55,12 +55,13 @@ abstract class IPRangeUtils {
 			// Grab first un-merged range
 			R mergedRange = sortedRanges.get(candidateIndex++);
 			I pendingRangeStart = mergedRange.getFirst();
-			// While subsequent ranges overlap (or are adjacent), keep expanding
-			// the merged range
-			while (candidateIndex < sortedRanges.size() && (mergedRange.overlaps(sortedRanges.get(candidateIndex))
-					|| mergedRange.getLast().next().equals(sortedRanges.get(candidateIndex).getFirst()))) {
-				I pendingRangeEnd = max(mergedRange.getLast(), sortedRanges.get(candidateIndex).getLast());
-				mergedRange = rangeCreator.apply(pendingRangeStart, pendingRangeEnd);
+			// extend "mergedRange" as much as possible
+			while (candidateIndex < sortedRanges.size()) {
+				R candidateRange = sortedRanges.get(candidateIndex);
+				if (!overlapsOrAdjacent(mergedRange, candidateRange)) {
+					break;
+				}
+				mergedRange = rangeCreator.apply(pendingRangeStart, max(mergedRange.getLast(), candidateRange.getLast()));
 				candidateIndex++;
 			}
 			sortedRanges.set(mergedRangeIndex++, mergedRange);
@@ -68,7 +69,12 @@ abstract class IPRangeUtils {
 
 		return new ArrayList<>(sortedRanges.subList(0, mergedRangeIndex));
 	}
-	
+
+	static <L extends Number & Comparable<L>, I extends IPAddress & Comparable<I>, R extends IPRange<I, L>> boolean overlapsOrAdjacent(
+			R mergedRange, R candidateRange) {
+		return mergedRange.overlaps(candidateRange) || mergedRange.getLast().next().equals(candidateRange.getFirst());
+	}
+
 	static <C extends Comparable<C>> C max(C a, C b) {
 		return a.compareTo(b) > 0 ? a : b;
 	}
