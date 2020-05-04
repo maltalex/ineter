@@ -185,6 +185,8 @@ public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
 	public static final int ADDRESS_BYTES = 16;
 	public static final int ADDRESS_SHORTS = 8;
 	public static final int HOLDER_BITS = 64;
+	public static final IPv6Address MIN_ADDR = IPv6Address.of("::");
+	public static final IPv6Address MAX_ADDR = IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff");
 
 	private static final long serialVersionUID = 2L;
 	private static final BigInteger NEGATIVE_ONE = BigInteger.ONE.negate();
