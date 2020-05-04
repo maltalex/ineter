@@ -61,7 +61,7 @@ abstract class IPRangeUtils {
 				if (!overlapsOrAdjacent(mergedRange, candidateRange)) {
 					break;
 				}
-				mergedRange = rangeCreator.apply(pendingRangeStart, max(mergedRange.getLast(), candidateRange.getLast()));
+				mergedRange = rangeCreator.apply(pendingRangeStart, IPAddress.max(mergedRange.getLast(), candidateRange.getLast()));
 				candidateIndex++;
 			}
 			sortedRanges.set(mergedRangeIndex++, mergedRange);
@@ -74,9 +74,4 @@ abstract class IPRangeUtils {
 			R mergedRange, R candidateRange) {
 		return mergedRange.overlaps(candidateRange) || mergedRange.getLast().next().equals(candidateRange.getFirst());
 	}
-
-	static <C extends Comparable<C>> C max(C a, C b) {
-		return a.compareTo(b) > 0 ? a : b;
-	}
-
 }

@@ -82,6 +82,14 @@ public interface IPAddress extends Serializable {
 		return IPv4Address.of((Inet4Address) address);
 	}
 
+	public static <C extends Comparable<C> & IPAddress> C max(C a, C b) {
+		return a.compareTo(b) > 0 ? a : b;
+	}
+
+	public static <C extends Comparable<C> & IPAddress> C min(C a, C b) {
+		return a.compareTo(b) < 0 ? a : b;
+	}
+
 	/**
 	 * Checks whether the given address is a 6to4 address
 	 *
