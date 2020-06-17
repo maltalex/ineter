@@ -1,6 +1,6 @@
-/**
- * Copyright (c) 2020, Ineter Contributors
- *
+/*
+ * Copyright (c) 2020, ineter Contributors
+ * <p>
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -65,8 +65,8 @@ public class IPv4Range implements IPRange<IPv4Address, Long> {
 	}
 
 	/**
-	 * merges the given collection of {@link IPv4Range} instances to a minimal
-	 * list of non-overlapping ranges
+	 * merges the given collection of {@link IPv4Range} instances to a minimal list
+	 * of non-overlapping ranges
 	 *
 	 * @return a list of {@link IPv4Range}
 	 */
@@ -75,13 +75,12 @@ public class IPv4Range implements IPRange<IPv4Address, Long> {
 	}
 
 	/**
-	 * Parses the given String into an {@link IPv4Range} The String can be
-	 * either a single address, a range such as "192.168.0.0-192.168.1.2" or a
-	 * subnet such as "192.168.0.0/16"
+	 * Parses the given String into an {@link IPv4Range} The String can be either a
+	 * single address, a range such as "192.168.0.0-192.168.1.2" or a subnet such as
+	 * "192.168.0.0/16"
 	 * 
-	 * @param from
-	 *            - a String representation of a single IPv4 address, a range or
-	 *            a subnet
+	 * @param from - a String representation of a single IPv4 address, a range or a
+	 *             subnet
 	 * @return An {@link IPv4Range}
 	 */
 	public static IPv4Range parse(String from) {
@@ -155,7 +154,7 @@ public class IPv4Range implements IPRange<IPv4Address, Long> {
 	public String toString() {
 		return String.format("%s - %s", this.getFirst().toString(), this.getLast().toString());
 	}
-	
+
 	@Override
 	public Iterator<IPv4Address> iterator(boolean skipFirst, boolean skipLast) {
 		return new Iterator<IPv4Address>() {
@@ -209,7 +208,7 @@ public class IPv4Range implements IPRange<IPv4Address, Long> {
 
 		return result;
 	}
-	
+
 	@Override
 	public int intLength() {
 		return this.length() >= Integer.MAX_VALUE ? Integer.MAX_VALUE : this.length().intValue();
@@ -219,7 +218,7 @@ public class IPv4Range implements IPRange<IPv4Address, Long> {
 	public IPv4Range withFirst(IPv4Address address) {
 		return IPv4Range.of(address, this.getLast());
 	}
-	
+
 	@Override
 	public IPv4Range withLast(IPv4Address address) {
 		return IPv4Range.of(this.getFirst(), address);

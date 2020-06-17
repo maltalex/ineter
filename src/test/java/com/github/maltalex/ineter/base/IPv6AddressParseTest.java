@@ -1,11 +1,13 @@
-/**
- * Copyright (c) 2020, Ineter Contributors
- *
+/*
+ * Copyright (c) 2020, ineter Contributors
+ * <p>
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package com.github.maltalex.ineter.base;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -22,11 +24,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-
-import com.github.maltalex.ineter.base.IPv6Address;
-import com.github.maltalex.ineter.base.ZonedIPv6Address;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(JUnitPlatform.class)
 public class IPv6AddressParseTest {

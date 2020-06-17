@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2020, Ineter Contributors
+/*
+ * Copyright (c) 2020, ineter Contributors
  * <p>
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,11 +24,9 @@ public interface IPAddress extends Serializable {
 	/**
 	 * Returns either an IPv4 or an IPv6 address
 	 *
-	 * @param bigEndianByteArr
-	 *            array of 4 or 16 bytes
+	 * @param bigEndianByteArr array of 4 or 16 bytes
 	 * @return new IPv4Address / IPv6Address
-	 * @throws IllegalArgumentException
-	 *             if the given array isn't 4 or 16 bytes long
+	 * @throws IllegalArgumentException if the given array isn't 4 or 16 bytes long
 	 */
 	public static IPAddress of(byte[] bigEndianByteArr) {
 		if (bigEndianByteArr.length == IPv4Address.ADDRESS_BYTES) {
@@ -44,11 +42,10 @@ public interface IPAddress extends Serializable {
 	/**
 	 * Returns either an IPv4 or an IPv6 address
 	 *
-	 * @param ip
-	 *            an IPv4 or IPv6 address in literal String form
+	 * @param ip an IPv4 or IPv6 address in literal String form
 	 * @return new IPv4Address / IPv6Address
-	 * @throws IllegalArgumentException
-	 *             if the given array isn't an IPv4/IPv6 address
+	 * @throws IllegalArgumentException if the given array isn't an IPv4/IPv6
+	 *                                  address
 	 */
 	public static IPAddress of(String ip) {
 		if (ip.length() >= 2 && ip.length() <= 41) {
@@ -70,8 +67,7 @@ public interface IPAddress extends Serializable {
 	/**
 	 * Returns either an IPv4 or an IPv6 address built from an InetAddress
 	 *
-	 * @param address
-	 *            to copy from
+	 * @param address to copy from
 	 * @return IPv4Address or IPv6Address instance
 	 */
 	public static IPAddress of(InetAddress address) {
@@ -98,8 +94,8 @@ public interface IPAddress extends Serializable {
 	public boolean is6To4();
 
 	/**
-	 * Martian addresses are reserved and private addresses that should not
-	 * appear on the public internet
+	 * Martian addresses are reserved and private addresses that should not appear
+	 * on the public internet
 	 *
 	 * @return true if the address is martian, false otherwise
 	 */

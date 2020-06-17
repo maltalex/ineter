@@ -1,6 +1,6 @@
-/**
- * Copyright (c) 2020, Ineter Contributors
- *
+/*
+ * Copyright (c) 2020, ineter Contributors
+ * <p>
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -21,7 +21,8 @@ import com.github.maltalex.ineter.base.IPv6Address;
 
 public class IPv6Range implements IPRange<IPv6Address, BigInteger> {
 
-	private static final BigInteger INTEGER_MAX_VALUE = new BigInteger(new byte[] {0x7f,(byte) 0xff,(byte) 0xff,(byte) 0xff});
+	private static final BigInteger INTEGER_MAX_VALUE = new BigInteger(
+			new byte[] { 0x7f, (byte) 0xff, (byte) 0xff, (byte) 0xff });
 	private static final long serialVersionUID = 2L;
 
 	public static IPv6Range of(IPv6Address firstAddress, IPv6Address lastAddress) {
@@ -62,28 +63,27 @@ public class IPv6Range implements IPRange<IPv6Address, BigInteger> {
 	 * 
 	 * @return a list of {@link IPv6Range}
 	 */
-	public static List<IPv6Range> merge(IPv6Range... ranges){
+	public static List<IPv6Range> merge(IPv6Range... ranges) {
 		return merge(Arrays.asList(ranges));
 	}
 
 	/**
-	 * merges the given collection of {@link IPv6Range} instances to a minimal list of
-	 * non-overlapping ranges
+	 * merges the given collection of {@link IPv6Range} instances to a minimal list
+	 * of non-overlapping ranges
 	 * 
 	 * @return a list of {@link IPv6Range}
 	 */
-	public static List<IPv6Range> merge(Collection<IPv6Range> ranges){
+	public static List<IPv6Range> merge(Collection<IPv6Range> ranges) {
 		return IPRangeUtils.merge(ranges, IPv6Range::of);
 	}
 
 	/**
-	 * Parses the given String into an {@link IPv6Range} The String can be
-	 * either a single address, a range such as "2001::-2002::" or a subnet such
-	 * as "2001::/16"
+	 * Parses the given String into an {@link IPv6Range} The String can be either a
+	 * single address, a range such as "2001::-2002::" or a subnet such as
+	 * "2001::/16"
 	 * 
-	 * @param from
-	 *            - a String representation of a single IPv6 address, a range or
-	 *            a subnet
+	 * @param from - a String representation of a single IPv6 address, a range or a
+	 *             subnet
 	 * @return An {@link IPv6Range}
 	 */
 	public static IPv6Range parse(String from) {
@@ -152,7 +152,7 @@ public class IPv6Range implements IPRange<IPv6Address, BigInteger> {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		return String.format("%s - %s", this.getFirst().toString(), this.getLast().toString());
@@ -230,17 +230,17 @@ public class IPv6Range implements IPRange<IPv6Address, BigInteger> {
 
 		return result;
 	}
-	
+
 	@Override
 	public int intLength() {
 		return this.length().compareTo(INTEGER_MAX_VALUE) >= 0 ? Integer.MAX_VALUE : this.length().intValue();
 	}
-	
+
 	@Override
 	public IPv6Range withFirst(IPv6Address address) {
 		return IPv6Range.of(address, this.getLast());
 	}
-	
+
 	@Override
 	public IPv6Range withLast(IPv6Address address) {
 		return IPv6Range.of(this.getFirst(), address);

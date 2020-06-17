@@ -1,11 +1,13 @@
-/**
- * Copyright (c) 2020, Ineter Contributors
- *
+/*
+ * Copyright (c) 2020, ineter Contributors
+ * <p>
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package com.github.maltalex.ineter.base;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigInteger;
 import java.net.Inet6Address;
@@ -19,13 +21,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
-import com.github.maltalex.ineter.base.IPAddress;
-import com.github.maltalex.ineter.base.IPv6Address;
-import com.github.maltalex.ineter.base.ZonedIPv6Address;
 import com.github.maltalex.ineter.range.IPv6Range;
 import com.github.maltalex.ineter.range.IPv6Subnet;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(JUnitPlatform.class)
 public class IPv6AddressTest {
@@ -299,27 +296,28 @@ public class IPv6AddressTest {
 		assertEquals(IPv6Range.of("::", "::1234"), IPv6Address.of("::").toRange(IPv6Address.of("::1234")));
 		assertEquals(IPv6Range.of("::", "::1234"), IPv6Address.of("::1234").toRange(IPv6Address.of("::")));
 	}
-	
+
 	@Test
 	void toSubnet() {
 		assertEquals(IPv6Subnet.of("::1234/128"), IPv6Address.of("::1234").toSubnet());
 	}
-	
+
 	@Test
 	void and() {
-		assertEquals(IPv6Address.of("::1230"), IPv6Address.of("::1234").and(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:fff0")));
+		assertEquals(IPv6Address.of("::1230"),
+				IPv6Address.of("::1234").and(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:fff0")));
 	}
 
 	@Test
 	void or() {
 		assertEquals(IPv6Address.of("::123f"), IPv6Address.of("::1230").or(IPv6Address.of("::f")));
 	}
-	
+
 	@Test
 	void xor() {
 		assertEquals(IPv6Address.of("::aaaa"), IPv6Address.of("::ffff").xor(IPv6Address.of("::5555")));
 	}
-	
+
 	@Test
 	void not() {
 		assertEquals(IPv6Address.of("::"), IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff").not());

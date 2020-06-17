@@ -1,11 +1,13 @@
-/**
- * Copyright (c) 2020, Ineter Contributors
- *
+/*
+ * Copyright (c) 2020, ineter Contributors
+ * <p>
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package com.github.maltalex.ineter.base;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigInteger;
 import java.net.Inet4Address;
@@ -21,8 +23,6 @@ import org.junit.runner.RunWith;
 
 import com.github.maltalex.ineter.range.IPv4Range;
 import com.github.maltalex.ineter.range.IPv4Subnet;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(JUnitPlatform.class)
 public class IPv4AddressTest {

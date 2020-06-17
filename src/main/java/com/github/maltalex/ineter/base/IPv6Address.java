@@ -1,6 +1,6 @@
-/**
- * Copyright (c) 2020, Ineter Contributors
- *
+/*
+ * Copyright (c) 2020, ineter Contributors
+ * <p>
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -195,10 +195,8 @@ public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
 	 * Build an IPv6Address from two longs - upper and lower 64 bits in form of
 	 * longs
 	 *
-	 * @param upper
-	 *            upper 64 bits of the IPv6Address
-	 * @param lower
-	 *            lower 64 bits of the IPv6Address
+	 * @param upper upper 64 bits of the IPv6Address
+	 * @param lower lower 64 bits of the IPv6Address
 	 * @return new IPv6Address instance
 	 */
 	public static IPv6Address of(long upper, long lower) {
@@ -215,11 +213,10 @@ public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
 	}
 
 	/**
-	 * Build an IPv6Address from a 16 byte long big-endian (highest byte first)
-	 * byte array
+	 * Build an IPv6Address from a 16 byte long big-endian (highest byte first) byte
+	 * array
 	 *
-	 * @param bigEndianByteArr
-	 *            16 byte big-endian byte array
+	 * @param bigEndianByteArr 16 byte big-endian byte array
 	 * @return new IPv6Address instance
 	 */
 	public static IPv6Address of(byte[] bigEndianByteArr) {
@@ -242,8 +239,8 @@ public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
 
 	/**
 	 * Build an IPv6Address or a ZonedIPv6Address from a literal IPv6 address in
-	 * String from such as "2001:1:2:3:4:5:6:7", "2001::", "[::]",
-	 * "fe80::1%eth0", and similar valid forms
+	 * String from such as "2001:1:2:3:4:5:6:7", "2001::", "[::]", "fe80::1%eth0",
+	 * and similar valid forms
 	 *
 	 * @param address
 	 * @return new IPv6Address instance
@@ -456,10 +453,8 @@ public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
 	 * Build an IPv6Address from two longs - upper and lower 64 bits in form of
 	 * longs
 	 *
-	 * @param upper
-	 *            upper 64 bits of the IPv6Address
-	 * @param lower
-	 *            lower 64 bits of the IPv6Address
+	 * @param upper upper 64 bits of the IPv6Address
+	 * @param lower lower 64 bits of the IPv6Address
 	 */
 	public IPv6Address(long upper, long lower) {
 		this.upper = upper;
@@ -731,9 +726,9 @@ public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
 	}
 
 	/**
-	 * Returns a range between this address and an arbitrary one This method
-	 * takes care of comparing the addresses so they're always passed to the
-	 * range factory in the right order
+	 * Returns a range between this address and an arbitrary one This method takes
+	 * care of comparing the addresses so they're always passed to the range factory
+	 * in the right order
 	 * 
 	 * @return an IPv6Range between this address and a given one
 	 */
@@ -742,8 +737,8 @@ public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
 	}
 
 	/**
-	 * Returns true iff the given address is adjacent (above or below) the
-	 * current one
+	 * Returns true iff the given address is adjacent (above or below) the current
+	 * one
 	 * 
 	 * @return true iff the given address is adjacent to this one
 	 */
@@ -753,11 +748,11 @@ public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
 	}
 
 	/**
-	 * Returns the distance to the given address. If the provided address is
-	 * bigger, the result will be positive. If it's smaller, the result will be
-	 * negative.
+	 * Returns the distance to the given address. If the provided address is bigger,
+	 * the result will be positive. If it's smaller, the result will be negative.
 	 * 
-	 * For example, the distance from ::1 to ::3 is 2, the distance from ::3 to ::1 is -2
+	 * For example, the distance from ::1 to ::3 is 2, the distance from ::3 to ::1
+	 * is -2
 	 * 
 	 * @return the distance between this address and the given one
 	 */
@@ -766,8 +761,10 @@ public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
 	}
 
 	/**
-	 * Returns the address which is the results of a bitwise AND between this address and the given one.
-	 * This operation is useful for masking and various low level bit manipulation
+	 * Returns the address which is the results of a bitwise AND between this
+	 * address and the given one. This operation is useful for masking and various
+	 * low level bit manipulation
+	 * 
 	 * @return a bitwise AND between this address and the given one
 	 */
 	public IPv6Address and(IPv6Address other) {
@@ -775,8 +772,10 @@ public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
 	}
 
 	/**
-	 * Returns the address which is the results of a bitwise OR between this address and the given one.
-	 * This operation is useful for masking and various low level bit manipulation
+	 * Returns the address which is the results of a bitwise OR between this address
+	 * and the given one. This operation is useful for masking and various low level
+	 * bit manipulation
+	 * 
 	 * @return a bitwise OR between this address and the given one
 	 */
 	public IPv6Address or(IPv6Address other) {
@@ -784,8 +783,10 @@ public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
 	}
 
 	/**
-	 * Returns the address which is the results of a bitwise XOR between this address and the given one.
-	 * This operation is useful for masking and various low level bit manipulation
+	 * Returns the address which is the results of a bitwise XOR between this
+	 * address and the given one. This operation is useful for masking and various
+	 * low level bit manipulation
+	 * 
 	 * @return a bitwise XOR between this address and the given one
 	 */
 	public IPv6Address xor(IPv6Address other) {
@@ -795,6 +796,7 @@ public class IPv6Address implements IPAddress, Comparable<IPv6Address> {
 	/**
 	 * Returns the address which is the results of a bitwise NOT of this address
 	 * This operation is useful for masking and various low level bit manipulation
+	 * 
 	 * @return a bitwise NOT of this address
 	 */
 	public IPv6Address not() {

@@ -1,6 +1,6 @@
-/**
- * Copyright (c) 2020, Ineter Contributors
- *
+/*
+ * Copyright (c) 2020, ineter Contributors
+ * <p>
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -126,11 +126,10 @@ public class IPv4Address implements IPAddress, Comparable<IPv4Address> {
 	private static final long serialVersionUID = 2L;
 
 	/**
-	 * Build an IPv4Address from a 4 byte long big-endian (highest byte first)
-	 * byte array
+	 * Build an IPv4Address from a 4 byte long big-endian (highest byte first) byte
+	 * array
 	 *
-	 * @param bigEndianByteArr
-	 *            4 byte big-endian byte array
+	 * @param bigEndianByteArr 4 byte big-endian byte array
 	 * @return new IPv4Address instance
 	 */
 	public static IPv4Address of(byte[] bigEndianByteArr) {
@@ -161,8 +160,7 @@ public class IPv4Address implements IPAddress, Comparable<IPv4Address> {
 	 * Build an IPv4Address from a literal String representations such as
 	 * "192.168.1.1"
 	 *
-	 * @param ip
-	 *            literal IP address String
+	 * @param ip literal IP address String
 	 * @return new IPv4Address instance
 	 */
 	public static IPv4Address of(String ip) {
@@ -407,9 +405,9 @@ public class IPv4Address implements IPAddress, Comparable<IPv4Address> {
 	}
 
 	/**
-	 * Returns a range between this address and an arbitrary one This method
-	 * takes care of comparing the addresses so they're always passed to the
-	 * range factory in the right order
+	 * Returns a range between this address and an arbitrary one This method takes
+	 * care of comparing the addresses so they're always passed to the range factory
+	 * in the right order
 	 * 
 	 * @return an IPv4Range between this address and a given one
 	 */
@@ -418,7 +416,9 @@ public class IPv4Address implements IPAddress, Comparable<IPv4Address> {
 	}
 
 	/**
-	 * Returns true iff the given address is adjacent (above or below) the current one
+	 * Returns true iff the given address is adjacent (above or below) the current
+	 * one
+	 * 
 	 * @return true iff the given address is adjacent to this one
 	 */
 	public boolean isAdjacentTo(IPv4Address other) {
@@ -427,11 +427,11 @@ public class IPv4Address implements IPAddress, Comparable<IPv4Address> {
 	}
 
 	/**
-	 * Returns the distance to the given address. If the provided address is
-	 * bigger, the result will be positive. If it's smaller, the result will be
-	 * negative.
+	 * Returns the distance to the given address. If the provided address is bigger,
+	 * the result will be positive. If it's smaller, the result will be negative.
 	 * 
-	 * For example, the distance from 10.0.0.1 to 10.0.0.3 is 2, the distance from 10.0.0.3 to 10.0.0.1 is -2
+	 * For example, the distance from 10.0.0.1 to 10.0.0.3 is 2, the distance from
+	 * 10.0.0.3 to 10.0.0.1 is -2
 	 * 
 	 * @return the distance between this address and the given one
 	 */
@@ -440,8 +440,10 @@ public class IPv4Address implements IPAddress, Comparable<IPv4Address> {
 	}
 
 	/**
-	 * Returns the address which is the results of a bitwise AND between this address and the given one.
-	 * This operation is useful for masking and various low level bit manipulation
+	 * Returns the address which is the results of a bitwise AND between this
+	 * address and the given one. This operation is useful for masking and various
+	 * low level bit manipulation
+	 * 
 	 * @return a bitwise AND between this address and the given one
 	 */
 	public IPv4Address and(IPv4Address other) {
@@ -449,17 +451,21 @@ public class IPv4Address implements IPAddress, Comparable<IPv4Address> {
 	}
 
 	/**
-	 * Returns the address which is the results of a bitwise OR between this address and the given one.
-	 * This operation is useful for masking and various low level bit manipulation
+	 * Returns the address which is the results of a bitwise OR between this address
+	 * and the given one. This operation is useful for masking and various low level
+	 * bit manipulation
+	 * 
 	 * @return a bitwise OR between this address and the given one
 	 */
 	public IPv4Address or(IPv4Address other) {
 		return IPv4Address.of(this.ip | other.ip);
 	}
-	
+
 	/**
-	 * Returns the address which is the results of a bitwise XOR between this address and the given one.
-	 * This operation is useful for masking and various low level bit manipulation
+	 * Returns the address which is the results of a bitwise XOR between this
+	 * address and the given one. This operation is useful for masking and various
+	 * low level bit manipulation
+	 * 
 	 * @return a bitwise XOR between this address and the given one
 	 */
 	public IPv4Address xor(IPv4Address other) {
@@ -469,6 +475,7 @@ public class IPv4Address implements IPAddress, Comparable<IPv4Address> {
 	/**
 	 * Returns the address which is the results of a bitwise NOT of this address
 	 * This operation is useful for masking and various low level bit manipulation
+	 * 
 	 * @return a bitwise NOT of this address
 	 */
 	public IPv4Address not() {

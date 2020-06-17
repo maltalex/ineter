@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2020, ineter Contributors
+ * <p>
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package com.github.maltalex.ineter.range;
 
 import java.util.ArrayList;
@@ -61,7 +68,8 @@ abstract class IPRangeUtils {
 				if (!overlapsOrAdjacent(mergedRange, candidateRange)) {
 					break;
 				}
-				mergedRange = rangeCreator.apply(pendingRangeStart, IPAddress.max(mergedRange.getLast(), candidateRange.getLast()));
+				mergedRange = rangeCreator.apply(pendingRangeStart,
+						IPAddress.max(mergedRange.getLast(), candidateRange.getLast()));
 				candidateIndex++;
 			}
 			sortedRanges.set(mergedRangeIndex++, mergedRange);

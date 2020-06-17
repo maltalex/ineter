@@ -1,6 +1,6 @@
-/**
- * Copyright (c) 2020, Ineter Contributors
- *
+/*
+ * Copyright (c) 2020, ineter Contributors
+ * <p>
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -14,22 +14,22 @@ import java.util.List;
 
 import com.github.maltalex.ineter.base.IPAddress;
 
-public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number & Comparable<L>> extends Iterable<I>, Serializable {
+public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number & Comparable<L>>
+		extends Iterable<I>, Serializable {
 
 	public I getFirst();
 
 	public I getLast();
 
 	/**
-	 * Checks whether this range has any overlapping addresses with a given
-	 * range. To check whether all addresses are contained, use
+	 * Checks whether this range has any overlapping addresses with a given range.
+	 * To check whether all addresses are contained, use
 	 * {@link IPRange#contains(IPRange)}
 	 *
-	 * @param range
-	 *            the range to check for overlap
+	 * @param range the range to check for overlap
 	 * @return true if the given range overlaps with this one
 	 */
-	default boolean overlaps(IPRange<I,L> range) {
+	default boolean overlaps(IPRange<I, L> range) {
 		// Either one of the ends of the other range is within this one
 		// Or this range is completely inside the other range. In that case,
 		// it's enough to check just one of the edges of this range
@@ -47,14 +47,13 @@ public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number &
 	}
 
 	/**
-	 * Checks whether this range contains all addresses of a given range. To
-	 * check for partial overlap, use {@link IPRange#overlaps(IPRange)}
+	 * Checks whether this range contains all addresses of a given range. To check
+	 * for partial overlap, use {@link IPRange#overlaps(IPRange)}
 	 *
-	 * @param range
-	 *            range to check
+	 * @param range range to check
 	 * @return true if the entire given range is contained within this range
 	 */
-	default boolean contains(IPRange<I,L> range) {
+	default boolean contains(IPRange<I, L> range) {
 		return this.contains(range.getFirst()) && this.contains(range.getLast());
 	}
 
@@ -80,11 +79,10 @@ public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number &
 	}
 
 	/**
-	 * Returns an iterator that optionally skips both the first and last
-	 * addresses in the range
+	 * Returns an iterator that optionally skips both the first and last addresses
+	 * in the range
 	 *
-	 * @param trim
-	 *            set to true to skip first and last addresses
+	 * @param trim set to true to skip first and last addresses
 	 * @return a new iterator instance
 	 */
 	default Iterator<I> iterator(boolean trim) {
@@ -92,20 +90,18 @@ public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number &
 	}
 
 	/**
-	 * Returns an iterator that optionally skips the first, last or both
-	 * addresses in the range
+	 * Returns an iterator that optionally skips the first, last or both addresses
+	 * in the range
 	 *
-	 * @param skipFirst
-	 *            set to true to skip the first address
-	 * @param skipLast
-	 *            set to true to skip the last addresses
+	 * @param skipFirst set to true to skip the first address
+	 * @param skipLast  set to true to skip the last addresses
 	 * @return a new iterator instance
 	 */
 	public Iterator<I> iterator(boolean skipFirst, boolean skipLast);
 
 	/**
-	 * Calculates and returns the minimal list of Subnets that compose this
-	 * address range.
+	 * Calculates and returns the minimal list of Subnets that compose this address
+	 * range.
 	 *
 	 * @return a list of Subnets that compose this address range
 	 */
@@ -125,16 +121,20 @@ public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number &
 		}
 		return list;
 	}
-	
+
 	/**
-	 * Return a new range instance with the <b>same first address</b> as the current range, and <b>the given last address</b>
+	 * Return a new range instance with the <b>same first address</b> as the current
+	 * range, and <b>the given last address</b>
+	 * 
 	 * @return a new range instance
 	 */
-	public IPRange<I,L> withLast(I address);
-	 
+	public IPRange<I, L> withLast(I address);
+
 	/**
-	 * Return a new range instance with the <b>same last address</b> as the current range, and <b>the given first address</b>
+	 * Return a new range instance with the <b>same last address</b> as the current
+	 * range, and <b>the given first address</b>
+	 * 
 	 * @return a new range instance
 	 */
-	public IPRange<I,L> withFirst(I address);
+	public IPRange<I, L> withFirst(I address);
 }

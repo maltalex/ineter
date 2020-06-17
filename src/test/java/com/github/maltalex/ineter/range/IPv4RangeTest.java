@@ -1,11 +1,13 @@
-/**
- * Copyright (c) 2020, Ineter Contributors
- *
+/*
+ * Copyright (c) 2020, ineter Contributors
+ * <p>
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package com.github.maltalex.ineter.range;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -19,7 +21,6 @@ import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.ImmutableList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -27,10 +28,7 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 import com.github.maltalex.ineter.base.IPv4Address;
-import com.github.maltalex.ineter.range.IPv4Range;
-import com.github.maltalex.ineter.range.IPv4Subnet;
-
-import static org.junit.jupiter.api.Assertions.*;
+import com.google.common.collect.ImmutableList;
 
 @RunWith(JUnitPlatform.class)
 public class IPv4RangeTest {
@@ -151,7 +149,7 @@ public class IPv4RangeTest {
 		IPv4Range range1 = IPv4Range.parse("192.168.0.0-192.168.255.255");
 		assertFalse(range1.equals(null));
 	}
-	
+
 	@Test
 	void unequalToObject() {
 		assertFalse(IPv4Range.parse("192.168.0.0-192.168.255.255").equals(new Object()));
@@ -226,36 +224,39 @@ public class IPv4RangeTest {
 		List<IPv4Subnet> generated = IPv4Range.parse(range).toSubnets();
 		List<IPv4Subnet> manual = Arrays.stream(subnets.split(" ")).map(IPv4Subnet::of).collect(Collectors.toList());
 		assertEquals(generated, manual);
-		assertEquals(manual.stream().mapToLong(IPv4Subnet::length).sum(),
-				IPv4Range.parse(range).length().longValue());
+		assertEquals(manual.stream().mapToLong(IPv4Subnet::length).sum(), IPv4Range.parse(range).length().longValue());
 	}
 
 	@Test
 	void singleIPRangeParse() {
 		final IPv4Range explicitRange = IPv4Range.parse("127.0.0.1-127.0.0.1");
 		final IPv4Range range = IPv4Range.parse("127.0.0.1");
-		assertEquals(explicitRange, range, "Single address range doesn't match explicit range with same addresses on both ends.");
+		assertEquals(explicitRange, range,
+				"Single address range doesn't match explicit range with same addresses on both ends.");
 	}
 
 	@Test
 	void singleIPRangeOfBytes() {
 		final IPv4Range explicitRange = IPv4Range.of(new byte[] { 1, 2, 3, 4 }, new byte[] { 1, 2, 3, 4 });
 		final IPv4Range range = IPv4Range.of(new byte[] { 1, 2, 3, 4 });
-		assertEquals(explicitRange, range, "Single address range doesn't match explicit range with same addresses on both ends.");
+		assertEquals(explicitRange, range,
+				"Single address range doesn't match explicit range with same addresses on both ends.");
 	}
 
 	@Test
 	void singleIPRangeOfString() {
 		final IPv4Range explicitRange = IPv4Range.of("1.2.3.4", "1.2.3.4");
 		final IPv4Range range = IPv4Range.of("1.2.3.4");
-		assertEquals(explicitRange, range, "Single address range doesn't match explicit range with same addresses on both ends.");
+		assertEquals(explicitRange, range,
+				"Single address range doesn't match explicit range with same addresses on both ends.");
 	}
 
 	@Test
 	void singleIPRangeOfIPv4Address() {
 		final IPv4Range explicitRange = IPv4Range.of(IPv4Address.of("1.2.3.4"), IPv4Address.of("1.2.3.4"));
 		final IPv4Range range = IPv4Range.of(IPv4Address.of("1.2.3.4"));
-		assertEquals(explicitRange, range, "Single address range doesn't match explicit range with same addresses on both ends.");
+		assertEquals(explicitRange, range,
+				"Single address range doesn't match explicit range with same addresses on both ends.");
 	}
 
 	@Test
@@ -263,7 +264,8 @@ public class IPv4RangeTest {
 		final IPv4Range explicitRange = IPv4Range.of((Inet4Address) InetAddress.getByName("1.2.3.4"),
 				(Inet4Address) InetAddress.getByName("1.2.3.4"));
 		final IPv4Range range = IPv4Range.of((Inet4Address) InetAddress.getByName("1.2.3.4"));
-		assertEquals(explicitRange, range, "Single address range doesn't match explicit range with same addresses on both ends.");
+		assertEquals(explicitRange, range,
+				"Single address range doesn't match explicit range with same addresses on both ends.");
 	}
 
 	@Test
@@ -322,7 +324,7 @@ public class IPv4RangeTest {
 	void shouldReturnEmptyOnEmpty() {
 		assertTrue(IPv4Range.merge(Collections.emptyList()).isEmpty());
 	}
-	
+
 	@Test
 	void testIntLength() {
 		assertEquals(256, IPv4Subnet.of("192.168.0.0/24").intLength());
@@ -332,15 +334,21 @@ public class IPv4RangeTest {
 
 	@Test
 	void testWithLast() {
-		assertEquals(IPv4Range.of("0.0.0.0", "1.2.3.4"), IPv4Subnet.of("0.0.0.0/0").withLast(IPv4Address.of("1.2.3.4")));
-		assertEquals(IPv4Range.of("1.2.3.0", "1.2.3.4"), IPv4Subnet.of("1.2.3.0/24").withLast(IPv4Address.of("1.2.3.4")));
-		assertThrows(IllegalArgumentException.class, () -> IPv4Subnet.of("1.2.3.0/24").withLast(IPv4Address.of("0.0.0.0")));
+		assertEquals(IPv4Range.of("0.0.0.0", "1.2.3.4"),
+				IPv4Subnet.of("0.0.0.0/0").withLast(IPv4Address.of("1.2.3.4")));
+		assertEquals(IPv4Range.of("1.2.3.0", "1.2.3.4"),
+				IPv4Subnet.of("1.2.3.0/24").withLast(IPv4Address.of("1.2.3.4")));
+		assertThrows(IllegalArgumentException.class,
+				() -> IPv4Subnet.of("1.2.3.0/24").withLast(IPv4Address.of("0.0.0.0")));
 	}
-	
+
 	@Test
 	void testWithFirst() {
-		assertEquals(IPv4Range.of("0.0.0.0", "255.255.255.255"), IPv4Subnet.of("128.0.0.0/1").withFirst(IPv4Address.of("0.0.0.0")));
-		assertEquals(IPv4Range.of("10.0.0.255", "10.0.0.255"), IPv4Subnet.of("10.0.0.0/24").withFirst(IPv4Address.of("10.0.0.255")));
-		assertThrows(IllegalArgumentException.class, () -> IPv4Subnet.of("10.0.0.0/8").withFirst(IPv4Address.of("12.12.12.12")));
+		assertEquals(IPv4Range.of("0.0.0.0", "255.255.255.255"),
+				IPv4Subnet.of("128.0.0.0/1").withFirst(IPv4Address.of("0.0.0.0")));
+		assertEquals(IPv4Range.of("10.0.0.255", "10.0.0.255"),
+				IPv4Subnet.of("10.0.0.0/24").withFirst(IPv4Address.of("10.0.0.255")));
+		assertThrows(IllegalArgumentException.class,
+				() -> IPv4Subnet.of("10.0.0.0/8").withFirst(IPv4Address.of("12.12.12.12")));
 	}
 }

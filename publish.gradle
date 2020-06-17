@@ -6,24 +6,24 @@ archivesBaseName = 'ineter'
 version = '0.2.0'
 
 task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
+	classifier = 'javadoc'
+	from javadoc
 }
 
 task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
+	classifier = 'sources'
+	from sourceSets.main.allSource
 }
 
 artifacts {
-    archives javadocJar, sourcesJar
+	archives javadocJar, sourcesJar
 }
 
 signing {
 	required {
 		gradle.taskGraph.hasTask("uploadArchives")
 	}
-    sign configurations.archives
+	sign configurations.archives
 }
 
 def OSSUsername = hasProperty('sonatypeUsername') ? sonatypeUsername : "dummyOssUsername"
@@ -32,9 +32,9 @@ def OSSPassword = hasProperty('sonatypePassword') ? sonatypePassword : "dummyOss
 uploadArchives {
 	repositories {
 		mavenDeployer {
-			beforeDeployment {
-				MavenDeployment deployment -> signing.signPom(deployment) 
-      		}
+			beforeDeployment { MavenDeployment deployment ->
+				signing.signPom(deployment)
+			}
 
 			repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
 				authentication(userName: OSSUsername, password: OSSPassword)
@@ -60,7 +60,7 @@ uploadArchives {
 					license {
 						name 'Mozilla Public License 2.0'
 						url 'http://mozilla.org/MPL/2.0/'
-					  }
+					}
 				}
 
 				developers {

@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2020, ineter Contributors
+ * <p>
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package com.github.maltalex.ineter.range;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -9,9 +16,6 @@ import java.util.function.Function;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-
-import com.github.maltalex.ineter.range.IPv4Range;
-import com.github.maltalex.ineter.range.IPv4Subnet;
 
 @RunWith(JUnitPlatform.class)
 class IPRangeUtilsTest {
@@ -42,7 +46,8 @@ class IPRangeUtilsTest {
 	@Test
 	void throwOnNonsenseOnRange() {
 		final String from = "127-127-127";
-		assertThrows(IllegalArgumentException.class, () -> IPRangeUtils.parseRange(from, IPv4_RANGE_PRODUCER, IPv4_SUBNET_PRODUCER));
+		assertThrows(IllegalArgumentException.class,
+				() -> IPRangeUtils.parseRange(from, IPv4_RANGE_PRODUCER, IPv4_SUBNET_PRODUCER));
 	}
 
 	@Test

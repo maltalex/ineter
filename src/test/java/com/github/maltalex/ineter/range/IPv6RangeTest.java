@@ -1,11 +1,13 @@
-/**
- * Copyright (c) 2020, Ineter Contributors
- *
+/*
+ * Copyright (c) 2020, ineter Contributors
+ * <p>
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package com.github.maltalex.ineter.range;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigInteger;
 import java.net.Inet6Address;
@@ -27,11 +29,7 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 import com.github.maltalex.ineter.base.IPv6Address;
-import com.github.maltalex.ineter.range.IPv6Range;
-import com.github.maltalex.ineter.range.IPv6Subnet;
 import com.google.common.collect.ImmutableList;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(JUnitPlatform.class)
 public class IPv6RangeTest {
@@ -141,13 +139,13 @@ public class IPv6RangeTest {
 
 		assertNotEquals(range1, range2);
 	}
-	
+
 	@Test
 	void unequalToNull() {
 		IPv6Range range1 = IPv6Range.parse("1234::1234-1234::ffff");
 		assertFalse(range1.equals(null));
 	}
-	
+
 	@Test
 	void unequalToObject() {
 		assertFalse(IPv6Range.parse("1234::1234-1234::ffff").equals(new Object()));
@@ -326,7 +324,7 @@ public class IPv6RangeTest {
 	void shouldReturnEmptyOnEmpty() {
 		assertTrue(IPv6Range.merge(Collections.emptyList()).isEmpty());
 	}
-	
+
 	@Test
 	void testIntLength() {
 		assertEquals(256, IPv6Subnet.of("::/120").intLength());
@@ -340,11 +338,12 @@ public class IPv6RangeTest {
 		assertEquals(IPv6Range.of("1234::", "1235::"), IPv6Subnet.of("1234::/16").withLast(IPv6Address.of("1235::")));
 		assertThrows(IllegalArgumentException.class, () -> IPv6Subnet.of("1234::/16").withLast(IPv6Address.of("::")));
 	}
-	
+
 	@Test
 	void testWithFirst() {
 		assertEquals(IPv6Range.of("::5", "::00ff"), IPv6Subnet.of("::/120").withFirst(IPv6Address.of("::5")));
 		assertEquals(IPv6Range.of("::", "::123f"), IPv6Subnet.of("::1230/124").withFirst(IPv6Address.of("::")));
-		assertThrows(IllegalArgumentException.class, () -> IPv6Subnet.of("1234::/16").withFirst(IPv6Address.of("2222::")));
+		assertThrows(IllegalArgumentException.class,
+				() -> IPv6Subnet.of("1234::/16").withFirst(IPv6Address.of("2222::")));
 	}
 }
