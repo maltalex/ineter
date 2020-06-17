@@ -170,21 +170,46 @@ public class IPv4Address implements IPAddress, Comparable<IPv4Address> {
 			throw new NullPointerException("String IP address is null");
 		}
 		if (ip.length() < 7 || ip.length() > 15) {
-			throw new IllegalArgumentException("Invalid IP address length");
+			throw new IllegalArgumentException("Invalid IP address length in " + ip);
 		}
-		String[] split = ip.split("\\.");
-		if (split.length != ADDRESS_BYTES) {
-			throw new IllegalArgumentException("IPv4 addresses must have exactly 4 octets");
+		boolean octetEmpty = true;
+		int ipInt = 0;
+		int octet = 0;
+		int dots = 0;
+		for (char c : ip.toCharArray()) {
+			if (c >= '0' && c <= '9') {
+				octetEmpty = false;
+				octet *= 10;
+				octet += c - '0';
+				if (octet > 255) {
+					throw new IllegalArgumentException("Invalid octet in " + ip);
+				}
+				continue;
+			}
+			if (c == '.') {
+				if (octetEmpty) {
+					throw new IllegalArgumentException("Empty octet in " + ip);
+				}
+				dots++;
+				if (dots > 3) {
+					throw new IllegalArgumentException("Too many dots in " + ip);
+				}
+				ipInt = (ipInt << 8) | octet;
+				octet = 0;
+				octetEmpty = true;
+				continue;
+			}
+			throw new IllegalArgumentException("Unexpected character " + c + " in " + ip);
 		}
-		int a = Integer.parseInt(split[0]), b = Integer.parseInt(split[1]);
-		int c = Integer.parseInt(split[2]), d = Integer.parseInt(split[3]);
+		if (dots != 3) {
+			throw new IllegalArgumentException("Too few dots in" + ip);
+		}
+		if (octetEmpty) {
+			throw new IllegalArgumentException("Empty octet in " + ip);
+		}
+		ipInt = (ipInt << 8) | octet;
 
-		// Make sure all octets are between 0 and 255
-		if (((a | b | c | d) & 0xffffff00) != 0) {
-			throw new IllegalArgumentException("All octets have to be between 0 and 255");
-		}
-
-		return of(shiftToInt(a, b, c, d));
+		return of(ipInt);
 	}
 
 	/**

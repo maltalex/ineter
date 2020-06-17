@@ -74,7 +74,7 @@ public class IPv4KnownAddressesTest {
 	}
 
 	@ParameterizedTest()
-	@CsvSource({ "192.168.0.0", "192.168.255.255", "10.0.0.0", "10.255.255.255", "172.16.0.0.", "172.31.255.255",
+	@CsvSource({ "192.168.0.0", "192.168.255.255", "10.0.0.0", "10.255.255.255", "172.16.0.0", "172.31.255.255",
 			"100.64.0.0", "100.127.255.255" })
 	void isPrivateTrue(String ip) {
 		assertTrue(IPv4Address.of(ip).isPrivate());

@@ -19,7 +19,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
-import com.github.maltalex.ineter.base.IPv4Address;
 import com.github.maltalex.ineter.range.IPv4Range;
 import com.github.maltalex.ineter.range.IPv4Subnet;
 
@@ -81,7 +80,8 @@ public class IPv4AddressTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "asdfasf", "260.52.123.260", "1.2.3.4.5", "1.2.3" })
+	@ValueSource(strings = { "asdfasf", "260.52.123.260", "1.2.3.4.5", "1.2.3", "1.2.3.4.", "1.2.-0.4", ".10.20.30",
+			"10.20.30.", "10.20..30", "123", "12.34.56.ab", "100.100.100" })
 	void badStringConstructor(String ipStr) {
 		assertThrows(IllegalArgumentException.class, () -> IPv4Address.of(ipStr));
 	}
