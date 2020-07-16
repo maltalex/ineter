@@ -11,11 +11,13 @@ import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.github.maltalex.ineter.base.IPAddress;
 import com.github.maltalex.ineter.base.IPv4Address;
 
 public class IPv4Range implements IPRange<IPv4Address, Long> {
@@ -222,5 +224,43 @@ public class IPv4Range implements IPRange<IPv4Address, Long> {
 	@Override
 	public IPv4Range withLast(IPv4Address address) {
 		return IPv4Range.of(this.getFirst(), address);
+	}
+
+	public List<IPv4Range> withRemoved(Collection<IPv4Range> ranges) {
+		List<IPv4Range> ret = new ArrayList<>(ranges.size() + 1);
+		List<IPv4Range> merged = IPv4Range.merge(ranges);
+		ret.add(this);
+		for (IPv4Range toRemove : merged) {
+			IPv4Range next = ret.remove(ret.size() - 1);
+			// a bit faster than calling withRemoved() one range at a time
+			if (toRemove.getFirst().compareTo(next.getFirst()) > 0) {
+				if (toRemove.getLast().compareTo(next.getLast()) < 0) {
+					ret.add(IPv4Range.of(next.getFirst(), toRemove.getFirst().previous()));
+					ret.add(IPv4Range.of(toRemove.getLast().next(), next.getLast()));
+					continue;
+				}
+				ret.add(IPv4Range.of(next.getFirst(), IPAddress.min(next.getLast(), toRemove.getFirst().previous())));
+				break;
+			}
+			if (toRemove.getLast().compareTo(next.getLast()) < 0) {
+				ret.add(IPv4Range.of(IPAddress.max(toRemove.getLast().next(), next.getFirst()), next.getLast()));
+			}
+		}
+		return ret;
+	}
+
+	public List<IPv4Range> withRemoved(IPv4Range r) {
+		if (r.getFirst().compareTo(this.getFirst()) > 0) {
+			if (r.getLast().compareTo(this.getLast()) < 0) {
+				return Arrays.asList(IPv4Range.of(this.getFirst(), r.getFirst().previous()),
+						IPv4Range.of(r.getLast().next(), this.getLast()));
+			}
+			return Arrays.asList(IPv4Range.of(this.getFirst(), IPAddress.min(this.getLast(), r.getFirst().previous())));
+		}
+		if (r.getLast().compareTo(this.getLast()) < 0) {
+			return Arrays.asList(IPv4Range.of(IPAddress.max(r.getLast().next(), this.getFirst()), this.getLast()));
+		}
+
+		return Collections.emptyList();
 	}
 }

@@ -12,11 +12,13 @@ import java.net.Inet6Address;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.github.maltalex.ineter.base.IPAddress;
 import com.github.maltalex.ineter.base.IPv6Address;
 
 public class IPv6Range implements IPRange<IPv6Address, BigInteger> {
@@ -244,5 +246,43 @@ public class IPv6Range implements IPRange<IPv6Address, BigInteger> {
 	@Override
 	public IPv6Range withLast(IPv6Address address) {
 		return IPv6Range.of(this.getFirst(), address);
+	}
+
+	public List<IPv6Range> withRemoved(Collection<IPv6Range> ranges) {
+		List<IPv6Range> ret = new ArrayList<>(ranges.size() + 1);
+		List<IPv6Range> merged = IPv6Range.merge(ranges);
+		ret.add(this);
+		for (IPv6Range toRemove : merged) {
+			IPv6Range next = ret.remove(ret.size() - 1);
+			// a bit faster than calling withRemoved() one range at a time
+			if (toRemove.getFirst().compareTo(next.getFirst()) > 0) {
+				if (toRemove.getLast().compareTo(next.getLast()) < 0) {
+					ret.add(IPv6Range.of(next.getFirst(), toRemove.getFirst().previous()));
+					ret.add(IPv6Range.of(toRemove.getLast().next(), next.getLast()));
+					continue;
+				}
+				ret.add(IPv6Range.of(next.getFirst(), IPAddress.min(next.getLast(), toRemove.getFirst().previous())));
+				break;
+			}
+			if (toRemove.getLast().compareTo(next.getLast()) < 0) {
+				ret.add(IPv6Range.of(IPAddress.max(toRemove.getLast().next(), next.getFirst()), next.getLast()));
+			}
+		}
+		return ret;
+	}
+
+	public List<IPv6Range> withRemoved(IPv6Range r) {
+		if (r.getFirst().compareTo(this.getFirst()) > 0) {
+			if (r.getLast().compareTo(this.getLast()) < 0) {
+				return Arrays.asList(IPv6Range.of(this.getFirst(), r.getFirst().previous()),
+						IPv6Range.of(r.getLast().next(), this.getLast()));
+			}
+			return Arrays.asList(IPv6Range.of(this.getFirst(), IPAddress.min(this.getLast(), r.getFirst().previous())));
+		}
+		if (r.getLast().compareTo(this.getLast()) < 0) {
+			return Arrays.asList(IPv6Range.of(IPAddress.max(r.getLast().next(), this.getFirst()), this.getLast()));
+		}
+
+		return Collections.emptyList();
 	}
 }

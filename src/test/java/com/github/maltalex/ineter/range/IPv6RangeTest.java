@@ -7,7 +7,13 @@
  */
 package com.github.maltalex.ineter.range;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigInteger;
 import java.net.Inet6Address;
@@ -345,5 +351,66 @@ public class IPv6RangeTest {
 		assertEquals(IPv6Range.of("::", "::123f"), IPv6Subnet.of("::1230/124").withFirst(IPv6Address.of("::")));
 		assertThrows(IllegalArgumentException.class,
 				() -> IPv6Subnet.of("1234::/16").withFirst(IPv6Address.of("2222::")));
+	}
+
+	@Test
+	void withRemovedAll() {
+		IPv6Range subnet = IPv6Range.parse("2001::/16");
+		assertEquals(Arrays.asList(subnet), subnet.withRemoved(emptyList()));
+		assertEquals(emptyList(), subnet.withRemoved(subnet));
+		assertEquals(emptyList(), subnet.withRemoved(IPv6Range.parse("2000::/8")));
+		assertEquals(emptyList(), subnet.withRemoved(IPv6Range.parse("::/0")));
+		assertEquals(emptyList(), IPv6Range.parse("::/0").withRemoved(IPv6Range.parse("::/0")));
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+	//@formatter:off
+		"::1234:1-::1234:ffff, ::1234:0/112, ::1234:0",
+		"::1234:0-::1234:fffe, ::1234:0/112, ::1234:ffff",
+			"::1234:0/113, ::1234:0/112, ::1234:8000/113",
+			"::1234:8000/113, ::1234:0/112, ::1234:0/113",
+			"::1234:0-::1234:fff ::1234:2001-::1234:ffff, ::1234:0/112, ::1234:1000-::1234:2000",
+			"::-0fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff 1001::-ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff, ::/0, 1000::/16"
+	//@formatter:on
+	})
+	void withRemovedSingle(String ans, String original, String toExclude) {
+		List<IPv6Range> ansList = Arrays.stream(ans.trim().split(" ")).map(IPv6Range::parse)
+				.collect(Collectors.toList());
+		assertEquals(ansList, IPv6Range.parse(original).withRemoved(IPv6Range.parse(toExclude)));
+	}
+
+	@Test
+	void withRemovedCollectionEmpty() {
+		assertEquals(singletonList(IPv6Range.parse("1234::/16")),
+				IPv6Range.parse("1234::/16").withRemoved(emptyList()));
+		assertEquals(emptyList(),
+				IPv6Range.parse("1234::/16").withRemoved(Arrays.asList(IPv6Range.parse("1234::/16"))));
+		assertEquals(emptyList(), IPv6Range.parse("1234::/16").withRemoved(Arrays.asList(IPv6Range.parse("::/0"))));
+		assertEquals(emptyList(),
+				IPv6Range.parse("1234::/16").withRemoved(Arrays.asList(IPv6Range.parse("1230::-1240::"))));
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+	//@formatter:off
+		"::1234:0/112 , ::1234:0/112 , ::1235:0/112 ::1236:0/112",
+		"::1234:0/112 , ::1234:0/112 , ::1232:0/112 ::1233:0/112",
+		"::1234:0/112 , ::1234:0/112 , 4321::",
+		"::1234:1001-::1234:1fff ::1234:3001-::1234:efff, ::1234:0/112, ::1000:0/112 ::1233:f000-::1234:1000 ::1234:2000-::1234:3000 ::1234:f000-::1235:1000 ::1236:0/112",
+		"::1234:1-::1234:0fff ::1234:1001-::1234:fffe,::1234:0/112, ::-::1234:0 ::1234:1000 ::1234:ffff-::1235:0",
+		"::1234:0/112,::1234:0/112, ::1232:0/113 ::1233:0/113",
+		"::1234:0/112,::1234:0/112, ::1232:0/113 ::1235:0/113",
+		"::1234:0-::1234:ff ::1234:101-::1234:fff ::1234:1001-::1234:ffff,::1234:0/112, ::1234:100 ::1234:1000",
+		"::1234:0-::1234:0fff,::1234:0/112, ::1232:0/113 ::1234:1000-::1235:1000"
+	//@formatter:on
+	})
+	void withRemovedCollection(String ans, String original, String toExclude) {
+		List<IPv6Range> ansList = Arrays.stream(ans.trim().split(" ")).map(IPv6Range::parse)
+				.collect(Collectors.toList());
+		List<IPv6Range> toExcludeList = toExclude == null ? emptyList()
+				: Arrays.stream(toExclude.trim().split(" ")).map(IPv6Range::parse).collect(Collectors.toList());
+
+		assertEquals(ansList, IPv6Range.parse(original).withRemoved(toExcludeList));
 	}
 }

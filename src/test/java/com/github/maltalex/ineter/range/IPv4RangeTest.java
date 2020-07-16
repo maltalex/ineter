@@ -7,7 +7,13 @@
  */
 package com.github.maltalex.ineter.range;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -350,5 +356,71 @@ public class IPv4RangeTest {
 				IPv4Subnet.of("10.0.0.0/24").withFirst(IPv4Address.of("10.0.0.255")));
 		assertThrows(IllegalArgumentException.class,
 				() -> IPv4Subnet.of("10.0.0.0/8").withFirst(IPv4Address.of("12.12.12.12")));
+	}
+
+	@Test
+	void withRemovedAll() {
+		IPv4Range subnet = IPv4Range.parse("10.0.0.0/24");
+		assertEquals(Arrays.asList(subnet), subnet.withRemoved(emptyList()));
+		assertEquals(emptyList(), subnet.withRemoved(subnet));
+		assertEquals(emptyList(), subnet.withRemoved(IPv4Range.parse("10.0.0.0/8")));
+		assertEquals(emptyList(), subnet.withRemoved(IPv4Range.parse("0.0.0.0/0")));
+		assertEquals(emptyList(), IPv4Range.parse("0.0.0.0/0").withRemoved(IPv4Range.parse("0.0.0.0/0")));
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+	//@formatter:off
+		"10.0.0.1-10.0.0.255, 10.0.0.0/24,  10.0.0.0",
+		"10.0.0.0-10.0.0.254, 10.0.0.0/24 ,10.0.0.255",
+		"10.0.0.128-10.0.0.255, 10.0.0.0/24,10.0.0.0/25",
+		"10.0.0.0-10.0.0.127, 10.0.0.0/24,10.0.0.128/25",
+		"10.0.0.0-10.0.0.99 10.0.0.201-10.0.0.255, 10.0.0.0/24, 10.0.0.100-10.0.0.200",
+		"0.0.0.0-127.255.255.255 129.0.0.0-255.255.255.255, 0.0.0.0/0, 128.0.0.0/8"
+	//@formatter:on
+	})
+	void withRemovedSingle(String ans, String original, String toExclude) {
+		List<IPv4Range> ansList = Arrays.stream(ans.trim().split(" ")).map(IPv4Range::parse)
+				.collect(Collectors.toList());
+		assertEquals(ansList, IPv4Range.parse(original).withRemoved(IPv4Range.parse(toExclude)));
+	}
+
+	@Test
+	void withRemovedCollectionEmpty() {
+		assertEquals(singletonList(IPv4Range.parse("10.0.0.0/24")),
+				IPv4Range.parse("10.0.0.0/24").withRemoved(emptyList()));
+		assertEquals(emptyList(),
+				IPv4Range.parse("10.0.0.0/24").withRemoved(Arrays.asList(IPv4Range.parse("10.0.0.0/24"))));
+		assertEquals(emptyList(),
+				IPv4Range.parse("10.0.0.0/24").withRemoved(Arrays.asList(IPv4Range.parse("0.0.0.0/0"))));
+		assertEquals(emptyList(),
+				IPv4Range.parse("10.0.0.0/24").withRemoved(Arrays.asList(IPv4Range.parse("9.0.0.0-11.0.0.0"))));
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+	//@formatter:off
+		"10.0.0.1-10.0.0.255, 10.0.0.0/24, 10.0.0.0",
+		"10.0.0.0-10.0.0.254, 10.0.0.0/24, 10.0.0.255",
+		"10.0.0.128-10.0.0.255, 10.0.0.0/24, 10.0.0.0/25",
+		"10.0.0.0-10.0.0.127, 10.0.0.0/24, 10.0.0.128/25",
+		"10.0.0.0/24, 10.0.0.0/24, 11.0.0.0/24 12.0.0.0/24",
+		"10.0.0.0/24, 10.0.0.0/24, 8.0.0.0/24 7.0.0.0/24",
+		"10.0.0.0/24, 10.0.0.0/24, ",
+		"10.0.0.0/24, 10.0.0.0/24, 1.2.3.4",
+		"10.0.0.1-10.0.0.9 10.0.0.20-10.0.0.249 , 10.0.0.0/24 , 8.0.0.0/24 9.0.0.0-10.0.0.0 10.0.0.10-10.0.0.19 10.0.0.250-255.255.255.255",
+		"10.0.0.20-10.0.0.249, 10.0.0.0/24 , 9.0.0.0-10.0.0.19 10.0.0.250-10.0.0.255",
+		"10.0.0.0-10.0.0.99 10.0.0.101-10.0.0.199 10.0.0.201-10.0.0.255 , 10.0.0.0/24 , 10.0.0.100 10.0.0.200",
+		"10.0.0.0-10.0.0.9 10.0.0.20-10.0.0.249, 10.0.0.0/24, 10.0.0.10-10.0.0.19 10.0.0.250-10.0.0.255 12.0.0.0/24",
+		"10.0.0.0 10.0.0.2 10.0.0.4-10.0.0.199, 10.0.0.0/24, 10.0.0.1 10.0.0.3 10.0.0.200-10.0.1.100" 
+	//@formatter:on
+	})
+	void withRemovedCollection(String ans, String original, String toExclude) {
+		List<IPv4Range> ansList = Arrays.stream(ans.trim().split(" ")).map(IPv4Range::parse)
+				.collect(Collectors.toList());
+		List<IPv4Range> toExcludeList = toExclude == null ? emptyList()
+				: Arrays.stream(toExclude.trim().split(" ")).map(IPv4Range::parse).collect(Collectors.toList());
+
+		assertEquals(ansList, IPv4Range.parse(original).withRemoved(toExcludeList));
 	}
 }
