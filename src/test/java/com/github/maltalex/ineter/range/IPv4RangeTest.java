@@ -386,14 +386,6 @@ public class IPv4RangeTest {
 	}
 
 	@Test
-	void withRemovedMutability() {
-	    IPv4Range original = IPv4Range.of("0.0.0.0", "0.0.0.10");
-	    List<IPv4Range> answered = original.withRemoved(IPv4Range.of("1.1.1.1", "1.1.1.10"));
-	    IPv4Range returned = answered.get(0);
-		assertEquals(returned, original);
-	}
-
-	@Test
 	void withRemovedCollectionEmpty() {
 		assertEquals(singletonList(IPv4Range.parse("10.0.0.0/24")),
 				IPv4Range.parse("10.0.0.0/24").withRemoved(emptyList()));
