@@ -421,7 +421,4 @@ public class IPv4RangeTest {
 
 		assertEquals(ansList, IPv4Range.parse(original).withRemoved(toExcludeList));
 	}
-	void failTest() {
-		assertEquals(1, 2);
-	}
 }
