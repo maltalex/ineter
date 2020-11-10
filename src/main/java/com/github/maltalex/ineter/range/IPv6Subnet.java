@@ -11,9 +11,9 @@ import java.math.BigInteger;
 
 import com.github.maltalex.ineter.base.IPv6Address;
 
-public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address, BigInteger> {
+public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Subnet, IPv6Range, IPv6Address, BigInteger> {
 
-	static enum IPv6SubnetMask {
+	enum IPv6SubnetMask {
 
 		//@formatter:off
 		MASK_000, MASK_001, MASK_002, MASK_003, MASK_004, MASK_005, MASK_006, MASK_007,
@@ -44,7 +44,7 @@ public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Address, BigIn
 		private final long maskUpper, maskLower;
 		private final int bitCount;
 
-		private IPv6SubnetMask() {
+		IPv6SubnetMask() {
 			this.bitCount = ordinal();
 			int upperCount = Math.min(64, this.bitCount);
 			int lowerCount = this.bitCount - upperCount;

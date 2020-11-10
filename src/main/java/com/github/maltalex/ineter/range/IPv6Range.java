@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import com.github.maltalex.ineter.base.IPAddress;
 import com.github.maltalex.ineter.base.IPv6Address;
 
-public class IPv6Range implements IPRange<IPv6Address, BigInteger> {
+public class IPv6Range implements IPRange<IPv6Range, IPv6Subnet, IPv6Address, BigInteger> {
 
 	private static final BigInteger INTEGER_MAX_VALUE = new BigInteger(
 			new byte[] { 0x7f, (byte) 0xff, (byte) 0xff, (byte) 0xff });

@@ -48,14 +48,16 @@ abstract class IPRangeUtils {
 		}
 	}
 
-	static <L extends Number & Comparable<L>, I extends IPAddress & Comparable<I>, R extends IPRange<I, L>> List<R> merge(
+	static <L extends Number & Comparable<L>,
+			I extends IPAddress & Comparable<I>,
+			R extends IPRange<R, ?, I, L>> List<R> merge(
 			Collection<R> rangesToMerge, BiFunction<I, I, R> rangeCreator) {
 		if (rangesToMerge.isEmpty()) {
 			return Collections.emptyList();
 		}
 
 		ArrayList<R> sortedRanges = new ArrayList<>(rangesToMerge);
-		Collections.sort(sortedRanges, Comparator.comparing(R::getFirst));
+		sortedRanges.sort(Comparator.comparing(R::getFirst));
 
 		int mergedRangeIndex = 0, candidateIndex = 0;
 		while (candidateIndex < sortedRanges.size()) {
@@ -78,7 +80,7 @@ abstract class IPRangeUtils {
 		return new ArrayList<>(sortedRanges.subList(0, mergedRangeIndex));
 	}
 
-	static <L extends Number & Comparable<L>, I extends IPAddress & Comparable<I>, R extends IPRange<I, L>> boolean overlapsOrAdjacent(
+	static <L extends Number & Comparable<L>, I extends IPAddress & Comparable<I>, R extends IPRange<R, ?, I, L>> boolean overlapsOrAdjacent(
 			R mergedRange, R candidateRange) {
 		return mergedRange.overlaps(candidateRange) || mergedRange.getLast().next().equals(candidateRange.getFirst());
 	}

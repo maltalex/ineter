@@ -9,9 +9,12 @@ package com.github.maltalex.ineter.range;
 
 import com.github.maltalex.ineter.base.IPv4Address;
 
-public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address, Long> {
+import java.util.Collection;
+import java.util.List;
 
-	protected static enum IPv4SubnetMask {
+public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Subnet, IPv4Range, IPv4Address, Long> {
+
+	protected enum IPv4SubnetMask {
 
 		// @formatter:off
 		MASK_00, MASK_01, MASK_02, MASK_03,
@@ -34,7 +37,7 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Address, Long>
 		private final int mask;
 		private final int bitCount;
 
-		private IPv4SubnetMask() {
+		IPv4SubnetMask() {
 			this.bitCount = ordinal();
 			this.mask = this.bitCount != 0 ? 0xffffffff << (32 - this.bitCount) : 0;
 		}

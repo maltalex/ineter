@@ -55,9 +55,7 @@ public class IPv6AddressTest {
 	@ValueSource(strings = { "::1%blah", "::%eth0", "1234:4321:abcd:dcba::%foo" })
 	void zonedType(String ipStr) {
 		IPv6Address ip1 = IPv6Address.of(ipStr);
-		IPv6Address ip2 = ZonedIPv6Address.of(ipStr);
 		assertTrue(ip1 instanceof ZonedIPv6Address);
-		assertTrue(ip2 instanceof ZonedIPv6Address);
 	}
 
 	@Test
@@ -95,14 +93,14 @@ public class IPv6AddressTest {
 
 	@Test
 	void unequalToObject() {
-		assertFalse(IPv6Address.of("::").equals(new Object()));
-		assertFalse(ZonedIPv6Address.of("::%foo").equals(new Object()));
+		assertNotEquals(new Object(), IPv6Address.of("::"));
+		assertNotEquals(new Object(), ZonedIPv6Address.of("::%foo"));
 	}
 
 	@Test
 	void unequalToNull() {
-		assertFalse(IPv6Address.of("::").equals(null));
-		assertFalse(ZonedIPv6Address.of("::%foo").equals(null));
+		assertNotEquals(IPv6Address.of("::"), null);
+		assertNotEquals(ZonedIPv6Address.of("::%foo"), null);
 	}
 
 	@ParameterizedTest
@@ -133,7 +131,9 @@ public class IPv6AddressTest {
 		IPv6Address ip2 = IPv6Address.of(ipStr2);
 		assertEquals(-1, ip1.compareTo(ip2));
 		assertEquals(1, ip2.compareTo(ip1));
+		//noinspection EqualsWithItself
 		assertEquals(0, ip1.compareTo(ip1));
+		//noinspection EqualsWithItself
 		assertEquals(0, ip2.compareTo(ip2));
 
 		assertEquals(1, ip1.compareTo(null));
@@ -147,7 +147,9 @@ public class IPv6AddressTest {
 		IPv6Address ip2 = IPv6Address.of(ipStr2);
 		assertTrue(ip1.compareTo(ip2) < 0);
 		assertTrue(ip2.compareTo(ip1) > 0);
+		//noinspection EqualsWithItself
 		assertEquals(0, ip1.compareTo(ip1));
+		//noinspection EqualsWithItself
 		assertEquals(0, ip2.compareTo(ip2));
 
 		assertTrue(ip1.compareTo(null) > 0);
@@ -275,10 +277,9 @@ public class IPv6AddressTest {
 		assertEquals(BigInteger.valueOf(2), IPv6Address.of("::1").distanceTo(IPv6Address.of("::3")));
 		assertEquals(BigInteger.valueOf(-2), IPv6Address.of("::3").distanceTo(IPv6Address.of("::1")));
 		assertEquals(BigInteger.ZERO, IPv6Address.of("::1").distanceTo(IPv6Address.of("::1")));
-		assertEquals(BigInteger.valueOf(2).pow(128).subtract(BigInteger.ONE),
-				IPv6Address.of("::").distanceTo(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff")));
-		assertEquals(BigInteger.valueOf(2).pow(128).subtract(BigInteger.ONE).negate(),
-				IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff").distanceTo(IPv6Address.of("::")));
+		BigInteger v = BigInteger.valueOf(2).pow(128).subtract(BigInteger.ONE);
+		assertEquals(v, IPv6Address.of("::").distanceTo(IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff")));
+		assertEquals(v.negate(), IPv6Address.of("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff").distanceTo(IPv6Address.of("::")));
 	}
 
 	@Test

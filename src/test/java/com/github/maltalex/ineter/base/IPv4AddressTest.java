@@ -24,6 +24,7 @@ import org.junit.runner.RunWith;
 import com.github.maltalex.ineter.range.IPv4Range;
 import com.github.maltalex.ineter.range.IPv4Subnet;
 
+@SuppressWarnings("JUnit5Platform")
 @RunWith(JUnitPlatform.class)
 public class IPv4AddressTest {
 
@@ -46,13 +47,13 @@ public class IPv4AddressTest {
 	@Test
 	void unequalToObject() {
 		IPv4Address ip1 = IPv4Address.of("1.2.3.4");
-		assertFalse(ip1.equals(new Object()));
+		assertNotEquals(new Object(), ip1);
 	}
 
 	@Test
 	void unequalToNull() {
 		IPv4Address ip1 = IPv4Address.of("1.2.3.4");
-		assertFalse(ip1.equals(null));
+		assertNotEquals(ip1, null);
 	}
 
 	@ParameterizedTest
@@ -72,7 +73,9 @@ public class IPv4AddressTest {
 		IPv4Address ip2 = IPv4Address.of(ipStr2);
 		assertEquals(-1, ip1.compareTo(ip2));
 		assertEquals(1, ip2.compareTo(ip1));
+		//noinspection EqualsWithItself
 		assertEquals(0, ip1.compareTo(ip1));
+		//noinspection EqualsWithItself
 		assertEquals(0, ip2.compareTo(ip2));
 
 		assertEquals(1, ip1.compareTo(null));
@@ -89,6 +92,7 @@ public class IPv4AddressTest {
 	@Test
 	void nullStringConstructor() {
 		String a = null;
+		//noinspection ConstantConditions
 		assertThrows(NullPointerException.class, () -> IPv4Address.of(a));
 	}
 

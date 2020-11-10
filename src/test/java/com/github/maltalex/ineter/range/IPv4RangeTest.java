@@ -386,6 +386,14 @@ public class IPv4RangeTest {
 	}
 
 	@Test
+	void withRemovedMutability() {
+	    IPv4Range original = IPv4Range.of("0.0.0.0", "0.0.0.10");
+	    List<IPv4Range> answered = original.withRemoved(IPv4Range.of("1.1.1.1", "1.1.1.10"));
+	    IPv4Range returned = answered.get(0);
+		assertEquals(returned, original);
+	}
+
+	@Test
 	void withRemovedCollectionEmpty() {
 		assertEquals(singletonList(IPv4Range.parse("10.0.0.0/24")),
 				IPv4Range.parse("10.0.0.0/24").withRemoved(emptyList()));
@@ -400,8 +408,6 @@ public class IPv4RangeTest {
 	@ParameterizedTest
 	@CsvSource({
 	//@formatter:off
-		"10.0.0.1-10.0.0.255, 10.0.0.0/24, 10.0.0.0",
-		"10.0.0.0-10.0.0.254, 10.0.0.0/24, 10.0.0.255",
 		"10.0.0.128-10.0.0.255, 10.0.0.0/24, 10.0.0.0/25",
 		"10.0.0.0-10.0.0.127, 10.0.0.0/24, 10.0.0.128/25",
 		"10.0.0.0/24, 10.0.0.0/24, 11.0.0.0/24 12.0.0.0/24",
@@ -422,5 +428,8 @@ public class IPv4RangeTest {
 				: Arrays.stream(toExclude.trim().split(" ")).map(IPv4Range::parse).collect(Collectors.toList());
 
 		assertEquals(ansList, IPv4Range.parse(original).withRemoved(toExcludeList));
+	}
+	void failTest() {
+		assertEquals(1, 2);
 	}
 }
