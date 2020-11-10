@@ -9,9 +9,6 @@ package com.github.maltalex.ineter.range;
 
 import com.github.maltalex.ineter.base.IPv4Address;
 
-import java.util.Collection;
-import java.util.List;
-
 public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Subnet, IPv4Range, IPv4Address, Long> {
 
 	protected enum IPv4SubnetMask {
