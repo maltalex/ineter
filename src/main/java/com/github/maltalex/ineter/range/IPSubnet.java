@@ -9,14 +9,18 @@ package com.github.maltalex.ineter.range;
 
 import com.github.maltalex.ineter.base.IPAddress;
 
-public interface IPSubnet<I extends IPAddress & Comparable<I>, L extends Number & Comparable<L>> extends IPRange<I, L> {
+public interface IPSubnet<
+		S extends IPSubnet<S, R, I, L>,
+		R extends IPRange<R, S, I, L>,
+		I extends IPAddress & Comparable<I>,
+		L extends Number & Comparable<L>> extends IPRange<R, S, I, L> {
 
 	/**
 	 * Returns the network mask in address form
 	 *
 	 * @return network mask of this subnet
 	 */
-	public I getNetworkMask();
+	I getNetworkMask();
 
 	/**
 	 * Returns the number of bits used for the network address. This number is equal
@@ -26,7 +30,7 @@ public interface IPSubnet<I extends IPAddress & Comparable<I>, L extends Number 
 	 *
 	 * @return number of bits in network
 	 */
-	public int getNetworkBitCount();
+	int getNetworkBitCount();
 
 	/**
 	 * Returns the number of bits used for the host part of the address. This number
@@ -35,13 +39,13 @@ public interface IPSubnet<I extends IPAddress & Comparable<I>, L extends Number 
 	 *
 	 * @return number of bits in the host part of the subnet
 	 */
-	public int getHostBitCount();
+	int getHostBitCount();
 
 	/**
 	 * Returns the address of the network (with all host bits set to zero) same as
 	 * {@link IPSubnet#getFirst()}
 	 *
-	 * @return
+	 * @return network address
 	 */
-	public I getNetworkAddress();
+	I getNetworkAddress();
 }

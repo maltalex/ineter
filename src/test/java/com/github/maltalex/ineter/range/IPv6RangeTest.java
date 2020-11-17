@@ -149,12 +149,12 @@ public class IPv6RangeTest {
 	@Test
 	void unequalToNull() {
 		IPv6Range range1 = IPv6Range.parse("1234::1234-1234::ffff");
-		assertFalse(range1.equals(null));
+		assertNotEquals(range1, null);
 	}
 
 	@Test
 	void unequalToObject() {
-		assertFalse(IPv6Range.parse("1234::1234-1234::ffff").equals(new Object()));
+		assertNotEquals(new Object(), IPv6Range.parse("1234::1234-1234::ffff"));
 	}
 
 	@ParameterizedTest
@@ -209,13 +209,13 @@ public class IPv6RangeTest {
 		Iterator<IPv6Address> i = IPv6Range.of("1234::", "1234::").iterator();
 		assertTrue(i.hasNext());
 		assertEquals(i.next(), IPv6Address.of("1234::"));
-		assertThrows(NoSuchElementException.class, () -> i.next());
+		assertThrows(NoSuchElementException.class, i::next);
 	}
 
 	@Test
 	void iterationRemove() {
 		Iterator<IPv6Address> i = IPv6Range.of("1234::", "1234::").iterator();
-		assertThrows(UnsupportedOperationException.class, () -> i.remove());
+		assertThrows(UnsupportedOperationException.class, i::remove);
 	}
 
 	@ParameterizedTest
@@ -228,7 +228,8 @@ public class IPv6RangeTest {
 		List<IPv6Subnet> generated = IPv6Range.parse(range).toSubnets();
 		List<IPv6Subnet> manual = Arrays.stream(subnets.split(" ")).map(IPv6Subnet::of).collect(Collectors.toList());
 		assertEquals(generated, manual);
-		assertEquals(manual.stream().map(IPv6Subnet::length).collect(Collectors.reducing((a, b) -> a.add(b))).get(),
+		//noinspection OptionalGetWithoutIsPresent
+		assertEquals(manual.stream().map(IPv6Subnet::length).reduce(BigInteger::add).get(),
 				IPv6Range.parse(range).length());
 	}
 

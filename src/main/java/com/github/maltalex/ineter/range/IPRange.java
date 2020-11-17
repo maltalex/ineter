@@ -9,17 +9,21 @@ package com.github.maltalex.ineter.range;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
 import com.github.maltalex.ineter.base.IPAddress;
 
-public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number & Comparable<L>>
-		extends Iterable<I>, Serializable {
+public interface IPRange<
+		R extends IPRange<R, S, I, L>,
+        S extends IPSubnet<S, R, I, L>,
+		I extends IPAddress & Comparable<I>,
+		L extends Number & Comparable<L> > extends Iterable<I>, Serializable {
 
-	public I getFirst();
+	I getFirst();
 
-	public I getLast();
+	I getLast();
 
 	/**
 	 * Checks whether this range has any overlapping addresses with a given range.
@@ -29,7 +33,7 @@ public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number &
 	 * @param range the range to check for overlap
 	 * @return true if the given range overlaps with this one
 	 */
-	default boolean overlaps(IPRange<I, L> range) {
+	default boolean overlaps(R range) {
 		// Either one of the ends of the other range is within this one
 		// Or this range is completely inside the other range. In that case,
 		// it's enough to check just one of the edges of this range
@@ -39,7 +43,7 @@ public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number &
 	/**
 	 * Checks whether a given address is inside this range
 	 *
-	 * @param ip
+	 * @param ip ip to check
 	 * @return true if the given address is inside this range
 	 */
 	default boolean contains(I ip) {
@@ -53,7 +57,7 @@ public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number &
 	 * @param range range to check
 	 * @return true if the entire given range is contained within this range
 	 */
-	default boolean contains(IPRange<I, L> range) {
+	default boolean contains(R range) {
 		return this.contains(range.getFirst()) && this.contains(range.getLast());
 	}
 
@@ -62,7 +66,7 @@ public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number &
 	 *
 	 * @return number of addresses in the range
 	 */
-	public L length();
+	L length();
 
 	/**
 	 * Returns the number of addresses in the range
@@ -71,8 +75,9 @@ public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number &
 	 * 
 	 * @return number of addresses in the range, up to Integer.MAX_VALUE
 	 */
-	public int intLength();
+	int intLength();
 
+	@SuppressWarnings("NullableProblems")
 	@Override
 	default Iterator<I> iterator() {
 		return iterator(false);
@@ -97,7 +102,7 @@ public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number &
 	 * @param skipLast  set to true to skip the last addresses
 	 * @return a new iterator instance
 	 */
-	public Iterator<I> iterator(boolean skipFirst, boolean skipLast);
+	Iterator<I> iterator(boolean skipFirst, boolean skipLast);
 
 	/**
 	 * Calculates and returns the minimal list of Subnets that compose this address
@@ -105,7 +110,7 @@ public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number &
 	 *
 	 * @return a list of Subnets that compose this address range
 	 */
-	public List<? extends IPSubnet<I, L>> toSubnets();
+	List<S> toSubnets();
 
 	/**
 	 * Returns the list of addresses contained in the range. The list is
@@ -128,7 +133,7 @@ public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number &
 	 * 
 	 * @return a new range instance
 	 */
-	public IPRange<I, L> withLast(I address);
+	R withLast(I address);
 
 	/**
 	 * Return a new range instance with the <b>same last address</b> as the current
@@ -136,5 +141,21 @@ public interface IPRange<I extends IPAddress & Comparable<I>, L extends Number &
 	 * 
 	 * @return a new range instance
 	 */
-	public IPRange<I, L> withFirst(I address);
+	R withFirst(I address);
+
+	/**
+	 * exclude a range from this range
+	 * @param exclusion the ranges to exclude from original range
+	 * @return A collection containing remaining ranges.
+	 *         If a range is empty - it will not be in the result.
+	 */
+	List<R> withRemoved(Collection<R> exclusion);
+
+	/**
+	 * exclude a range from this range
+	 * @param exclusion the range to exclude from original range
+	 * @return A collection containing remaining ranges.
+	 *         If a range is empty - it will not be in the result.
+	 */
+	List<R> withRemoved(R exclusion);
 }

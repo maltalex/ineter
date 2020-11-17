@@ -75,12 +75,12 @@ public class IPv4SubnetTest {
 
 	@Test
 	void unequalToNull() {
-		assertFalse(IPv4Subnet.of("1.2.3.0/24").equals(null));
+		assertNotEquals(IPv4Subnet.of("1.2.3.0/24"), null);
 	}
 
 	@Test
 	void unequalToObject() {
-		assertFalse(IPv4Subnet.of("1.2.3.0/24").equals(new Object()));
+		assertNotEquals(new Object(), IPv4Subnet.of("1.2.3.0/24"));
 	}
 
 	@Test

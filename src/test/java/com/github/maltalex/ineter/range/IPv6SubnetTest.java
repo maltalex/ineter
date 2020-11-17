@@ -9,7 +9,6 @@ package com.github.maltalex.ineter.range;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -75,12 +74,12 @@ public class IPv6SubnetTest {
 
 	@Test
 	void unequalToNull() {
-		assertFalse(IPv6Subnet.of("::/24").equals(null));
+		assertNotEquals(IPv6Subnet.of("::/24"), null);
 	}
 
 	@Test
 	void unequalToObject() {
-		assertFalse(IPv6Subnet.of("::/24").equals(new Object()));
+		assertNotEquals(new Object(), IPv6Subnet.of("::/24"));
 	}
 
 	@Test
