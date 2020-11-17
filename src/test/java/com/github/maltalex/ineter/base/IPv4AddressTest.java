@@ -73,9 +73,9 @@ public class IPv4AddressTest {
 		IPv4Address ip2 = IPv4Address.of(ipStr2);
 		assertEquals(-1, ip1.compareTo(ip2));
 		assertEquals(1, ip2.compareTo(ip1));
-		//noinspection EqualsWithItself
+		// noinspection EqualsWithItself
 		assertEquals(0, ip1.compareTo(ip1));
-		//noinspection EqualsWithItself
+		// noinspection EqualsWithItself
 		assertEquals(0, ip2.compareTo(ip2));
 
 		assertEquals(1, ip1.compareTo(null));
@@ -92,7 +92,7 @@ public class IPv4AddressTest {
 	@Test
 	void nullStringConstructor() {
 		String a = null;
-		//noinspection ConstantConditions
+		// noinspection ConstantConditions
 		assertThrows(NullPointerException.class, () -> IPv4Address.of(a));
 	}
 

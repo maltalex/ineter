@@ -228,7 +228,7 @@ public class IPv6RangeTest {
 		List<IPv6Subnet> generated = IPv6Range.parse(range).toSubnets();
 		List<IPv6Subnet> manual = Arrays.stream(subnets.split(" ")).map(IPv6Subnet::of).collect(Collectors.toList());
 		assertEquals(generated, manual);
-		//noinspection OptionalGetWithoutIsPresent
+		// noinspection OptionalGetWithoutIsPresent
 		assertEquals(manual.stream().map(IPv6Subnet::length).reduce(BigInteger::add).get(),
 				IPv6Range.parse(range).length());
 	}

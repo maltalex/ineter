@@ -48,9 +48,7 @@ abstract class IPRangeUtils {
 		}
 	}
 
-	static <L extends Number & Comparable<L>,
-			I extends IPAddress & Comparable<I>,
-			R extends IPRange<R, ?, I, L>> List<R> merge(
+	static <L extends Number & Comparable<L>, I extends IPAddress & Comparable<I>, R extends IPRange<R, ?, I, L>> List<R> merge(
 			Collection<R> rangesToMerge, BiFunction<I, I, R> rangeCreator) {
 		if (rangesToMerge.isEmpty()) {
 			return Collections.emptyList();

@@ -15,11 +15,13 @@ import java.util.List;
 
 import com.github.maltalex.ineter.base.IPAddress;
 
+//@formatter:off
 public interface IPRange<
 		R extends IPRange<R, S, I, L>,
         S extends IPSubnet<S, R, I, L>,
 		I extends IPAddress & Comparable<I>,
 		L extends Number & Comparable<L> > extends Iterable<I>, Serializable {
+//@formatter:on
 
 	I getFirst();
 
@@ -145,17 +147,19 @@ public interface IPRange<
 
 	/**
 	 * exclude a range from this range
+	 * 
 	 * @param exclusion the ranges to exclude from original range
-	 * @return A collection containing remaining ranges.
-	 *         If a range is empty - it will not be in the result.
+	 * @return A collection containing remaining ranges. If a range is empty - it
+	 *         will not be in the result.
 	 */
 	List<R> withRemoved(Collection<R> exclusion);
 
 	/**
 	 * exclude a range from this range
+	 * 
 	 * @param exclusion the range to exclude from original range
-	 * @return A collection containing remaining ranges.
-	 *         If a range is empty - it will not be in the result.
+	 * @return A collection containing remaining ranges. If a range is empty - it
+	 *         will not be in the result.
 	 */
 	List<R> withRemoved(R exclusion);
 }

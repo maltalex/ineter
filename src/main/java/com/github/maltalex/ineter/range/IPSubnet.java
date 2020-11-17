@@ -9,11 +9,8 @@ package com.github.maltalex.ineter.range;
 
 import com.github.maltalex.ineter.base.IPAddress;
 
-public interface IPSubnet<
-		S extends IPSubnet<S, R, I, L>,
-		R extends IPRange<R, S, I, L>,
-		I extends IPAddress & Comparable<I>,
-		L extends Number & Comparable<L>> extends IPRange<R, S, I, L> {
+public interface IPSubnet<S extends IPSubnet<S, R, I, L>, R extends IPRange<R, S, I, L>, I extends IPAddress & Comparable<I>, L extends Number & Comparable<L>>
+		extends IPRange<R, S, I, L> {
 
 	/**
 	 * Returns the network mask in address form
