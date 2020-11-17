@@ -71,8 +71,11 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Subnet, IPv4Ra
 	private static final long serialVersionUID = 2L;
 
 	public static IPv4Subnet of(String cidr) {
-		String[] cidrSplit = cidr.split("/");
-		return of(cidrSplit[0], cidrSplit[1]);
+		int slashIndex = cidr.indexOf('/');
+		if (slashIndex == -1) {
+			throw new IllegalArgumentException("Expected '/' in cidr");
+		}
+		return of(cidr.substring(0, slashIndex), cidr.substring(slashIndex + 1));
 	}
 
 	public static IPv4Subnet of(String address, int maskLen) {

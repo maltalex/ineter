@@ -36,6 +36,9 @@ public class IPv6SubnetTest {
 		assertEquals(a, b);
 		assertEquals(b, c);
 		assertThrows(IllegalArgumentException.class, () -> IPv6Subnet.of("::/-0"));
+		assertThrows(IllegalArgumentException.class, () -> IPv6Subnet.of("::"));
+		assertThrows(IllegalArgumentException.class, () -> IPv6Subnet.of("::/0/4"));
+		assertThrows(IllegalArgumentException.class, () -> IPv6Subnet.of("::/0/"));
 	}
 
 	@Test

@@ -72,8 +72,11 @@ public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Subnet, IPv6Ra
 	private static final long serialVersionUID = 1L;
 
 	public static IPv6Subnet of(String cidr) {
-		String[] cidrSplit = cidr.split("/");
-		return of(cidrSplit[0], cidrSplit[1]);
+		int slashIndex = cidr.indexOf('/');
+		if (slashIndex == -1) {
+			throw new IllegalArgumentException("Expected '/' in cidr");
+		}
+		return of(cidr.substring(0, slashIndex), cidr.substring(slashIndex + 1));
 	}
 
 	public static IPv6Subnet parse(String from) {

@@ -36,6 +36,9 @@ public class IPv4SubnetTest {
 		assertEquals(a, b);
 		assertEquals(b, c);
 		assertThrows(IllegalArgumentException.class, () -> IPv4Subnet.of("0.0.0.0/-0"));
+		assertThrows(IllegalArgumentException.class, () -> IPv4Subnet.of("0.0.0.0"));
+		assertThrows(IllegalArgumentException.class, () -> IPv4Subnet.of("0.0.0.0/0/2"));
+		assertThrows(IllegalArgumentException.class, () -> IPv4Subnet.of("0.0.0.0/0/"));
 	}
 
 	@Test
