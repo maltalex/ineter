@@ -21,31 +21,33 @@ abstract class IPRangeUtils {
 
 	static <T> T parseRange(String from, BiFunction<String, String, ? extends T> rangeProducer,
 			Function<String, ? extends T> subnetProducer) {
-		String[] parts = from.split("-");
-		if (parts.length == 2) {
-			return rangeProducer.apply(parts[0].trim(), parts[1].trim());
-		} else if (parts.length == 1) {
-			if (from.contains("/")) {
-				return subnetProducer.apply(from);
+		// The shortest valid string is :: (length 2)
+		for (int i = from.length() - 1; i > 1; i--) {
+			char c = from.charAt(i);
+			if (c == '-') {
+				return rangeProducer.apply(from.substring(0, i).trim(), from.substring(i + 1, from.length()).trim());
 			}
-			return rangeProducer.apply(parts[0].trim(), parts[0].trim());
-		} else {
-			throw new IllegalArgumentException(
-					String.format("Inappropriate format for address range string %s.", from));
+			if (c == '/') {
+				return subnetProducer.apply(from.trim());
+			}
 		}
+		String trimmed = from.trim();
+		return rangeProducer.apply(trimmed, trimmed);
 	}
 
 	static <T> T parseSubnet(String from, BiFunction<String, Integer, ? extends T> subnetProducer,
 			int singleAddressMask) {
-		final String[] parts = from.split("/");
-		if (parts.length == 2) {
-			return subnetProducer.apply(parts[0].trim(), Integer.parseInt(parts[1].trim()));
-		} else if (parts.length == 1) {
-			return subnetProducer.apply(parts[0].trim(), singleAddressMask);
-		} else {
-			throw new IllegalArgumentException(
-					String.format("Inappropriate format for address subnet string %s.", from));
+		int position = from.length() - 1;
+		int charsToCheck = 4; // The slash (/) has to be in the last 4 positions
+		while (position > 0 && charsToCheck > 0) {
+			if (from.charAt(position) == '/') {
+				return subnetProducer.apply(from.substring(0, position).trim(),
+						Integer.parseUnsignedInt(from.substring(position + 1, from.length()).trim()));
+			}
+			position--;
+			charsToCheck--;
 		}
+		return subnetProducer.apply(from.trim(), singleAddressMask);
 	}
 
 	static <L extends Number & Comparable<L>, I extends IPAddress & Comparable<I>, R extends IPRange<R, ?, I, L>> List<R> merge(

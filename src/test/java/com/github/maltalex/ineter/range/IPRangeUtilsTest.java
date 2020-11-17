@@ -73,4 +73,16 @@ class IPRangeUtilsTest {
 		final String from = "127/127/127";
 		assertThrows(IllegalArgumentException.class, () -> IPRangeUtils.parseSubnet(from, IPv4Subnet::of, (byte) 32));
 	}
+
+	@Test
+	void throwOnInvalidSplit() {
+		assertThrows(IllegalArgumentException.class,
+				() -> IPRangeUtils.parseRange("0.0.0.0-1.1.1.1-", IPv4Range::of, IPv4Subnet::of));
+		assertThrows(IllegalArgumentException.class,
+				() -> IPRangeUtils.parseRange("-0.0.0.0-1.1.1.1", IPv4Range::of, IPv4Subnet::of));
+		assertThrows(IllegalArgumentException.class,
+				() -> IPRangeUtils.parseSubnet("0.0.0.0/24/", IPv4Subnet::of, (byte) 32));
+		assertThrows(IllegalArgumentException.class,
+				() -> IPRangeUtils.parseSubnet("/0.0.0.0/24", IPv4Subnet::of, (byte) 32));
+	}
 }
