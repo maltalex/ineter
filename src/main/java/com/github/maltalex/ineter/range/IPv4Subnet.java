@@ -84,7 +84,7 @@ public class IPv4Subnet extends IPv4Range implements IPSubnet<IPv4Subnet, IPv4Ra
 	}
 
 	public static IPv4Subnet of(String address, String maskLen) {
-		return new IPv4Subnet(IPv4Address.of(address), IPv4SubnetMask.fromMaskLen(Integer.parseInt(maskLen)));
+		return new IPv4Subnet(IPv4Address.of(address), IPv4SubnetMask.fromMaskLen(Integer.parseUnsignedInt(maskLen)));
 	}
 
 	public static IPv4Subnet parse(String from) throws IllegalArgumentException {

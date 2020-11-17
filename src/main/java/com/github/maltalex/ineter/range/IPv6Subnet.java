@@ -89,7 +89,7 @@ public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Subnet, IPv6Ra
 	}
 
 	public static IPv6Subnet of(String address, String maskLen) {
-		return new IPv6Subnet(IPv6Address.of(address), IPv6SubnetMask.fromMaskLen(Integer.parseInt(maskLen)));
+		return new IPv6Subnet(IPv6Address.of(address), IPv6SubnetMask.fromMaskLen(Integer.parseUnsignedInt(maskLen)));
 	}
 
 	protected final int networkBitCount;
