@@ -22,7 +22,7 @@ import com.github.maltalex.ineter.base.IPv4Address;
 
 public class IPv4Range implements IPRange<IPv4Range, IPv4Subnet, IPv4Address, Long> {
 
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 3L;
 
 	public static IPv4Range of(IPv4Address firstAddress, IPv4Address lastAddress) {
 		return new IPv4Range(firstAddress, lastAddress);

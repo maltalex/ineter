@@ -69,7 +69,7 @@ public class IPv6Subnet extends IPv6Range implements IPSubnet<IPv6Subnet, IPv6Ra
 		}
 	}
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 3L;
 
 	public static IPv6Subnet of(String cidr) {
 		int slashIndex = cidr.indexOf('/');
