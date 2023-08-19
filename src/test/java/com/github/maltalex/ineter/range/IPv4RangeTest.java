@@ -393,8 +393,8 @@ public class IPv4RangeTest {
 				IPv4Range.parse("10.0.0.0/24").withRemoved(Arrays.asList(IPv4Range.parse("10.0.0.0/24"))));
 		assertEquals(emptyList(),
 				IPv4Range.parse("10.0.0.0/24").withRemoved(Arrays.asList(IPv4Range.parse("0.0.0.0/0"))));
-		assertEquals(emptyList(),
-				IPv4Range.parse("10.0.0.0/24").withRemoved(Arrays.asList(IPv4Range.parse("9.0.0.0-11.0.0.0"))));
+		assertEquals(emptyList(), IPv4Range.parse("10.0.0.0/24")
+				.withRemoved(Arrays.asList(IPv4Range.parse("9.0.0.0-11.0.0.0"), IPv4Range.parse("13.0.0.0/24"))));
 	}
 
 	@ParameterizedTest

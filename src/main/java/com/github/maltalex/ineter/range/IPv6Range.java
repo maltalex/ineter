@@ -253,6 +253,9 @@ public class IPv6Range implements IPRange<IPv6Range, IPv6Subnet, IPv6Address, Bi
 		List<IPv6Range> merged = IPv6Range.merge(ranges);
 		ret.add(this);
 		for (IPv6Range toRemove : merged) {
+			if (ret.isEmpty()) {
+				break;
+			}
 			IPv6Range next = ret.remove(ret.size() - 1);
 			// a bit faster than calling withRemoved() one range at a time
 			if (toRemove.getFirst().compareTo(next.getFirst()) > 0) {
