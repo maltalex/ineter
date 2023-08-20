@@ -25,12 +25,12 @@ ineter (pronounced "Eye-netter") is a tiny Java library for working with:
 	<dependency>
     	<groupId>com.github.maltalex</groupId>
     	<artifactId>ineter</artifactId>
-    	<version>0.2.0</version>
+    	<version>0.3.1</version>
 	</dependency>
 
 #### Gradle:
 
-	compile 'com.github.maltalex:ineter:0.2.0'
+	compile 'com.github.maltalex:ineter:0.3.1'
 
 ## How?
 
